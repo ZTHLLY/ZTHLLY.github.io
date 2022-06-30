@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>这是第一篇博客</title>
+    <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<p> 这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
+<span id="more"></span>
+
+<h1 id="1-粗体和斜体"><a href="#1-粗体和斜体" class="headerlink" title="1.粗体和斜体"></a>1.粗体和斜体</h1><h1 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
+
+<p>显示效果：</p>
+<ol>
+<li><em>这是一段斜体</em></li>
+<li><strong>这是一段粗体</strong></li>
+<li><em><strong>这是一段加粗斜体</strong></em></li>
+<li><del>这是一段删除线</del></li>
+</ol>
+<h1 id="2-分级标题"><a href="#2-分级标题" class="headerlink" title="2.分级标题"></a>2.分级标题</h1><p>语法:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.#一级标题</span><br><span class="line">2.##二级标题</span><br><span class="line">3.###三级标题</span><br><span class="line">4.####四级标题</span><br><span class="line">5.#####五级标题</span><br><span class="line">6.######六级标题</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 字号一次递减，一级最大。</p>
+<h1 id="3-超链接"><a href="#3-超链接" class="headerlink" title="3.超链接"></a>3.超链接</h1><h4 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h4><p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.欢迎滚去[百度一下](https://www.baidu.com/ &quot;百度一下你就知道&quot;)</span><br><span class="line">2.欢迎滚去[百度一下](https://www.baidu.com/)</span><br></pre></td></tr></table></figure>
+
+<p>1.欢迎滚去<a href="https://www.baidu.com/" title="百度一下你就知道">百度一下</a></p>
+<p>2.欢迎滚去<a href="https://www.baidu.com/">百度一下</a></p>
+<h4 id="第二种（有点问题）"><a href="#第二种（有点问题）" class="headerlink" title="第二种（有点问题）"></a>第二种（有点问题）</h4><p>在第一种的基础上可以加上序号方便管理。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.你可以前往[百度][1],[洛谷][2]等地方学习</span><br><span class="line">2.[1]:https://www.baidu.com/ &quot;百度&quot;</span><br><span class="line">3.[2]:https://www.luogu.com.cn/ &quot;洛谷&quot;</span><br></pre></td></tr></table></figure>
+
+<p>你可以前往<a href="https://www.baidu.com/" title="百度">百度</a>,<a href="https://www.luogu.com.cn/" title="洛谷">洛谷</a>等地方学习</p>
+<h4 id="第三种"><a href="#第三种" class="headerlink" title="第三种"></a>第三种</h4><p>这种是直接贴出来的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;链接地址&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
+<h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><p><strong>无序列表的表示</strong></p>
+<p>使用*，+，- 表示无序列表</p>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.- 无序列表一</span><br><span class="line">2.- 无序列表二</span><br><span class="line">3.- 无序列表三</span><br></pre></td></tr></table></figure>
+
+<p>显示效果：</p>
+<ul>
+<li>无序列表一</li>
+<li>无序列表二</li>
+<li>无序列表三</li>
+</ul>
+<p><strong>有序列表的表示</strong></p>
+<p>直接用一个数字和英文句点就行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. balabala</span><br><span class="line">2. balabala</span><br><span class="line">3. balabala</span><br></pre></td></tr></table></figure>
+
+<p>显示效果：</p>
+<ol>
+<li>有序列表一</li>
+<li>有序列表二</li>
+<li>有序列表三</li>
+</ol>
+<h5 id="包含引用（虽然我感觉没啥用2333）"><a href="#包含引用（虽然我感觉没啥用2333）" class="headerlink" title="包含引用（虽然我感觉没啥用2333）"></a>包含引用（虽然我感觉没啥用2333）</h5><p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* 阅读的方法</span><br><span class="line">	&gt; 打开电灯</span><br><span class="line">	&gt; 打开书本</span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<ul>
+<li><p>阅读的方法</p>
+<blockquote>
+<p>打开电灯<br>打开书本</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
+
+<p>emmm,自己注意一下</p>
+<ol>
+<li>1986. what a  great season.</li>
+</ol>
+<h1 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h1><p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.质能守恒方程可以用$E=mc^2$来表达</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>博客</category>
+      </categories>
+      <tags>
+        <tag>markdown</tag>
+        <tag>语法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>面向对象程序设计期末复(预)习</title>
+    <url>/2022/06/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D-%E9%A2%84-%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下期末程序设计复(预)习</p>
+<span id="more"></span>
+
+]]></content>
+  </entry>
+  <entry>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+<span id="more"></span>
+
+<ul>
+<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
+<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
+</li>
+<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3><h3 id="令-A-x-且方阵是-n-n-的方阵"><a href="#令-A-x-且方阵是-n-n-的方阵" class="headerlink" title="令$|A|=x$,且方阵是$n*n$的方阵"></a>令$|A|=x$,且方阵是$n*n$的方阵</h3></li>
+</ul>
+<ol>
+<li><p>$$|2*A|=2^n*x$$</p>
+</li>
+<li><p>$$|-A|=(-1)^n*x$$</p>
+</li>
+<li><p>$$|A^2|=x^2$$</p>
+</li>
+<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
+<p>$$A*C\tau=|A|*I$$</p>
+<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$$\Lambda=X^-1*A*X$$ </p>
+<p>$$A=X^-1*\Lambda*X$$ </p>
+]]></content>
+  </entry>
+</search>
