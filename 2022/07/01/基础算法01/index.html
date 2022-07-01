@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/SILVERBULLETS.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/image.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这里存放一点非常基础的算法，忘记了可以来看一眼。 主要是：排序总结，高精度总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础算法01">
+<meta property="og:url" content="http://example.com/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/index.html">
+<meta property="og:site_name" content="小朱同学">
+<meta property="og:description" content="这里存放一点非常基础的算法，忘记了可以来看一眼。 主要是：排序总结，高精度总结。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-01T07:17:52.000Z">
+<meta property="article:modified_time" content="2022-07-01T08:26:35.488Z">
+<meta property="article:author" content="silverbullets">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/","path":"2022/07/01/基础算法01/","title":"基础算法01"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基础算法01 | 小朱同学</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+ <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/clicklove.js"></script> 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小朱同学</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎ヽ(✿ﾟ▽ﾟ)ノ</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF"><span class="nav-number">1.</span> <span class="nav-text">排序模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="nav-number">1.1.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.</span> <span class="nav-text">快速排序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%B2%BE%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">高精度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#a-b%E9%AB%98%E7%B2%BE%E5%BA%A6"><span class="nav-number">2.1.</span> <span class="nav-text">a+b高精度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#a-b%E9%AB%98%E7%B2%BE%E5%BA%A6%EF%BC%8Ca-b%E9%AB%98%E7%B2%BE%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">a-b高精度，a*b高精度</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="silverbullets"
+      src="/images/image.jpg">
+  <p class="site-author-name" itemprop="name">silverbullets</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/image.jpg">
+      <meta itemprop="name" content="silverbullets">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小朱同学">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基础算法01 | 小朱同学">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基础算法01
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-01 15:17:52 / 修改时间：16:26:35" itemprop="dateCreated datePublished" datetime="2022-07-01T15:17:52+08:00">2022-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p> 这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
+<p>主要是：排序总结，高精度总结。</p>
+<span id="more"></span>
+
+<h3 id="排序模板"><a href="#排序模板" class="headerlink" title="排序模板"></a>排序模板</h3><h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
+<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，……的排序，至此排序完成。</p>
+<p>核心代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
+<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
+<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
+<p>核心代码大同小异，这里我就摆一种：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>排序就先摆两个吧，有空了再贴(画饼</p>
+<h3 id="高精度计算"><a href="#高精度计算" class="headerlink" title="高精度计算"></a>高精度计算</h3><h4 id="a-b高精度"><a href="#a-b高精度" class="headerlink" title="a+b高精度"></a>a+b高精度</h4><p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
+<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
+<p><strong>实现代码：</strong></p>
+<p>读入数组部分：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>计算部分：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>全部代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
+<h4 id="a-b高精度，a-b高精度"><a href="#a-b高精度，a-b高精度" class="headerlink" title="a-b高精度，a*b高精度"></a>a-b高精度，a*b高精度</h4><p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
+<p>实现代码：</p>
+<p>减法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>乘法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>silverbullets
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/" title="基础算法01">http://example.com/2022/07/01/基础算法01/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/" rel="prev" title="计算机体系结构复习">
+                  <i class="fa fa-chevron-left"></i> 计算机体系结构复习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/" rel="next" title="基础算法02">
+                  基础算法02 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">silverbullets</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.1/es5/tex-mml-chtml.js","integrity":"sha256-hlC2uSQYTmPsrzGZTEQEg9PZ1a/+SV6VBCTclohf2og="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.2.0/quicklink.umd.js" integrity="sha256-4kQf9z5ntdQrzsBC3YSHnEz02Z9C1UeW/E9OgnvlzSY=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"http://example.com/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
