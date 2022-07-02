@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java入门基础</title>
+    <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
+<span id="more"></span>
+
+<h4 id="创建新的程序"><a href="#创建新的程序" class="headerlink" title="创建新的程序"></a>创建新的程序</h4><p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/Java%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4.png"></p>
+<p>如上图，创建一个JAVA程序的步骤依次向下创建，注意一个工程可以包含多个模块，一个模块可以包含多个包，一个包可以包含多个类。</p>
+<h4 id="字面量-数据格式"><a href="#字面量-数据格式" class="headerlink" title="字面量(数据格式)"></a>字面量(数据格式)</h4><p>字符：用单引号括起来</p>
+<p>字符串：用双引号括起来</p>
+<p>空值：null</p>
+<p>特殊字符：\n:换行符，\t:缩进符</p>
+<h4 id="主要结构"><a href="#主要结构" class="headerlink" title="主要结构"></a>主要结构</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XXXXXX</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Java</tag>
+        <tag>语法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>基础算法02</title>
     <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
     <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
@@ -130,26 +150,6 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
-<span id="more"></span>
-
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>markdown基本语法使用</title>
     <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
     <content><![CDATA[<p> 这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
@@ -232,8 +232,28 @@
         <category>博客</category>
       </categories>
       <tags>
-        <tag>markdown</tag>
         <tag>语法</tag>
+        <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
 </search>
