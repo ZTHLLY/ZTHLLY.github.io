@@ -43,6 +43,21 @@
 <p>可以跳出并立即结束所在方法的执行</p>
 <h4 id="生成随机字符"><a href="#生成随机字符" class="headerlink" title="生成随机字符"></a>生成随机字符</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">char ch=(char) (ra.nextInt(26)+65);//生成随机大写字母</span><br><span class="line">char ch2=(char) (ra.nextInt(26)+97);//生成随机小写字母</span><br></pre></td></tr></table></figure>
 
+<h4 id="String类常用api"><a href="#String类常用api" class="headerlink" title="String类常用api"></a>String类常用api</h4><p><strong>判断相等</strong>：在java中字符串内容比较不能使用”==”，因为java字符串表示的是地址。。</p>
+<p>如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">string name=<span class="string">&quot;zrm&quot;</span>;</span><br><span class="line">string password=<span class="string">&quot;123456&quot;</span>;</span><br><span class="line">string in_name,in_password;</span><br><span class="line">cin&gt;&gt;in_name&gt;&gt;in_password;</span><br><span class="line"><span class="keyword">if</span>(in_name==name&amp;&amp;in_password==password) cout&lt;&lt;<span class="string">&quot;正确&quot;</span>;</span><br><span class="line"><span class="keyword">else</span> cout&lt;&lt;<span class="string">&quot;错误&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这一段C++代码是可以执行的，但是放在java中即使输入相同的名字密码都无法输出“正确”，因为定义的正确字符串存于常量区，而输入的字符串在堆内存中，两者的地址不一样，比较的结果是不相等。</p>
+<p>因此需要用到一个判断内容相等的api：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String name=<span class="string">&quot;aaa&quot;</span>;</span><br><span class="line">String password=<span class="string">&quot;123456&quot;</span>；</span><br><span class="line">Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in)</span><br><span class="line"><span class="comment">//定义接受输入内容的对象....</span></span><br><span class="line">name.equal(in_name)<span class="comment">//判断name字符串和in_name字符串内容是否相等，包括大小写检验</span></span><br><span class="line">password.equalIgnoreCase(in_password)<span class="comment">//判断前后是否相等，忽略大小写</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>对字符串的操作</strong>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str=<span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">str.length();<span class="comment">//求字符串长度</span></span><br><span class="line">str.charAt(<span class="type">int</span> num);<span class="comment">//求字符串特定位置字符</span></span><br><span class="line">str.toCharArray();<span class="comment">//把字符串转成字符数组</span></span><br><span class="line">str.substring(<span class="type">int</span> first,<span class="type">int</span> last);<span class="comment">//截取，包前不包后</span></span><br><span class="line">str.substring(<span class="type">int</span> first);<span class="comment">//截取，从当前索引一直截取到末尾</span></span><br><span class="line">str.replace(String before,String <span class="keyword">new</span>);<span class="comment">//替换，把前一个内容全部替换成后一个内容</span></span><br><span class="line">str.contain(String s);<span class="comment">//判断是否包含，是返回true,否则返回false</span></span><br><span class="line">str.startsWith(String str);<span class="comment">//判断是否以此字符串开始</span></span><br><span class="line">String str2=<span class="string">&quot;aaa,bbb,ccc&quot;</span>;</span><br><span class="line">str.split(<span class="string">&quot;,&quot;</span>);<span class="comment">//按照&quot;,&quot;分开，返回字符串数组，需要有一个字符串数组对象接收返回值</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="生成验证码第二种表达方式"><a href="#生成验证码第二种表达方式" class="headerlink" title="生成验证码第二种表达方式"></a>生成验证码第二种表达方式</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">special_number</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        String str=<span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&quot;</span>;</span><br><span class="line">        Random ra=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        String res=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> num=ra.nextInt(str.length());</span><br><span class="line">            <span class="type">char</span> c=str.charAt(num);</span><br><span class="line">            res+=c;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ArrayList类"><a href="#ArrayList类" class="headerlink" title="ArrayList类"></a>ArrayList类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ArrayList&lt;String&gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();<span class="comment">//尖括号内约束数据类型</span></span><br><span class="line">list.add();<span class="comment">//直接添加</span></span><br><span class="line">list.add(<span class="type">int</span> index,type data);<span class="comment">//在指定位置插入元素</span></span><br><span class="line">list.get(<span class="type">int</span> index);<span class="comment">//获得指定位置元素</span></span><br><span class="line">list.size();<span class="comment">//获得元素个数</span></span><br><span class="line">list.remove(<span class="type">int</span> index);<span class="comment">//删除索引位置元素，返回被删除的元素值</span></span><br><span class="line">list.remove(Object o);<span class="comment">//删除容器内元素的值，如有多个相同值则删除第一个</span></span><br><span class="line">list.set(<span class="type">int</span> index,E element);<span class="comment">//修改索引位置的元素为后面的元素</span></span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <tags>
         <tag>Java</tag>
@@ -192,6 +207,61 @@
       </tags>
   </entry>
   <entry>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+<span id="more"></span>
+
+<ul>
+<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
+<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
+</li>
+<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
+</ul>
+<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
+<ol>
+<li><p>$$|2*A|=2^n*x$$</p>
+</li>
+<li><p>$$|-A|=(-1)^n*x$$</p>
+</li>
+<li><p>$$|A^2|=x^2$$</p>
+</li>
+<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
+<p>$$A*C\tau=|A|*I$$</p>
+<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$$\Lambda=X^-1*A*X$$ </p>
+<p>$$A=X^-1*\Lambda*X$$ </p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>线性代数</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>markdown基本语法使用</title>
     <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
     <content><![CDATA[<p> 这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
@@ -276,61 +346,6 @@
       <tags>
         <tag>语法</tag>
         <tag>markdown</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>线代预习一些知识</title>
-    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
-<span id="more"></span>
-
-<ul>
-<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
-</li>
-<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
-</li>
-<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
-<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
-</li>
-<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
-</li>
-<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
-</ul>
-<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
-<ol>
-<li><p>$$|2*A|=2^n*x$$</p>
-</li>
-<li><p>$$|-A|=(-1)^n*x$$</p>
-</li>
-<li><p>$$|A^2|=x^2$$</p>
-</li>
-<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
-</li>
-</ol>
-<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
-<p>矩阵可逆可推出列空间是$R^3$</p>
-<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
-<p>列空间的维数是他的秩</p>
-<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
-<p>$$A*C\tau=|A|*I$$</p>
-<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
-<p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$$\Lambda=X^-1*A*X$$ </p>
-<p>$$A=X^-1*\Lambda*X$$ </p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>线性代数</tag>
       </tags>
   </entry>
   <entry>
