@@ -210,7 +210,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-08-02 11:35:15 / 修改时间：12:05:59" itemprop="dateCreated datePublished" datetime="2022-08-02T11:35:15+08:00">2022-08-02</time>
+      <time title="创建时间：2022-08-02 11:35:15 / 修改时间：12:45:46" itemprop="dateCreated datePublished" datetime="2022-08-02T11:35:15+08:00">2022-08-02</time>
     </span>
 
   
@@ -223,58 +223,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
-
-<h1 id="JAVA代码规范"><a href="#JAVA代码规范" class="headerlink" title="JAVA代码规范"></a>JAVA代码规范</h1><h2 id="普通规范"><a href="#普通规范" class="headerlink" title="普通规范"></a>普通规范</h2><h4 id="包的命名方式：公司域名倒置-子公司-产品名称-功能名称"><a href="#包的命名方式：公司域名倒置-子公司-产品名称-功能名称" class="headerlink" title="包的命名方式：公司域名倒置+子公司/产品名称+功能名称"></a>包的命名方式：公司域名倒置+子公司/产品名称+功能名称</h4><p>如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net.hedao.music</span><br><span class="line">net.hedao.uem.internal</span><br><span class="line">net.hedao.uem.http</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="utils和tools命名规范"><a href="#utils和tools命名规范" class="headerlink" title="utils和tools命名规范"></a>utils和tools命名规范</h4><p>utils:</p>
-<ul>
-<li>定义：通用的，与业务无关，可供其他项目使用</li>
-<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
-<li>例子：字符串类，文件工具类</li>
-</ul>
-<p>tools:</p>
-<ul>
-<li>定义：在当前项目通用；仅能在当前项目使用</li>
-<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
-<li>用户校验类，支付工具类</li>
-</ul>
-<h4 id="类名规范"><a href="#类名规范" class="headerlink" title="类名规范"></a>类名规范</h4><p>类名首字母大写，若多个单词拼合则采取驼峰式命名</p>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestDemo</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h4><p>成员属性，变量名使用有含义的单词或词组构成；</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">long</span> abc=<span class="number">0</span>;<span class="comment">//禁止</span></span><br></pre></td></tr></table></figure>
-
-<p>常量必须由大写字母和下划线分割单词的方式组成</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_NUMBER</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br></pre></td></tr></table></figure>
-
-<p>静态变量:采用小写s开头，代表static，s后首字母大写，遵循驼峰原则</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> sCurrentTime;</span><br></pre></td></tr></table></figure>
-
-<p>实体类，java bean类中普通成员变量采用小写字母开头，单词之间采用驼峰式命名规范。</p>
-<p>注：此类用于存储数据，只有setter,getter方法，不作其他业务处理</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">			<span class="keyword">private</span> String userName;</span><br><span class="line">			<span class="keyword">private</span> String userAccount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法的命名规范"><a href="#方法的命名规范" class="headerlink" title="方法的命名规范"></a>方法的命名规范</h4><p>方法命名采用小写字母开头，字母之间采用驼峰式命名规范，一般不超过20个字符，长度很长时可以使用简写</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">calculateScreenSize</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUInfo</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">size</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，错误</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUserInfomation</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="注释规范"><a href="#注释规范" class="headerlink" title="注释规范"></a>注释规范</h2><p>注释：</p>
-<ul>
-<li>屏蔽不需要执行的代码</li>
-<li>对代码进行解释说明</li>
-</ul>
-<h4 id="类的注释"><a href="#类的注释" class="headerlink" title="类的注释"></a>类的注释</h4><p>类的注释采用多行注释方式，在包名和类定义中间，通常记录作者信息，版本号，类的功能描述信息等。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment">* 文件工具类</span></span><br><span class="line"><span class="comment">* 项目名称:JAVA编码规范测试用例</span></span><br><span class="line"><span class="comment">* 包:net.herdao.common.utils   </span></span><br><span class="line"><span class="comment">* 类名称:FileUtils.java</span></span><br><span class="line"><span class="comment">* 类描述:本类是一个文件操作工具类，包括了文件的几个基本操作方法，创建文件、删除文件、文件重命名</span></span><br><span class="line"><span class="comment">* 创建人:林鸿亮</span></span><br><span class="line"><span class="comment">* 创建时间:2021/10/21 11:46</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法的注释"><a href="#方法的注释" class="headerlink" title="方法的注释"></a>方法的注释</h4><p>多行注释，主要内容记录该方法的<strong>作用</strong>，<strong>参数及参数说明</strong>，<strong>返回值</strong>、<strong>返回类容</strong>和<strong>异常信息说明</strong>，<strong>修改记录</strong>，<strong>是否过期</strong>，及<strong>修改日期</strong>等等。</p>
-<p>我们规定所有public类型的方法必须加上注释<strong>对方法和参数</strong>加以说明，private方法中如果处理逻辑相对较多，相对复杂的也应加上注释。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在指定目录创建一个新文件</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> dirPath  文件目录路径</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> fileName 文件名称* <span class="doctag">@return</span>  返回创建的新文件</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">createeNewFile</span><span class="params">(String dirPath, String fileName)</span> &#123;<span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dirPath,fileName);<span class="keyword">return</span> file;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
+          <p> 软件开发代码规范:</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
