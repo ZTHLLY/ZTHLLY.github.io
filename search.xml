@@ -384,26 +384,6 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
-<span id="more"></span>
-
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>markdown基本语法使用</title>
     <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
     <content><![CDATA[<p> 这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
@@ -575,6 +555,124 @@
 <li>开发设计方案编写</li>
 <li>开发设计方案评审</li>
 </ul>
+<h5 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h5><ul>
+<li>测试用户评审</li>
+</ul>
+<h4 id="开发及SIT"><a href="#开发及SIT" class="headerlink" title="开发及SIT"></a>开发及SIT</h4><h5 id="服务器部署"><a href="#服务器部署" class="headerlink" title="服务器部署"></a>服务器部署</h5><ul>
+<li>服务器部署——在客户需求方案阶段输出服务器配置方案给到客户</li>
+</ul>
+<h5 id="开发编码"><a href="#开发编码" class="headerlink" title="开发编码"></a>开发编码</h5><ul>
+<li>开发编码</li>
+<li>开发自测</li>
+<li>开发组长代码走查</li>
+</ul>
+<h5 id="系统测试"><a href="#系统测试" class="headerlink" title="系统测试"></a>系统测试</h5><ul>
+<li>集成测试—-确保业务闭环</li>
+<li>测试分析总结—–客户关键业务场景测试结果分析，以及后续上线沟通方案</li>
+<li>SIT评审—-通过后签署《SIT测试报告》，签字人包括测试，项目经理，中心领导，公司领导，评审通过后再进行UAT</li>
+</ul>
+<h4 id="UAT及上线"><a href="#UAT及上线" class="headerlink" title="UAT及上线"></a>UAT及上线</h4><h5 id="系统UAT测试"><a href="#系统UAT测试" class="headerlink" title="系统UAT测试"></a>系统UAT测试</h5><ul>
+<li>实施验收测试—-客户UAT测试之前，项目经理需先完成实施验收测试</li>
+<li>系统UAT测试—-《UAT测试验收报告》：客户UAT测试通过后，签字至客户业务线第一负责人及IT负责人</li>
+</ul>
+<p><strong>UAT测试前的准备事项</strong></p>
+<ol>
+<li>项目经理对交付功能进行初步验收</li>
+<li>测试用例的准备</li>
+<li>数据初始化</li>
+<li>UAT测试计划</li>
+<li>UAT测试前的培训指导</li>
+<li>测试的账号</li>
+</ol>
+<p><strong>UAT测试过程中的注意事项</strong></p>
+<ol>
+<li>选择合适的UAT测试开展方式</li>
+<li>创建《测试问题跟踪表》登记问题</li>
+<li>推动测试进度，必要时辅助客户</li>
+<li>问题处理—-问题分类处理，与业务沟通</li>
+<li>签署测试报告</li>
+</ol>
+<h5 id="上线培训"><a href="#上线培训" class="headerlink" title="上线培训"></a>上线培训</h5><ul>
+<li>上线培训—–培训ppt通过审核，项目组内部可试讲</li>
+</ul>
+<h5 id="上线准备"><a href="#上线准备" class="headerlink" title="上线准备"></a>上线准备</h5><ul>
+<li>上线规划方案评审—-甲乙方共同制定系统上线策略及切换计划，明确需要完成的事项—-各领域规定一名核心用户为内部专家</li>
+<li>上线启动会—-《未签合同提前上线申请单》：PPR项目上线时未签订合同，需签提前上线申请单</li>
+<li>上线数据准备—-输出业务初始化数据（<strong>确认版</strong>）</li>
+</ul>
+<p><strong>上线规划方案</strong></p>
+<ol>
+<li>围绕上线目标</li>
+<li>明确上线组织范围，功能范围，时间计划</li>
+<li>包含最终用户方案，体现准出法则：系统的测试结果和培训情况</li>
+<li>包含系统初始化方案，数据迁移方案，同时有对上线切换策略明确规定</li>
+<li>风险应对策略，形成风险登记册</li>
+<li>有线上保障机制—–甲乙双方上线资源保障及分工—–上线问题跟踪记录表</li>
+</ol>
+<h5 id="系统试点上线"><a href="#系统试点上线" class="headerlink" title="系统试点上线"></a>系统试点上线</h5><ul>
+<li>准备正式环境</li>
+<li>系统初始化</li>
+<li>上线通知发布</li>
+</ul>
+<h4 id="实施推广"><a href="#实施推广" class="headerlink" title="实施推广"></a>实施推广</h4><h5 id="系统上线试运行"><a href="#系统上线试运行" class="headerlink" title="系统上线试运行"></a>系统上线试运行</h5><ul>
+<li>试运行—-上线问题跟踪处理，上线使用情况分析—–上线后两周内项目经理每日配合甲方跟进处理系统运行问题并发出系统运行日报</li>
+</ul>
+<h5 id="推广方案"><a href="#推广方案" class="headerlink" title="推广方案"></a>推广方案</h5><ul>
+<li>推广方案—–共同制定计划，组织分工，包含培训计划，数据准备</li>
+<li>运维接入—-转接运维</li>
+</ul>
+<h5 id="上线切换"><a href="#上线切换" class="headerlink" title="上线切换"></a>上线切换</h5><ul>
+<li>推广动员大会</li>
+<li>最终用户培训</li>
+<li>数据准备—–初始化数据保密</li>
+<li>上线初始化——和测试环境一致</li>
+<li>上线切换</li>
+</ul>
+<h4 id="项目验收"><a href="#项目验收" class="headerlink" title="项目验收"></a>项目验收</h4><h5 id="项目验收-1"><a href="#项目验收-1" class="headerlink" title="项目验收"></a>项目验收</h5><ul>
+<li>内部验收评审会—-检查项目验收标准—-项目平稳运行3个月可以开始验收</li>
+<li>验收总结会议—-项目验收报告需签字至甲方业务管线总及IT负责人</li>
+</ul>
+<p><strong>验收总结汇报PPT</strong></p>
+<ol>
+<li>体现系统给客户带来的价值</li>
+<li>整体回顾中包含项目背景，项目目标和项目里程碑的完成节点</li>
+<li>展示包含核心场景的兑现效果</li>
+<li>包含困难及应对，团队表彰和项目总结</li>
+</ol>
+<h5 id="运维交接"><a href="#运维交接" class="headerlink" title="运维交接"></a>运维交接</h5><ul>
+<li>实施转运维交接—–明确遗留问题清单及计划</li>
+</ul>
+<h5 id="项目复盘总结"><a href="#项目复盘总结" class="headerlink" title="项目复盘总结"></a>项目复盘总结</h5><ul>
+<li>项目复盘总结</li>
+<li>产品运营</li>
+</ul>
+<p><strong>项目复盘ppt</strong></p>
+<ol>
+<li>围绕支付策略，应用效果，经验教训和成果提炼</li>
+<li>包含与客户达成共识的项目目标和整体解决方案，内部达成共识的项目实施路径图</li>
+<li>对于核心场景截图说明</li>
+<li>经验教训总结，包含<strong>进度</strong>，<strong>成本</strong>，<strong>风险</strong>，<strong>质量</strong>和<strong>客户满意度</strong>五个方面</li>
+</ol>
 ]]></content>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
+      </tags>
   </entry>
 </search>
