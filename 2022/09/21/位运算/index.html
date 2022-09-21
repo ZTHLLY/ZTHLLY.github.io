@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/SILVERBULLETS.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/image.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="位运算基础概念以及题目：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="位运算">
+<meta property="og:url" content="http://example.com/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/index.html">
+<meta property="og:site_name" content="si1v3r的狗窝">
+<meta property="og:description" content="位运算基础概念以及题目：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-21T11:44:30.000Z">
+<meta property="article:modified_time" content="2022-09-21T13:36:31.511Z">
+<meta property="article:author" content="silverbullets">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/","path":"2022/09/21/位运算/","title":"位运算"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>位运算 | si1v3r的狗窝</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+ <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/clicklove.js"></script> 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">si1v3r的狗窝</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎ヽ(✿ﾟ▽ﾟ)ノ</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8D%E4%B8%8E"><span class="nav-number">1.1.</span> <span class="nav-text">位与</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8D%E6%88%96"><span class="nav-number">1.2.</span> <span class="nav-text">位或</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%88%96"><span class="nav-number">1.3.</span> <span class="nav-text">异或</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A6%E7%A7%BB"><span class="nav-number">1.4.</span> <span class="nav-text">左移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%B3%E7%A7%BB"><span class="nav-number">1.5.</span> <span class="nav-text">右移</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E7%9A%84%E5%B9%82"><span class="nav-number">2.1.</span> <span class="nav-text">2的幂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%E7%9A%84%E5%B9%82"><span class="nav-number">2.2.</span> <span class="nav-text">4的幂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8D1%E7%9A%84%E4%B8%AA%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">位1的个数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%95%B0%E5%AD%97"><span class="nav-number">2.4.</span> <span class="nav-text">交换数字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97"><span class="nav-number">2.5.</span> <span class="nav-text">只出现一次的数字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB"><span class="nav-number">2.6.</span> <span class="nav-text">汉明距离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E6%9B%BF%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0"><span class="nav-number">2.7.</span> <span class="nav-text">交替位二进制数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%BE%E5%87%BA%E6%89%80%E6%9C%89%E5%AD%90%E9%9B%86%E7%9A%84%E5%BC%82%E6%88%96%E6%80%BB%E5%92%8C%E5%86%8D%E6%B1%82%E5%92%8C"><span class="nav-number">2.8.</span> <span class="nav-text">找出所有子集的异或总和再求和</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="silverbullets"
+      src="/images/image.jpg">
+  <p class="site-author-name" itemprop="name">silverbullets</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/image.jpg">
+      <meta itemprop="name" content="silverbullets">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="si1v3r的狗窝">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="位运算 | si1v3r的狗窝">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          位运算
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-09-21 19:44:30 / 修改时间：21:36:31" itemprop="dateCreated datePublished" datetime="2022-09-21T19:44:30+08:00">2022-09-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p> 位运算基础概念以及题目：</p>
+<span id="more"></span>
+
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="位与"><a href="#位与" class="headerlink" title="位与"></a>位与</h4><p>符号：&amp;</p>
+<p>12&amp;10—&gt;1100&amp;1010（转换为二进制）</p>
+<p>从低到高按位运算，当两个数字都为1，结果才为1，否则为0，因此结果为1000，也就是8</p>
+<h4 id="位或"><a href="#位或" class="headerlink" title="位或"></a>位或</h4><p>符号：|</p>
+<p>12|10—–&gt;1100|1010</p>
+<p>从低到高按位运算，当两个数字都为0，结果才为0，否则为1，因此结果为1110，也就是14</p>
+<p>小概念：相同的数异或为0，任何数与0异或为它本身，满足交换律和结合律</p>
+<h4 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h4><p>符号：^</p>
+<p>12^10—–&gt;1100^1010</p>
+<p>从低到高按位运算，当两个数字都不同，结果才为1，否则为0，因此结果为0110，也就是6</p>
+<h4 id="左移"><a href="#左移" class="headerlink" title="左移"></a>左移</h4><p>符号：&lt;&lt;</p>
+<p>12&lt;&lt;3—–&gt;1100&lt;&lt;3</p>
+<p>想左移三位，末尾补零，因此结果为1100000.另外，左移一位可以看作该数字乘二。</p>
+<h4 id="右移"><a href="#右移" class="headerlink" title="右移"></a>右移</h4><p>符号: &gt;&gt;</p>
+<p>12&gt;&gt;3—–&gt;1100&gt;&gt;3=1</p>
+<p>右移三位，右移一位可看作除二向下取整</p>
+<h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><h4 id="2的幂"><a href="#2的幂" class="headerlink" title="2的幂"></a>2的幂</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">isPowerOfTwo</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n&gt;<span class="number">0</span>&amp;&amp;(n&amp;(n<span class="number">-1</span>))==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解析：当一个数为2的幂时，他的表达方式一定为100000….，这个数n表达方式固定，n-1则确定为0111111….。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
+<h4 id="4的幂"><a href="#4的幂" class="headerlink" title="4的幂"></a>4的幂</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
+<p>解析：分析可知：$2^{2x}mod 3=1$ 且 $2^{2x+1}mod 3=2$ 因此可以得出结论$4^xmod3=1$ 。因此，当一个数n是2的幂，同时模3为1，则他一定是4的幂</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isPowerOfFour(int n)&#123;</span><br><span class="line">    return (n&gt;0)&amp;&amp;(n&amp;(n-1))==0&amp;&amp;n % 3==1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="位1的个数"><a href="#位1的个数" class="headerlink" title="位1的个数"></a>位1的个数</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
+<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为….1000时我们把它减去1，则变为形式…..0111,当我们把这两个数进行位与运算，得到的结果为…..0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingWeight</span><span class="params">(<span class="type">uint32_t</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="type">int</span> ans=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        n=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="交换数字"><a href="#交换数字" class="headerlink" title="交换数字"></a>交换数字</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
+<p>解法：</p>
+<ul>
+<li>a=a^b</li>
+<li>b=a^b=a^b^b=a^0=a</li>
+<li>a=a^b=a^a^b=b</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Note: The returned array must be malloced, assume caller calls free().</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">swapNumbers</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span> aSize, <span class="type">int</span>* returnSize)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">1</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    *returnSize=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="只出现一次的数字"><a href="#只出现一次的数字" class="headerlink" title="只出现一次的数字"></a>只出现一次的数字</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">singleNumber</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;numsSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum=sum^nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解法：很巧妙的解法，根据异或的性质，我们发现当我们从头开始循环异或，出现两次的数必然可以结合异或结果为0，最后只剩下异或结果为本身的数，这个数就是出现一次的数。(草，真的牛逼)</p>
+<h4 id="汉明距离"><a href="#汉明距离" class="headerlink" title="汉明距离"></a>汉明距离</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
+<p>解析：把两个数字异或，我们发现结果为1的位上就是两个数字对应二进制位不同的位置，因此我们把异或后的结果进行1消去，同时统计1的个数，答案就是汉明距离。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    <span class="type">int</span> n=x^y;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        n=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="交替位二进制数"><a href="#交替位二进制数" class="headerlink" title="交替位二进制数"></a>交替位二进制数</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
+<p>解析：题目意思可以视为判断数字n的二进制表达形式是否为01连续出现，我们判断当00和11出现时对应的十进制数字为0和3，因此我们将数字n与3位与，如果符合题意，得到的结果只能是10或者01，即为1，2，如果出现0，3，则说明n中出现了00，11的组合，则返回false。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">hasAlternatingBits</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n&amp;<span class="number">3</span>)==<span class="number">0</span>||(n&amp;<span class="number">3</span>)==<span class="number">3</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="找出所有子集的异或总和再求和"><a href="#找出所有子集的异或总和再求和" class="headerlink" title="找出所有子集的异或总和再求和"></a>找出所有子集的异或总和再求和</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
+<p>解析：这个题我搞了半天（md我怎么这么菜），首先是我们要明白一个数组的子集个数是2的元素个数的次方，因此第一个循环是为了找到所有的子集，当我们找到所有子集之后，我们要对每一个子集进行分析，因为集合中的元素在子集中只会有两种状态，0（未出现）和1（出现），因此，<strong>每个子集都可以表示为一个二进制数字</strong>，比如数组[2,3,4]的子集之一[2,3]，用相对应的二进制数字来表示就是110。这样表示完每一个子集后，我们对每一个二进制数进行分析，当我们在二进制数中寻找到1时，说明对应的数组nums[i]在子集中存在，就可以进行异或操作了，而寻找二进制数中的1可以用一个表达式来解决:**i&amp;(1&lt;&lt;j)**。意思是寻找二进制数i在第j位是否为1。当第二次循环遍历二进制数位数之后，我们就可以确定存在的元素，就可以进行必要的异或和相加的操作了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">subsetXORSum</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> i,j,ans;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(<span class="number">1</span>&lt;&lt;numsSize);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;numsSize;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&amp;(<span class="number">1</span>&lt;&lt;j)) ans^=nums[j];</span><br><span class="line">        &#125;</span><br><span class="line">        sum+=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>silverbullets
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/" title="位运算">http://example.com/2022/09/21/位运算/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" rel="prev" title="git的基本用法">
+                  <i class="fa fa-chevron-left"></i> git的基本用法
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">silverbullets</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.1/es5/tex-mml-chtml.js","integrity":"sha256-hlC2uSQYTmPsrzGZTEQEg9PZ1a/+SV6VBCTclohf2og="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.2.0/quicklink.umd.js" integrity="sha256-4kQf9z5ntdQrzsBC3YSHnEz02Z9C1UeW/E9OgnvlzSY=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"http://example.com/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
