@@ -2815,3 +2815,10 @@ mjx-container[display='true'] + br {
     padding: 10px 12px;
   }
 }
+body {
+  background: url("/images/background.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: 50% 50%;
+}
