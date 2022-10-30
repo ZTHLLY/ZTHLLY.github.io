@@ -39,6 +39,57 @@
       </tags>
   </entry>
   <entry>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p> git命令行的基本用法：</p>
+<span id="more"></span>
+
+<h3 id="Git-commit"><a href="#Git-commit" class="headerlink" title="Git commit"></a>Git commit</h3><p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg"></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg"></p>
+<h3 id="Git-branch"><a href="#Git-branch" class="headerlink" title="Git branch"></a>Git branch</h3><p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg"></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg"></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg"></p>
+<h3 id="Git-merge"><a href="#Git-merge" class="headerlink" title="Git merge"></a>Git merge</h3><p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg"></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg"></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg"></p>
+<h3 id="Git-rebase"><a href="#Git-rebase" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg"></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg"></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg"></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg"></p>
+<h3 id="Git-branch-f-XXX-HEAD-n"><a href="#Git-branch-f-XXX-HEAD-n" class="headerlink" title="Git branch -f XXX HEAD~n"></a>Git branch -f XXX HEAD~n</h3><p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg"></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg"></p>
+<h3 id="Git-cherry-pick"><a href="#Git-cherry-pick" class="headerlink" title="Git cherry-pick"></a>Git cherry-pick</h3><p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg"></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg"></p>
+<h3 id="Git-rebase-1"><a href="#Git-rebase-1" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg"></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg"></p>
+]]></content>
+      <categories>
+        <category>乱七八糟的东东</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java入门基础</title>
     <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
@@ -127,57 +178,6 @@
       </tags>
   </entry>
   <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p> git命令行的基本用法：</p>
-<span id="more"></span>
-
-<h3 id="Git-commit"><a href="#Git-commit" class="headerlink" title="Git commit"></a>Git commit</h3><p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg"></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg"></p>
-<h3 id="Git-branch"><a href="#Git-branch" class="headerlink" title="Git branch"></a>Git branch</h3><p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg"></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg"></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg"></p>
-<h3 id="Git-merge"><a href="#Git-merge" class="headerlink" title="Git merge"></a>Git merge</h3><p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg"></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg"></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg"></p>
-<h3 id="Git-rebase"><a href="#Git-rebase" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg"></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg"></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg"></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg"></p>
-<h3 id="Git-branch-f-XXX-HEAD-n"><a href="#Git-branch-f-XXX-HEAD-n" class="headerlink" title="Git branch -f XXX HEAD~n"></a>Git branch -f XXX HEAD~n</h3><p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg"></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg"></p>
-<h3 id="Git-cherry-pick"><a href="#Git-cherry-pick" class="headerlink" title="Git cherry-pick"></a>Git cherry-pick</h3><p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg"></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg"></p>
-<h3 id="Git-rebase-1"><a href="#Git-rebase-1" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg"></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg"></p>
-]]></content>
-      <categories>
-        <category>乱七八糟的东东</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>pwn:从一窍不通到入门的门前</title>
     <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
     <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
@@ -235,19 +235,6 @@
         <tag>基础</tag>
         <tag>pwn</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>函数调用栈</title>
-    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
-    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
-<span id="more"></span>
-
-<h4 id="函数开始"><a href="#函数开始" class="headerlink" title="函数开始"></a>函数开始</h4><p>如图：</p>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg"></p>
-<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束"><a href="#函数结束" class="headerlink" title="函数结束"></a>函数结束</h4><p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg"></p>
-<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
-]]></content>
   </entry>
   <entry>
     <title>“代码规范”</title>
@@ -496,6 +483,19 @@
       </tags>
   </entry>
   <entry>
+    <title>函数调用栈</title>
+    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
+    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
+<span id="more"></span>
+
+<h4 id="函数开始"><a href="#函数开始" class="headerlink" title="函数开始"></a>函数开始</h4><p>如图：</p>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg"></p>
+<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
+<h4 id="函数结束"><a href="#函数结束" class="headerlink" title="函数结束"></a>函数结束</h4><p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg"></p>
+<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>线代预习一些知识</title>
     <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
@@ -551,17 +551,24 @@
       </tags>
   </entry>
   <entry>
-    <title>大牛的博客(学习用)</title>
-    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
 <span id="more"></span>
 
-<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
-<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
-<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
-<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
-<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
 ]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
+      </tags>
   </entry>
   <entry>
     <title>markdown基本语法使用</title>
@@ -649,6 +656,19 @@
         <tag>语法</tag>
         <tag>markdown</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>大牛的博客(学习用)</title>
+    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
+    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
+<span id="more"></span>
+
+<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
+<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
+<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
+<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+]]></content>
   </entry>
   <entry>
     <title>项目管理实施流程</title>
@@ -840,26 +860,6 @@
       <tags>
         <tag>项目管理</tag>
         <tag>项目流程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
-<span id="more"></span>
-
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
       </tags>
   </entry>
 </search>
