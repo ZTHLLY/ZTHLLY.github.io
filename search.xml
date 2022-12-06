@@ -36,6 +36,63 @@
       </tags>
   </entry>
   <entry>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p>git命令行的基本用法：</p>
+<span id="more"></span>
+<h3 id="Git-commit">Git commit</h3>
+<p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
+<h3 id="Git-branch">Git branch</h3>
+<p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
+<h3 id="Git-merge">Git merge</h3>
+<p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
+<h3 id="Git-rebase">Git rebase</h3>
+<p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
+<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
+<p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
+<h3 id="Git-cherry-pick">Git cherry-pick</h3>
+<p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
+<h3 id="Git-rebase-2">Git rebase</h3>
+<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>乱七八糟的东东</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java入门基础</title>
     <url>/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p>Java初学，包含使用IDEA创建文件，基本程序等等</p>
@@ -134,6 +191,11 @@
 <p>抽象类得到了抽象方法，却失去了创建对象的能力（不能被实例化）</p>
 </li>
 </ul>
+<h3 id="try…catch-抛出异常">try…catch 抛出异常</h3>
+<p>编程时可以用try…来处理异常，</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/12/06/67d15528807e588c.png" alt=""></p>
+<p>最后一段可以使用finally</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    setAge(age);</span><br><span class="line">    openFile(filename);</span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">catch</span> <span class="title function_">age</span><span class="params">(IllegalArgumentException e)</span> &#123; </span><br><span class="line">    System.out.println(“Unchecked exception!<span class="string">&quot;);</span></span><br><span class="line"><span class="string">    System.err.println(e);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">    catch age(IOException e) &#123; </span></span><br><span class="line"><span class="string">    System.out.println(“Checked exception!&quot;</span>);</span><br><span class="line">    System.err.println(e);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">finally</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Print this anyways.&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>编程语言</category>
@@ -219,63 +281,6 @@
       <tags>
         <tag>密码学</tag>
         <tag>基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p>git命令行的基本用法：</p>
-<span id="more"></span>
-<h3 id="Git-commit">Git commit</h3>
-<p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
-<h3 id="Git-branch">Git branch</h3>
-<p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
-<h3 id="Git-merge">Git merge</h3>
-<p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
-<h3 id="Git-rebase">Git rebase</h3>
-<p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
-<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
-<p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
-<h3 id="Git-cherry-pick">Git cherry-pick</h3>
-<p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
-<h3 id="Git-rebase-2">Git rebase</h3>
-<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
-]]></content>
-      <categories>
-        <category>乱七八糟的东东</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -767,6 +772,33 @@
 <h2 id="UML图">UML图</h2>
 <p>呃就是一个类的图形化表示，举个例子吧~</p>
 <p><img src="https://s3.uuu.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
+<h2 id="递归">递归</h2>
+<ul>
+<li>Mistakes like omitting the base case or writing the recursion step incorrectly can cause infinite recursion. <strong>小心无限递归爆栈</strong></li>
+<li>Recursive programs may result in exponential method calls <strong>递归可能导致指数级别调用</strong></li>
+<li>Each recursive method can be re-written using loops<strong>所有递归可重写为循环</strong></li>
+<li>Use recursive methods only if the problem is naturally recursive (i.e., to improve understanding) or there are performance benefits, or you need to impress in a job interview<strong>在必要的时候再用递归</strong></li>
+</ul>
+<h2 id="Concurrency-in-Java-（并发）">Concurrency in Java （并发）</h2>
+<p>Complex applications may use multithreading to speed up performance or user experience  <strong>复杂的程序会使用多线程来加速性能或用户体验</strong></p>
+<h3 id="Caveats-of-multithreading（多线程注意事项）">Caveats of multithreading（多线程注意事项）</h3>
+<ul>
+<li>Calling methods from multiple threads may have undesired and unexpected side effects (things may not happen in the expected order)   <strong>可能有副作用</strong></li>
+<li>Only primitive variables that are declared <strong>final</strong> can be shared across threads  <strong>只有声明final的变量可以跨线程共享</strong></li>
+<li>Using keyword <strong>synchronized</strong> will “lock” the method execution and force other threads to wait until the execution completes <strong>使用关键字同步将“锁定”方法的执行，并强制其他线程等待，直到执行完成</strong></li>
+<li>Thread can be in different states. After termination, thread can’t be started again (however, you can create a new thread). <strong>线程终止后不能再次启动，但是可以创建一个新的线程</strong></li>
+</ul>
+<p><img src="https://s3.uuu.ovh/imgs/2022/12/06/084e6b23e9a89d42.png" alt=""></p>
+<h2 id="Exception-handling-（异常处理）">Exception handling  （异常处理）</h2>
+<ul>
+<li>An <em>exception</em> is an event, which occurs during the execution of a program, that disrupts the normal flow of the program’s instructions</li>
+<li><strong>Exception handler</strong> is a block of code that can handle the exception</li>
+<li>Java allows to separate exception handling code from the normal code to improve the readability</li>
+<li>Exceptions are propagated across the call stack until exception handler is found so developer can choose at which level exceptions should be handled</li>
+<li>Each organisation will have its own house style on how to write and handle exceptions</li>
+</ul>
+<p>主要层次结构如下：</p>
+<p><img src="https://s3.uuu.ovh/imgs/2022/12/06/aab3b03140ebf50d.png" alt=""></p>
 ]]></content>
       <tags>
         <tag>Java</tag>
@@ -785,88 +817,6 @@
 <p><a href="https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner">https://github.com/tangzichengcc/The_Growth_Path_Of_A_CTFer_And_Pwner</a></p>
 <p><a href="http://blog.eonew.cn/">http://blog.eonew.cn/</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>大二上软件工程导论课程复习</title>
-    <url>/2022/12/06/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%AF%BC%E8%AE%BA%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>​      整理ppt,课件等等。</p>
-<h3 id="Waterfall-model-（瀑布模型）">Waterfall model （瀑布模型）</h3>
-<p>The waterfall model is a plan-driven process. When you encounter a problem at a certain stage, you solve the problem under the current stage.</p>
-<p>瀑布模型是一个由<strong>计划驱动</strong>的过程。当您在某个阶段遇到问题时，您可以在当前阶段下解决该问题。但要注意的是瀑布模型不能回到上一个阶段。</p>
-<h4 id="适用场景">适用场景</h4>
-<ul>
-<li>产品简单或总量小，可以明确找到每个阶段的所有潜在问题</li>
-<li>所有潜在问题可以在每个阶段进行预测。</li>
-<li>外部原因导致，比如多个公司共同开发且公司之间交流成本昂贵</li>
-</ul>
-<h3 id="Incremental-development-model-（增量开发模型）">Incremental development model （增量开发模型）</h3>
-<p>Specification, development, and validation activities are interleaved rather than separate, with rapid feedback across activities.</p>
-<p>规范、开发和验证活动是交错的，而不是分开的，跨活动具有快速的反馈。</p>
-<h4 id="优点">优点</h4>
-<ul>
-<li>适用于敏捷开发</li>
-<li>具备快速的反馈</li>
-<li>能更早的由客户使用并从中获得价值</li>
-<li>实现需求变更的成本降低了</li>
-</ul>
-<h4 id="缺点">缺点</h4>
-<ul>
-<li>整个流程不可视</li>
-<li>如果系统发展迅速，每个版本的文档没有成本效益</li>
-<li>系统结构会随着新的增量而退化</li>
-<li>不支持大型复杂，长寿命系统</li>
-</ul>
-<h3 id="Integration-and-Configuration-（集成和配置）">Integration and Configuration （集成和配置）</h3>
-<h4 id="经常被重用">经常被重用</h4>
-<ul>
-<li>特定环境下的应用程序</li>
-<li>组件或集成包开发对象的集合（python第三方库）</li>
-<li>web服务</li>
-</ul>
-<h4 id="优点-2">优点</h4>
-<ul>
-<li>降低成本，提高速度</li>
-<li>减少测试负荷，保证产品质量</li>
-</ul>
-<h4 id="缺点-2">缺点</h4>
-<ul>
-<li>可能有需求无法实现</li>
-<li>可能失去对系统演化控制，因为新版本不受控制</li>
-</ul>
-<h3 id="Project-management-（项目管理）">Project management  （项目管理）</h3>
-<h4 id="目标">目标</h4>
-<ul>
-<li>To deliver the software to the customer at the agreed time.     <strong>按时交货</strong></li>
-<li>To keep overall costs within budget     <strong>缩紧腰包</strong></li>
-<li>To deliver software that meets the customer’s expectations.   <strong>按质交货</strong></li>
-<li>To maintain a coherent and well-functioning development team.  <strong>找好队友</strong></li>
-</ul>
-<h4 id="Project-planning">Project planning</h4>
-<p>PMs are responsible for planning, estimating, and scheduling project development and assigning people to tasks. PMs supervise the work to ensure that it is carried out to the required standards.     <strong>工头监督</strong></p>
-<h4 id="Risk-management">Risk management</h4>
-<p>PMs have to assess the risks that may affect a project, monitor these risks, and take action when problems arise. <strong>工头风控</strong></p>
-<h4 id="People-management">People management</h4>
-<p>PMs are responsible for managing a team of people. They have to choose people for their team and establish ways of working that lead to effective team performance.   <strong>工头招人</strong></p>
-<h3 id="Requirements-（需求）">Requirements  （需求）</h3>
-<h4 id="Functional-requirements-（功能性需求）">Functional requirements （功能性需求）</h4>
-<p>These are statements of services the system should provide, how the system should react to particular inputs, and how the system should behave in particular situations.</p>
-<p>就是系统对于输入的应对</p>
-<h4 id="Non-functional-requirements-（非功能性需求）">Non-functional requirements （非功能性需求）</h4>
-<ul>
-<li>Non-functional requirements usually specific or constrain characteristics of the system as a whole. They may relate to emergent system properties such as reliability, response time, and memory use.   <strong>可靠性，效应时间，内存等等</strong></li>
-</ul>
-<h4 id="Requirements-engineering-process">Requirements engineering process</h4>
-<p>过程：</p>
-<ul>
-<li>Requirements elicitation  <strong>需求引出，发现需求</strong></li>
-<li>Requirements specification    <strong>将需求规范化为标准形式</strong></li>
-<li>Requirements validation    <strong>需求验证</strong></li>
-</ul>
-<h3 id="System-Modeling-系统模型">System Modeling  (系统模型)</h3>
-]]></content>
-      <tags>
-        <tag>复习</tag>
-      </tags>
   </entry>
   <entry>
     <title>线代预习一些知识</title>
@@ -939,6 +889,26 @@
       </tags>
   </entry>
   <entry>
+    <title>计算机体系结构复习</title>
+    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>大一下预习计算机体系结构</p>
+<span id="more"></span>
+<h4 id="原码反码补码">原码反码补码</h4>
+<ul>
+<li>原码：二进制形式</li>
+<li>反码：原码除符号位不变，其余全部取反</li>
+<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
+</ul>
+<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>计算机原理</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>记录软院2022年1024解谜</title>
     <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
     <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
@@ -977,26 +947,6 @@
 <p>梅开二度，盲水印x2得到答案。</p>
 <p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>计算机体系结构复习</title>
-    <url>/2022/06/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>大一下预习计算机体系结构</p>
-<span id="more"></span>
-<h4 id="原码反码补码">原码反码补码</h4>
-<ul>
-<li>原码：二进制形式</li>
-<li>反码：原码除符号位不变，其余全部取反</li>
-<li>补码：反码加一 ($a-b$的意思是a加上b的补码)</li>
-</ul>
-<p>减法器可以用一个加法器，一个非门，一个VDD组合构成。</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>计算机原理</tag>
-      </tags>
   </entry>
   <entry>
     <title>markdown基本语法使用</title>
@@ -1306,6 +1256,88 @@
       <tags>
         <tag>项目管理</tag>
         <tag>项目流程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大二上软件工程导论课程复习</title>
+    <url>/2022/12/06/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%AF%BC%E8%AE%BA%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>​      整理ppt,课件等等。</p>
+<h3 id="Waterfall-model-（瀑布模型）">Waterfall model （瀑布模型）</h3>
+<p>The waterfall model is a plan-driven process. When you encounter a problem at a certain stage, you solve the problem under the current stage.</p>
+<p>瀑布模型是一个由<strong>计划驱动</strong>的过程。当您在某个阶段遇到问题时，您可以在当前阶段下解决该问题。但要注意的是瀑布模型不能回到上一个阶段。</p>
+<h4 id="适用场景">适用场景</h4>
+<ul>
+<li>产品简单或总量小，可以明确找到每个阶段的所有潜在问题</li>
+<li>所有潜在问题可以在每个阶段进行预测。</li>
+<li>外部原因导致，比如多个公司共同开发且公司之间交流成本昂贵</li>
+</ul>
+<h3 id="Incremental-development-model-（增量开发模型）">Incremental development model （增量开发模型）</h3>
+<p>Specification, development, and validation activities are interleaved rather than separate, with rapid feedback across activities.</p>
+<p>规范、开发和验证活动是交错的，而不是分开的，跨活动具有快速的反馈。</p>
+<h4 id="优点">优点</h4>
+<ul>
+<li>适用于敏捷开发</li>
+<li>具备快速的反馈</li>
+<li>能更早的由客户使用并从中获得价值</li>
+<li>实现需求变更的成本降低了</li>
+</ul>
+<h4 id="缺点">缺点</h4>
+<ul>
+<li>整个流程不可视</li>
+<li>如果系统发展迅速，每个版本的文档没有成本效益</li>
+<li>系统结构会随着新的增量而退化</li>
+<li>不支持大型复杂，长寿命系统</li>
+</ul>
+<h3 id="Integration-and-Configuration-（集成和配置）">Integration and Configuration （集成和配置）</h3>
+<h4 id="经常被重用">经常被重用</h4>
+<ul>
+<li>特定环境下的应用程序</li>
+<li>组件或集成包开发对象的集合（python第三方库）</li>
+<li>web服务</li>
+</ul>
+<h4 id="优点-2">优点</h4>
+<ul>
+<li>降低成本，提高速度</li>
+<li>减少测试负荷，保证产品质量</li>
+</ul>
+<h4 id="缺点-2">缺点</h4>
+<ul>
+<li>可能有需求无法实现</li>
+<li>可能失去对系统演化控制，因为新版本不受控制</li>
+</ul>
+<h3 id="Project-management-（项目管理）">Project management  （项目管理）</h3>
+<h4 id="目标">目标</h4>
+<ul>
+<li>To deliver the software to the customer at the agreed time.     <strong>按时交货</strong></li>
+<li>To keep overall costs within budget     <strong>缩紧腰包</strong></li>
+<li>To deliver software that meets the customer’s expectations.   <strong>按质交货</strong></li>
+<li>To maintain a coherent and well-functioning development team.  <strong>找好队友</strong></li>
+</ul>
+<h4 id="Project-planning">Project planning</h4>
+<p>PMs are responsible for planning, estimating, and scheduling project development and assigning people to tasks. PMs supervise the work to ensure that it is carried out to the required standards.     <strong>工头监督</strong></p>
+<h4 id="Risk-management">Risk management</h4>
+<p>PMs have to assess the risks that may affect a project, monitor these risks, and take action when problems arise. <strong>工头风控</strong></p>
+<h4 id="People-management">People management</h4>
+<p>PMs are responsible for managing a team of people. They have to choose people for their team and establish ways of working that lead to effective team performance.   <strong>工头招人</strong></p>
+<h3 id="Requirements-（需求）">Requirements  （需求）</h3>
+<h4 id="Functional-requirements-（功能性需求）">Functional requirements （功能性需求）</h4>
+<p>These are statements of services the system should provide, how the system should react to particular inputs, and how the system should behave in particular situations.</p>
+<p>就是系统对于输入的应对</p>
+<h4 id="Non-functional-requirements-（非功能性需求）">Non-functional requirements （非功能性需求）</h4>
+<ul>
+<li>Non-functional requirements usually specific or constrain characteristics of the system as a whole. They may relate to emergent system properties such as reliability, response time, and memory use.   <strong>可靠性，效应时间，内存等等</strong></li>
+</ul>
+<h4 id="Requirements-engineering-process">Requirements engineering process</h4>
+<p>过程：</p>
+<ul>
+<li>Requirements elicitation  <strong>需求引出，发现需求</strong></li>
+<li>Requirements specification    <strong>将需求规范化为标准形式</strong></li>
+<li>Requirements validation    <strong>需求验证</strong></li>
+</ul>
+<h3 id="System-Modeling-系统模型">System Modeling  (系统模型)</h3>
+]]></content>
+      <tags>
+        <tag>复习</tag>
       </tags>
   </entry>
 </search>
