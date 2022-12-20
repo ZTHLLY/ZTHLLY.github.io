@@ -159,98 +159,6 @@
       </tags>
   </entry>
   <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p>git命令行的基本用法：</p>
-<span id="more"></span>
-<h3 id="Git-commit">Git commit</h3>
-<p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
-<h3 id="Git-branch">Git branch</h3>
-<p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
-<h3 id="Git-merge">Git merge</h3>
-<p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
-<h3 id="Git-rebase">Git rebase</h3>
-<p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
-<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
-<p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
-<h3 id="Git-cherry-pick">Git cherry-pick</h3>
-<p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
-<h3 id="Git-rebase-2">Git rebase</h3>
-<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
-]]></content>
-      <categories>
-        <category>乱七八糟的东东</category>
-      </categories>
-      <tags>
-        <tag>git</tag>
-        <tag>基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Crypto:来自摸鱼哥的浅学</title>
-    <url>/2022/09/04/Crypto-%E6%9D%A5%E8%87%AA%E6%91%B8%E9%B1%BC%E5%93%A5%E7%9A%84%E6%B5%85%E5%AD%A6/</url>
-    <content><![CDATA[<p>来自一个学不明白堆的菜的研究：</p>
-<span id="more"></span>
-<h3 id="工具一把梭">工具一把梭</h3>
-<p>这里需要一个小工具，叫ciphey，命令行调用即可对密文进行解密，挺方便的。具体的安装方法csdn就有，有一些地方需要注意一下，但还是很快能安装完毕。安装完毕后使用命令行调用：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ciphey -t &quot;需要解密的密文&quot;</span><br></pre></td></tr></table></figure>
-<p>直接就返回明文以及具体的解答方式。</p>
-<p>像这样：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a528.png" alt=""></p>
-<p>经典给出一堆乱码，像这种：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a527.jpg" alt=""></p>
-<h3 id="base64以及凯撒等简单密码">base64以及凯撒等简单密码</h3>
-<p>这里装好相应的库，对着密文一通decode就能（大概？解出最最简单的题目了</p>
-<p>比如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">var=<span class="string">&quot;************************************&quot;</span></span><br><span class="line">flag=<span class="string">&#x27;NSSCTF&#123;&#x27;</span> + base64.b16encode(base64.b32encode(base64.b64encode(var.encode()))) + <span class="string">&#x27;&#125;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line">小明不小心泄露了源码，输出结果为：4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D，你能还原出var的正确结果吗？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>这种就看着加密方式一步一步逆回去咯：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">ans=<span class="string">&quot;4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D&quot;</span></span><br><span class="line"><span class="comment">#var=base64.decode(base64.b64decode(base64.b32decode(base64.b16decode(ans))),var)</span></span><br><span class="line">var2=base64.b64decode(base64.b32decode(base64.b16decode(ans)))</span><br><span class="line">var2=var2.decode()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;NSSCTF&#123;&quot;</span>+var2+<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>当然如果遇到纯粹的凯撒，那直接工具一把梭也是可以的</p>
-<h3 id="RSA以及其共模攻击">RSA以及其共模攻击</h3>
-<p>这里就涉及一点数论知识了，还没有学习太深入，只能照葫芦画瓢抄一抄简单脚本：</p>
-<p>这是题目附件：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag  = <span class="string">&#x27;***************&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;p=&quot;</span>,p)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;q=&quot;</span>,q)</span><br><span class="line">m1 = bytes_to_long(<span class="built_in">bytes</span>(flag.encode()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = p*q</span><br><span class="line">e1 = getPrime(<span class="number">32</span>)</span><br><span class="line">e2 = getPrime(<span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">flag1 = <span class="built_in">pow</span>(m1,e1,n)</span><br><span class="line">flag2 = <span class="built_in">pow</span>(m1,e2,n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag1= &#x27;</span>+<span class="built_in">str</span>(flag1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag2= &#x27;</span>+<span class="built_in">str</span>(flag2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e1= &#x27;</span> +<span class="built_in">str</span>(e1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e2= &#x27;</span>+<span class="built_in">str</span>(e2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;n= &#x27;</span>+<span class="built_in">str</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#flag1= 100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"><span class="comment">#flag2= 86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"><span class="comment">#e1= 3247473589</span></span><br><span class="line"><span class="comment">#e2= 3698409173</span></span><br><span class="line"><span class="comment">#n= 103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>解题脚本：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#from xenny.ctf.crypto.modern.asymmetric.rsa import same_module</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">flag1=<span class="number">100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"></span><br><span class="line">flag2=<span class="number">86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"></span><br><span class="line">e1= <span class="number">3247473589</span></span><br><span class="line">e2= <span class="number">3698409173</span></span><br><span class="line"></span><br><span class="line">n=<span class="number">103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rsa_gong_N_def</span>(<span class="params">e1,e2,c1,c2,n</span>):  <span class="comment">#共模攻击函数</span></span><br><span class="line">    e1, e2, c1, c2, n=<span class="built_in">int</span>(e1),<span class="built_in">int</span>(e2),<span class="built_in">int</span>(c1),<span class="built_in">int</span>(c2),<span class="built_in">int</span>(n)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;e1,e2:&quot;</span>,e1,e2)</span><br><span class="line">    s = gmpy2.gcdext(e1, e2)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;mpz:&quot;</span>,s)</span><br><span class="line">    s1 = s[<span class="number">1</span>]</span><br><span class="line">    s2 = s[<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> s1 &lt; <span class="number">0</span>:</span><br><span class="line">        s1 = - s1</span><br><span class="line">        c1 = gmpy2.invert(c1, n)</span><br><span class="line">    <span class="keyword">elif</span> s2 &lt; <span class="number">0</span>:</span><br><span class="line">        s2 = - s2</span><br><span class="line">        c2 = gmpy2.invert(c2, n)</span><br><span class="line">    m = (<span class="built_in">pow</span>(c1,s1,n) * <span class="built_in">pow</span>(c2 ,s2 ,n)) % n</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(m)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># def de(c, e, n): #因为此时的m不是真正的m，而是m^k，所以对m^k进行爆破</span></span><br><span class="line"><span class="comment">#     k = 0</span></span><br><span class="line"><span class="comment">#     while k&lt;1000: #指定k小于1000</span></span><br><span class="line"><span class="comment">#         mk = c + n*k</span></span><br><span class="line"><span class="comment">#         flag, true1 = gmpy2.iroot(mk, e)  #返回的第一个数值为开方数，第二个数值为布尔型，可整除为true，可自行测试</span></span><br><span class="line"><span class="comment">#         if True == true1:</span></span><br><span class="line"><span class="comment">#             # print(libnum.n2s(int(flag)))</span></span><br><span class="line"><span class="comment">#             return flag</span></span><br><span class="line"><span class="comment">#         k += 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for e1 in range(2,e1e2):</span></span><br><span class="line"><span class="comment">#     if e1e2%e1==0:         #爆破可整除的e</span></span><br><span class="line"><span class="comment">#         e2=e1e2//e1</span></span><br><span class="line"><span class="comment">#         c=rsa_gong_N_def(e1, e2, c1, c2, n)</span></span><br><span class="line"><span class="comment">#         e=gmpy2.gcd(e1,e2)</span></span><br><span class="line"><span class="comment">#         m1=de(c, e, n)</span></span><br><span class="line"><span class="comment">#         if m1:  #指定输出m1</span></span><br><span class="line"><span class="comment">#             print(libnum.n2s(int(m1)))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#m = same_module.attack(n, e1, e2, flag1, flag2)</span></span><br><span class="line">m=rsa_gong_N_def(e1,e2,flag1,flag2,n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(m)).decode())</span><br></pre></td></tr></table></figure>
-<p>中间被注释掉的部分是为了处理更难级别的题目，但在此题暂时还用不上。</p>
-<p>暂时先到这里吧，RSA其中原理以及逆元还不是很清楚，摆烂（</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-]]></content>
-      <tags>
-        <tag>基础</tag>
-        <tag>密码学</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RSA学习</title>
     <url>/2022/11/01/RSA%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h3 id="RSA学习">RSA学习</h3>
@@ -324,8 +232,100 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = <span class="number">8637633767257008567099653486541091171320491509433615447539162437911244175885667806398411790524083553445158113502227745206205327690939504032994699902053229</span></span><br><span class="line">q = <span class="number">12640674973996472769176047937170883420927050821480010581593137135372473880595613737337630629752577346147039284030082593490776630572584959954205336880228469</span></span><br><span class="line"></span><br><span class="line">dp = <span class="number">6500795702216834621109042351193261530650043841056252930930949663358625016881832840728066026150264693076109354874099841380454881716097778307268116910582929</span></span><br><span class="line">dq = <span class="number">783472263673553449019532580386470672380574033551303889137911760438881683674556098098256795673512201963002175438762767516968043599582527539160811120550041</span></span><br><span class="line"></span><br><span class="line">c = <span class="number">24722305403887382073567316467649080662631552905960229399079107995602154418176056335800638887527614164073530437657085079676157350205351945222989351316076486573599576041978339872265925062764318536089007310270278526159678937431903862892400747915525118983959970607934142974736675784325993445942031372107342103852</span></span><br><span class="line"></span><br><span class="line">i=gmpy2.invert(p,q)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;i=&quot;</span>,i)</span><br><span class="line"></span><br><span class="line">m1=<span class="built_in">pow</span>(c,dp,p)</span><br><span class="line">m2=<span class="built_in">pow</span>(c,dq,q)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">m=(((m1-m2)*i)%q)*p+m2</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
-        <tag>基础</tag>
         <tag>密码学</tag>
+        <tag>基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Crypto:来自摸鱼哥的浅学</title>
+    <url>/2022/09/04/Crypto-%E6%9D%A5%E8%87%AA%E6%91%B8%E9%B1%BC%E5%93%A5%E7%9A%84%E6%B5%85%E5%AD%A6/</url>
+    <content><![CDATA[<p>来自一个学不明白堆的菜的研究：</p>
+<span id="more"></span>
+<h3 id="工具一把梭">工具一把梭</h3>
+<p>这里需要一个小工具，叫ciphey，命令行调用即可对密文进行解密，挺方便的。具体的安装方法csdn就有，有一些地方需要注意一下，但还是很快能安装完毕。安装完毕后使用命令行调用：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ciphey -t &quot;需要解密的密文&quot;</span><br></pre></td></tr></table></figure>
+<p>直接就返回明文以及具体的解答方式。</p>
+<p>像这样：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a528.png" alt=""></p>
+<p>经典给出一堆乱码，像这种：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a527.jpg" alt=""></p>
+<h3 id="base64以及凯撒等简单密码">base64以及凯撒等简单密码</h3>
+<p>这里装好相应的库，对着密文一通decode就能（大概？解出最最简单的题目了</p>
+<p>比如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">var=<span class="string">&quot;************************************&quot;</span></span><br><span class="line">flag=<span class="string">&#x27;NSSCTF&#123;&#x27;</span> + base64.b16encode(base64.b32encode(base64.b64encode(var.encode()))) + <span class="string">&#x27;&#125;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line">小明不小心泄露了源码，输出结果为：4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D，你能还原出var的正确结果吗？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这种就看着加密方式一步一步逆回去咯：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">ans=<span class="string">&quot;4A5A4C564B36434E4B5241544B5432454E4E32465552324E47424758534D44594C4657564336534D4B5241584F574C4B4B463245365643424F35485649534C584A5A56454B4D4B5049354E47593D3D3D&quot;</span></span><br><span class="line"><span class="comment">#var=base64.decode(base64.b64decode(base64.b32decode(base64.b16decode(ans))),var)</span></span><br><span class="line">var2=base64.b64decode(base64.b32decode(base64.b16decode(ans)))</span><br><span class="line">var2=var2.decode()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;NSSCTF&#123;&quot;</span>+var2+<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当然如果遇到纯粹的凯撒，那直接工具一把梭也是可以的</p>
+<h3 id="RSA以及其共模攻击">RSA以及其共模攻击</h3>
+<p>这里就涉及一点数论知识了，还没有学习太深入，只能照葫芦画瓢抄一抄简单脚本：</p>
+<p>这是题目附件：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag  = <span class="string">&#x27;***************&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;p=&quot;</span>,p)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;q=&quot;</span>,q)</span><br><span class="line">m1 = bytes_to_long(<span class="built_in">bytes</span>(flag.encode()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = p*q</span><br><span class="line">e1 = getPrime(<span class="number">32</span>)</span><br><span class="line">e2 = getPrime(<span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">flag1 = <span class="built_in">pow</span>(m1,e1,n)</span><br><span class="line">flag2 = <span class="built_in">pow</span>(m1,e2,n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag1= &#x27;</span>+<span class="built_in">str</span>(flag1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag2= &#x27;</span>+<span class="built_in">str</span>(flag2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e1= &#x27;</span> +<span class="built_in">str</span>(e1))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;e2= &#x27;</span>+<span class="built_in">str</span>(e2))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;n= &#x27;</span>+<span class="built_in">str</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#flag1= 100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"><span class="comment">#flag2= 86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"><span class="comment">#e1= 3247473589</span></span><br><span class="line"><span class="comment">#e2= 3698409173</span></span><br><span class="line"><span class="comment">#n= 103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解题脚本：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#from xenny.ctf.crypto.modern.asymmetric.rsa import same_module</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">flag1=<span class="number">100156221476910922393504870369139942732039899485715044553913743347065883159136513788649486841774544271396690778274591792200052614669235485675534653358596366535073802301361391007325520975043321423979924560272762579823233787671688669418622502663507796640233829689484044539829008058686075845762979657345727814280</span></span><br><span class="line"></span><br><span class="line">flag2=<span class="number">86203582128388484129915298832227259690596162850520078142152482846864345432564143608324463705492416009896246993950991615005717737886323630334871790740288140033046061512799892371429864110237909925611745163785768204802056985016447086450491884472899152778839120484475953828199840871689380584162839244393022471075</span></span><br><span class="line"></span><br><span class="line">e1= <span class="number">3247473589</span></span><br><span class="line">e2= <span class="number">3698409173</span></span><br><span class="line"></span><br><span class="line">n=<span class="number">103606706829811720151309965777670519601112877713318435398103278099344725459597221064867089950867125892545997503531556048610968847926307322033117328614701432100084574953706259773711412853364463950703468142791390129671097834871371125741564434710151190962389213898270025272913761067078391308880995594218009110313</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rsa_gong_N_def</span>(<span class="params">e1,e2,c1,c2,n</span>):  <span class="comment">#共模攻击函数</span></span><br><span class="line">    e1, e2, c1, c2, n=<span class="built_in">int</span>(e1),<span class="built_in">int</span>(e2),<span class="built_in">int</span>(c1),<span class="built_in">int</span>(c2),<span class="built_in">int</span>(n)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;e1,e2:&quot;</span>,e1,e2)</span><br><span class="line">    s = gmpy2.gcdext(e1, e2)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;mpz:&quot;</span>,s)</span><br><span class="line">    s1 = s[<span class="number">1</span>]</span><br><span class="line">    s2 = s[<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> s1 &lt; <span class="number">0</span>:</span><br><span class="line">        s1 = - s1</span><br><span class="line">        c1 = gmpy2.invert(c1, n)</span><br><span class="line">    <span class="keyword">elif</span> s2 &lt; <span class="number">0</span>:</span><br><span class="line">        s2 = - s2</span><br><span class="line">        c2 = gmpy2.invert(c2, n)</span><br><span class="line">    m = (<span class="built_in">pow</span>(c1,s1,n) * <span class="built_in">pow</span>(c2 ,s2 ,n)) % n</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(m)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># def de(c, e, n): #因为此时的m不是真正的m，而是m^k，所以对m^k进行爆破</span></span><br><span class="line"><span class="comment">#     k = 0</span></span><br><span class="line"><span class="comment">#     while k&lt;1000: #指定k小于1000</span></span><br><span class="line"><span class="comment">#         mk = c + n*k</span></span><br><span class="line"><span class="comment">#         flag, true1 = gmpy2.iroot(mk, e)  #返回的第一个数值为开方数，第二个数值为布尔型，可整除为true，可自行测试</span></span><br><span class="line"><span class="comment">#         if True == true1:</span></span><br><span class="line"><span class="comment">#             # print(libnum.n2s(int(flag)))</span></span><br><span class="line"><span class="comment">#             return flag</span></span><br><span class="line"><span class="comment">#         k += 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for e1 in range(2,e1e2):</span></span><br><span class="line"><span class="comment">#     if e1e2%e1==0:         #爆破可整除的e</span></span><br><span class="line"><span class="comment">#         e2=e1e2//e1</span></span><br><span class="line"><span class="comment">#         c=rsa_gong_N_def(e1, e2, c1, c2, n)</span></span><br><span class="line"><span class="comment">#         e=gmpy2.gcd(e1,e2)</span></span><br><span class="line"><span class="comment">#         m1=de(c, e, n)</span></span><br><span class="line"><span class="comment">#         if m1:  #指定输出m1</span></span><br><span class="line"><span class="comment">#             print(libnum.n2s(int(m1)))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#m = same_module.attack(n, e1, e2, flag1, flag2)</span></span><br><span class="line">m=rsa_gong_N_def(e1,e2,flag1,flag2,n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(m)).decode())</span><br></pre></td></tr></table></figure>
+<p>中间被注释掉的部分是为了处理更难级别的题目，但在此题暂时还用不上。</p>
+<p>暂时先到这里吧，RSA其中原理以及逆元还不是很清楚，摆烂（</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
+]]></content>
+      <tags>
+        <tag>密码学</tag>
+        <tag>基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p>git命令行的基本用法：</p>
+<span id="more"></span>
+<h3 id="Git-commit">Git commit</h3>
+<p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
+<h3 id="Git-branch">Git branch</h3>
+<p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
+<h3 id="Git-merge">Git merge</h3>
+<p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
+<h3 id="Git-rebase">Git rebase</h3>
+<p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
+<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
+<p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
+<h3 id="Git-cherry-pick">Git cherry-pick</h3>
+<p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
+<h3 id="Git-rebase-2">Git rebase</h3>
+<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>乱七八糟的东东</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -595,28 +595,18 @@
       </tags>
   </entry>
   <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+    <title>函数调用栈</title>
+    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
+    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
 <span id="more"></span>
-<h4 id="例题一">例题一</h4>
-<p>先来看一道很简单的例题：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
-<p>具体要求如下：</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="函数开始">函数开始</h4>
+<p>如图：</p>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
+<h4 id="函数结束">函数结束</h4>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
 ]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
   </entry>
   <entry>
     <title>基础算法01</title>
@@ -657,6 +647,30 @@
 <p>乘法：</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+<span id="more"></span>
+<h4 id="例题一">例题一</h4>
+<p>先来看一道很简单的例题：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51T.png" alt=""></p>
+<p>具体要求如下：</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51U.png" alt=""></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -765,20 +779,6 @@
         <tag>C++</tag>
         <tag>算法</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>函数调用栈</title>
-    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
-    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
-<span id="more"></span>
-<h4 id="函数开始">函数开始</h4>
-<p>如图：</p>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束">函数结束</h4>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
-]]></content>
   </entry>
   <entry>
     <title>大二上java程序设计期末复习</title>
@@ -1158,46 +1158,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>记录软院2022年1024解谜</title>
-    <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
-    <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
-<p>再讲一下这次1024的情况，我是在总共15题中做出9题，排名在12位，当然其中也有廖学长的提示(雾</p>
-<h4 id="第二题">第二题</h4>
-<p>第一题就不说了，兜兜转转搞半天原来就是直接点击链接进入拿到flag{hello1024}，害得我想了半天。</p>
-<p>第二题体面就很简单，经典的乱码，一眼看出文本编码问题，常见的编码出现乱码原因就是utf-8编码和gbk编码的问题，这里有一个很简单的办法就是打开一个编辑器修改编码方式即可，由于正文肯定是使用utf-8编写，因此只需要在gbk编码下将内容录入编辑器再重新以utf-8打开文件即可。</p>
-<p>密文：鑷 劧鏁扮殑鍊硷紝淇濈暀灏忔暟鐐瑰悗 62 浣嶏紝涓嶇渷鐣ュ皬鏁扮偣</p>
-<p><img src="https://s2.loli.net/2022/11/09/WSFKalPjJif97Vc.png" alt="image1.png"></p>
-<p>得到正文，但是不全，这个时候就靠脑洞了…我当时还以为转错了…（逆天出题人，求一个什么什么数的小数点后62位的值，62位，基本肯定无限不循环小数，尝试${\Pi}$ 和自然对数e, 结果就是求e的小数点后64位。</p>
-<h4 id="第三题">第三题</h4>
-<p>题面：画家的密码</p>
-<p>题目：<em>a</em>1=1210 <em>a</em>2=321100 <em>a</em>3= ?</p>
-<p>也很简单，可是脑洞开的不够大了…（哭，结束之后才知道是自我描述数，反正当时是没想到…</p>
-<h4 id="第七题">第七题</h4>
-<p>解码问题，明文被加密，给出密文：627c279d7f747d9a8d2418c0f88b0960</p>
-<p>根据廖学长提醒，所有的md5加密的密文是具备固定长度的，因此看到该密文优先选择md5加密，随后找在线工具解就行，可是这题好像又有些网站解不出来，这里贴一个可以解的：<a href="https://www.t007.cn/">https://www.t007.cn/</a> 。其实网站倒是很多，多换几个就能解出来。</p>
-<h4 id="第八题">第八题</h4>
-<p>题面依然是简单至极：</p>
-<p><img src="https://s2.loli.net/2022/11/09/vM1I53uLPjr7JA2.png" alt="image2.png"></p>
-<p>搞得还以为是查看网页源代码，结果只要改一改google的黑夜模式就可以找到一串白色的文字…脑洞…</p>
-<h4 id="第十题">第十题</h4>
-<p>简单的图片隐写，先binwalk查看有没有隐藏的文件可以分离：</p>
-<p><img src="https://s2.loli.net/2022/11/09/yrxMLdfYcSqB35H.png" alt="image3.png"></p>
-<p>发现藏有一个zip，分离出来的文件是一个名字为flag的文件，但是常规方法打不开，这里我是用的ida打开，查找字符串就能找到flag,<img src="https://s2.loli.net/2022/11/09/iGOY5me6NXJp2gy.png" alt="image4.png"></p>
-<p>但是后来发现根本没必要，直接记事本打开，查找关键字flag或者关键符号&quot;{}&quot;即可找到flag，然后一眼字符串以==结尾，base64解码即可。</p>
-<h4 id="第十一题">第十一题</h4>
-<p>翻译一下得知要求最长公共子序列，直接网上搜一个代码跑一遍就行，答案不唯一选一个就好</p>
-<h4 id="第十三题">第十三题</h4>
-<p>题目：A,B,C,D  4个人组成的考古小队，在峡谷洞穴中触发陷阱，释放了僵尸，他们当即原路返回，可原路有条横跨峡谷的索桥。天色昏暗，只有一只灯，且如果有人要过桥，必须要提着灯过桥，桥上不可同时存在大于两个人的数量，或者当一群僵尸与人同时上桥时，桥便会断掉。 现在已知A过桥需要1min B:2min C:5min D:10min 而他们已经计算出僵尸群还有17min将赶上他们。怎么做才能安全脱险呢？请输出正确过程 (t代表灯，注意为规范答案，t放在表示人的字母的后面 请参照示例 示例过程：“CBt Bt BAt&quot; 代表“C与B一起过桥，他们拿着灯，（空格后面到下一个空格）代表返回过程：B带着灯回来，然后BAt指的是B跟A拿着灯过桥”)</p>
-<p>答案：ABt At CDt Bt ABt</p>
-<h4 id="第十四题">第十四题</h4>
-<p>图片隐写，由于给出了两个一样的图片，尝试stegsolve和盲水印解题，盲水印的话跑一个小脚本就行，得到一个名为out.png的图片，内容是一个篮球，上面有个100，就是答案，看得不清楚可以去stegsolve自己看看，脚本内容比较长，就不在这里放了。想要的可以网上搜一搜，很多的，<s>或者联系我捏</s>。</p>
-<p><img src="https://s2.loli.net/2022/11/09/C7qPRu4XeIMSj5V.png" alt="image5.png"></p>
-<h4 id="第十五题">第十五题</h4>
-<p>梅开二度，盲水印x2得到答案。</p>
-<p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
-]]></content>
-  </entry>
-  <entry>
     <title>线代预习一些知识</title>
     <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
@@ -1286,6 +1246,46 @@
       <tags>
         <tag>计算机原理</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>记录软院2022年1024解谜</title>
+    <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
+    <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
+<p>再讲一下这次1024的情况，我是在总共15题中做出9题，排名在12位，当然其中也有廖学长的提示(雾</p>
+<h4 id="第二题">第二题</h4>
+<p>第一题就不说了，兜兜转转搞半天原来就是直接点击链接进入拿到flag{hello1024}，害得我想了半天。</p>
+<p>第二题体面就很简单，经典的乱码，一眼看出文本编码问题，常见的编码出现乱码原因就是utf-8编码和gbk编码的问题，这里有一个很简单的办法就是打开一个编辑器修改编码方式即可，由于正文肯定是使用utf-8编写，因此只需要在gbk编码下将内容录入编辑器再重新以utf-8打开文件即可。</p>
+<p>密文：鑷 劧鏁扮殑鍊硷紝淇濈暀灏忔暟鐐瑰悗 62 浣嶏紝涓嶇渷鐣ュ皬鏁扮偣</p>
+<p><img src="https://s2.loli.net/2022/11/09/WSFKalPjJif97Vc.png" alt="image1.png"></p>
+<p>得到正文，但是不全，这个时候就靠脑洞了…我当时还以为转错了…（逆天出题人，求一个什么什么数的小数点后62位的值，62位，基本肯定无限不循环小数，尝试${\Pi}$ 和自然对数e, 结果就是求e的小数点后64位。</p>
+<h4 id="第三题">第三题</h4>
+<p>题面：画家的密码</p>
+<p>题目：<em>a</em>1=1210 <em>a</em>2=321100 <em>a</em>3= ?</p>
+<p>也很简单，可是脑洞开的不够大了…（哭，结束之后才知道是自我描述数，反正当时是没想到…</p>
+<h4 id="第七题">第七题</h4>
+<p>解码问题，明文被加密，给出密文：627c279d7f747d9a8d2418c0f88b0960</p>
+<p>根据廖学长提醒，所有的md5加密的密文是具备固定长度的，因此看到该密文优先选择md5加密，随后找在线工具解就行，可是这题好像又有些网站解不出来，这里贴一个可以解的：<a href="https://www.t007.cn/">https://www.t007.cn/</a> 。其实网站倒是很多，多换几个就能解出来。</p>
+<h4 id="第八题">第八题</h4>
+<p>题面依然是简单至极：</p>
+<p><img src="https://s2.loli.net/2022/11/09/vM1I53uLPjr7JA2.png" alt="image2.png"></p>
+<p>搞得还以为是查看网页源代码，结果只要改一改google的黑夜模式就可以找到一串白色的文字…脑洞…</p>
+<h4 id="第十题">第十题</h4>
+<p>简单的图片隐写，先binwalk查看有没有隐藏的文件可以分离：</p>
+<p><img src="https://s2.loli.net/2022/11/09/yrxMLdfYcSqB35H.png" alt="image3.png"></p>
+<p>发现藏有一个zip，分离出来的文件是一个名字为flag的文件，但是常规方法打不开，这里我是用的ida打开，查找字符串就能找到flag,<img src="https://s2.loli.net/2022/11/09/iGOY5me6NXJp2gy.png" alt="image4.png"></p>
+<p>但是后来发现根本没必要，直接记事本打开，查找关键字flag或者关键符号&quot;{}&quot;即可找到flag，然后一眼字符串以==结尾，base64解码即可。</p>
+<h4 id="第十一题">第十一题</h4>
+<p>翻译一下得知要求最长公共子序列，直接网上搜一个代码跑一遍就行，答案不唯一选一个就好</p>
+<h4 id="第十三题">第十三题</h4>
+<p>题目：A,B,C,D  4个人组成的考古小队，在峡谷洞穴中触发陷阱，释放了僵尸，他们当即原路返回，可原路有条横跨峡谷的索桥。天色昏暗，只有一只灯，且如果有人要过桥，必须要提着灯过桥，桥上不可同时存在大于两个人的数量，或者当一群僵尸与人同时上桥时，桥便会断掉。 现在已知A过桥需要1min B:2min C:5min D:10min 而他们已经计算出僵尸群还有17min将赶上他们。怎么做才能安全脱险呢？请输出正确过程 (t代表灯，注意为规范答案，t放在表示人的字母的后面 请参照示例 示例过程：“CBt Bt BAt&quot; 代表“C与B一起过桥，他们拿着灯，（空格后面到下一个空格）代表返回过程：B带着灯回来，然后BAt指的是B跟A拿着灯过桥”)</p>
+<p>答案：ABt At CDt Bt ABt</p>
+<h4 id="第十四题">第十四题</h4>
+<p>图片隐写，由于给出了两个一样的图片，尝试stegsolve和盲水印解题，盲水印的话跑一个小脚本就行，得到一个名为out.png的图片，内容是一个篮球，上面有个100，就是答案，看得不清楚可以去stegsolve自己看看，脚本内容比较长，就不在这里放了。想要的可以网上搜一搜，很多的，<s>或者联系我捏</s>。</p>
+<p><img src="https://s2.loli.net/2022/11/09/C7qPRu4XeIMSj5V.png" alt="image5.png"></p>
+<h4 id="第十五题">第十五题</h4>
+<p>梅开二度，盲水印x2得到答案。</p>
+<p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
+]]></content>
   </entry>
   <entry>
     <title>markdown基本语法使用</title>
